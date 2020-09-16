@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 
 import NewReenrollmentDTO from '@modules/reenrollment/dtos/NewReenrollmentDTO';
 import NewReenrollmetService from '@modules/reenrollment/services/NewReenrollmetService';
+// import GenerateEnrollmentFormPdfService from '@modules/reenrollment/services/GenerateEnrollmentFormPdfService';
+// import GenerateContractPdfService from '@modules/reenrollment/services/GenerateContractPdfService';
 
 class ReenrollmentController {
     public async create(
@@ -69,9 +71,7 @@ class ReenrollmentController {
             grade_name,
         }: NewReenrollmentDTO = request.body;
 
-        const newReenrollmetService = new NewReenrollmetService();
-
-        await newReenrollmetService.execute({
+        const data = {
             financial_name,
             financial_birth_date,
             financial_nacionality,
@@ -130,7 +130,19 @@ class ReenrollmentController {
             student_health_problem,
             student_special_necessities,
             grade_name,
-        });
+        };
+
+        const newReenrollmet = new NewReenrollmetService();
+
+        await newReenrollmet.execute(data);
+
+        // const generateEnrollmentFormPdf = new GenerateEnrollmentFormPdfService();
+
+        // generateEnrollmentFormPdf.execute(data);
+
+        // const generateContractPdf = new GenerateContractPdfService();
+
+        // generateContractPdf.execute(data);
 
         return response.json({ ok: true });
     }

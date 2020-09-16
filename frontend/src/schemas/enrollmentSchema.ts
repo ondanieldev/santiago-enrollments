@@ -32,9 +32,9 @@ export default Yup.object().shape({
   financial_monthly_income: Yup.number()
     .typeError('Renda mensal inválida')
     .required('Renda mensal obrigatória'),
-  financial_income_tax: Yup.bool().required(
-    'Declaração de imposto de renda obrigatória',
-  ),
+  financial_income_tax: Yup.string()
+    .matches(/(yes|no)/, () => 'Declaração inválida')
+    .required('Declaração de imposto de renda obrigatória'),
   financial_email: Yup.string()
     .email('E-mail inválido')
     .required('E-mail obrigatório'),
@@ -93,9 +93,9 @@ export default Yup.object().shape({
     /(white|brown|black|indigenous|yellow)/,
     () => 'Raça inválida',
   ),
-  student_ease_relating: Yup.string().required(
-    'Facilidade em se relacionar não informada',
-  ),
+  student_ease_relating: Yup.string()
+    .matches(/(yes|no)/, () => 'Declaração inválida')
+    .required('Facilidade em se relacionar não informada'),
   student_origin_school: Yup.string(),
   student_healt_plan: Yup.string(),
   student_food_alergy: Yup.string(),

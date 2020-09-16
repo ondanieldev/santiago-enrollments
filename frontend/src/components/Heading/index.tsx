@@ -8,7 +8,7 @@ interface IProps {
 
 const Heading: React.FC<IProps> = ({ title }) => (
   <Container>
-    <h1>{title}</h1>
+    <h2>{title}</h2>
     <hr />
   </Container>
 );

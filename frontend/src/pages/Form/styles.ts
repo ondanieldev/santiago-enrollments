@@ -2,13 +2,24 @@ import styled from 'styled-components';
 
 export const Container = styled.div`
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
   padding: 24px;
 
-  form {
-    flex: 1%;
-    max-width: 700px;
+  h1 {
+    margin-bottom: 24px;
+  }
+
+  > div {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+
+    form {
+      flex: 1;
+      max-width: 700px;
+    }
   }
 `;
 

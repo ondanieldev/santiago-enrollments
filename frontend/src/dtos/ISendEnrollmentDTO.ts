@@ -18,7 +18,7 @@ export default interface ISendEnrollmentDTO {
   financial_education_level: string;
   financial_workplace: string;
   financial_monthly_income: number;
-  financial_income_tax: boolean;
+  financial_income_tax: 'yes' | 'no' | boolean;
   financial_email: string;
 
   supportive_name: string;
@@ -39,7 +39,7 @@ export default interface ISendEnrollmentDTO {
   supportive_personal_phone: string;
   supportive_education_level: string;
   supportive_workplace: string;
-  supportive_monthly_income: number;
+  supportive_monthly_income: 'yes' | 'no' | boolean;
   supportive_email: string;
 
   student_name: string;
@@ -51,7 +51,7 @@ export default interface ISendEnrollmentDTO {
   student_birth_state: string;
   student_gender: 'male' | 'female';
   student_race: 'white' | 'brown' | 'black' | 'indigenous' | 'yellow';
-  student_ease_relating: boolean;
+  student_ease_relating: 'yes' | 'no' | boolean;
   student_origin_school: string;
   student_healt_plan: string;
   student_food_alergy: string;
