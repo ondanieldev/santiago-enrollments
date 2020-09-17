@@ -9,6 +9,8 @@ class NewEnrollmentService {
 
         const reenrollment = new Reenrollment(data);
 
+        console.log(reenrollment);
+
         await reenrollment.save();
     }
 }
