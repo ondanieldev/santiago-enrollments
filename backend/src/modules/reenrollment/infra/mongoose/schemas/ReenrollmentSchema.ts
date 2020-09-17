@@ -55,7 +55,7 @@ const ReenrollmentSchema = new mongoose.Schema({
     student_race: String,
     student_ease_relating: Boolean,
     student_origin_school: String,
-    student_healt_plan: String,
+    student_health_plan: String,
     student_food_alergy: String,
     student_medication_alergy: String,
     student_health_problem: String,
