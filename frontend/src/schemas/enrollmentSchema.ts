@@ -25,9 +25,12 @@ export default Yup.object().shape({
   financial_personal_phone: Yup.string().required(
     'Telefone pessoal obrigatório',
   ),
-  financial_education_level: Yup.string().required(
-    'Nível de escolaridade obrigatório',
-  ),
+  financial_education_level: Yup.string()
+    .matches(
+      /(elementary_incompleted|elementary_completed|highschool_incompleted|highschool_completed|university_incompleted|university_completed)/,
+      () => 'Nivel de escolaridade inválido',
+    )
+    .required('Nível de escolaridade obrigatório'),
   financial_workplace: Yup.string().required('Local de trabalho obrigatório'),
   financial_monthly_income: Yup.number()
     .typeError('Renda mensal inválida')
@@ -64,9 +67,12 @@ export default Yup.object().shape({
   supportive_personal_phone: Yup.string().required(
     'Telefone pessoal obrigatório',
   ),
-  supportive_education_level: Yup.string().required(
-    'Nível de escolaridade obrigatório',
-  ),
+  supportive_education_level: Yup.string()
+    .matches(
+      /(elementary_incompleted|elementary_completed|highschool_incompleted|highschool_completed|university_incompleted|university_completed)/,
+      () => 'Nivel de escolaridade inválido',
+    )
+    .required('Nível de escolaridade obrigatório'),
   supportive_workplace: Yup.string().required('Local de trabalho obrigatório'),
   supportive_monthly_income: Yup.number()
     .typeError('Renda mensal inválida')

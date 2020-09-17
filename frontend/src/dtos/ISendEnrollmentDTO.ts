@@ -15,7 +15,13 @@ export default interface ISendEnrollmentDTO {
   financial_residencial_phone: string;
   financial_commercial_phone: string;
   financial_personal_phone: string;
-  financial_education_level: string;
+  financial_education_level:
+    | 'elementary_incompleted'
+    | 'elementary_completed'
+    | 'highschool_incompleted'
+    | 'highschool_completed'
+    | 'university_incompleted'
+    | 'university_completed';
   financial_workplace: string;
   financial_monthly_income: number;
   financial_income_tax: 'yes' | 'no' | boolean;
@@ -37,7 +43,13 @@ export default interface ISendEnrollmentDTO {
   supportive_residencial_phone: string;
   supportive_commercial_phone: string;
   supportive_personal_phone: string;
-  supportive_education_level: string;
+  supportive_education_level:
+    | 'elementary_incompleted'
+    | 'elementary_completed'
+    | 'highschool_incompleted'
+    | 'highschool_completed'
+    | 'university_incompleted'
+    | 'university_completed';
   supportive_workplace: string;
   supportive_monthly_income: 'yes' | 'no' | boolean;
   supportive_email: string;

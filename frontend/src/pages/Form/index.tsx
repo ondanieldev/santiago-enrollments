@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState, useEffect } from 'react';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 import { useHistory } from 'react-router-dom';
@@ -21,12 +21,14 @@ import {
 } from 'react-icons/fi';
 import { ValidationError as YupValidationError } from 'yup';
 import { toast } from 'react-toastify';
+import cepPromise from 'cep-promise';
 
 import { Container, FormGroup, InputGroup, ButtonGroup } from './styles';
 import Heading from '../../components/Heading';
 import Input from '../../components/Input';
 import RadioInput from '../../components/RadioInput';
 import Select from '../../components/Select';
+import Checkbox from '../../components/Checkbox';
 import Button from '../../components/Button';
 import ISendEnrollmentDTO from '../../dtos/ISendEnrollmentDTO';
 import enrollmentSchema from '../../schemas/enrollmentSchema';
@@ -47,7 +49,65 @@ const FormPage: React.FC = () => {
   const [showHealthProblem, setShowHealthProblem] = useState(false);
   const [showMedicationAlergy, setShowMedicationAlergy] = useState(false);
   const [showSpecialNecessities, setShowSpecialNecessities] = useState(false);
+  const [reaprooveAddress, setReaprooveAddress] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (reaprooveAddress) {
+      const street = formRef.current?.getFieldValue('financial_address_street');
+      const number = formRef.current?.getFieldValue('financial_address_number');
+      const complement = formRef.current?.getFieldValue(
+        'financial_address_complement',
+      );
+      const neighborhood = formRef.current?.getFieldValue(
+        'financial_address_neighborhood',
+      );
+      const city = formRef.current?.getFieldValue('financial_address_city');
+      const cep = formRef.current?.getFieldValue('financial_address_cep');
+
+      formRef.current?.setFieldValue('supportive_address_street', street);
+      formRef.current?.setFieldValue('supportive_address_number', number);
+      formRef.current?.setFieldValue(
+        'supportive_address_complement',
+        complement,
+      );
+      formRef.current?.setFieldValue(
+        'supportive_address_neighborhood',
+        neighborhood,
+      );
+      formRef.current?.setFieldValue('supportive_address_city', city);
+      formRef.current?.setFieldValue('supportive_address_cep', cep);
+    } else {
+      formRef.current?.setFieldValue('supportive_address_street', '');
+      formRef.current?.setFieldValue('supportive_address_number', '');
+      formRef.current?.setFieldValue('supportive_address_complement', '');
+      formRef.current?.setFieldValue('supportive_address_neighborhood', '');
+      formRef.current?.setFieldValue('supportive_address_city', '');
+      formRef.current?.setFieldValue('supportive_address_cep', '');
+    }
+  }, [reaprooveAddress]);
+
+  const handleSearchAddressByCep = useCallback((cep, responsible_type) => {
+    cepPromise(cep).then(result => {
+      const { street, neighborhood, city } = result;
+
+      if (responsible_type === 'financial') {
+        formRef.current?.setFieldValue('financial_address_street', street);
+        formRef.current?.setFieldValue(
+          'financial_address_neighborhood',
+          neighborhood,
+        );
+        formRef.current?.setFieldValue('financial_address_city', city);
+      } else {
+        formRef.current?.setFieldValue('supportive_address_street', street);
+        formRef.current?.setFieldValue(
+          'supportive_address_neighborhood',
+          neighborhood,
+        );
+        formRef.current?.setFieldValue('supportive_address_city', city);
+      }
+    });
+  }, []);
 
   const handleSubmitForm = useCallback(
     async (data: ISendEnrollmentDTO, { reset }) => {
@@ -141,11 +201,25 @@ const FormPage: React.FC = () => {
             </InputGroup>
 
             <InputGroup>
-              <Input
-                name="financial_education_level"
-                placeholder="Grau de instrução"
-                icon={FiInfo}
-              />
+              <Select name="financial_education_level" icon={FiInfo}>
+                <option value="null">Grau de instrução</option>
+                <option value="elementary_incompleted">
+                  Fundamental incompleto
+                </option>
+                <option value="elementary_completed">
+                  Fundamental completo
+                </option>
+                <option value="highschool_incompleted">
+                  Segundo grau incompleto
+                </option>
+                <option value="highschool_completed">
+                  Segundo grau completo
+                </option>
+                <option value="university_incompleted">
+                  Superior incompleto
+                </option>
+                <option value="university_completed">Superior completo</option>
+              </Select>
 
               <Input
                 name="financial_profission"
@@ -184,43 +258,46 @@ const FormPage: React.FC = () => {
 
             <InputGroup>
               <Input
+                name="financial_address_cep"
+                placeholder="CEP"
+                icon={FiMapPin}
+                onBlur={e =>
+                  handleSearchAddressByCep(e.target.value, 'financial')
+                }
+              />
+
+              <Input
                 name="financial_address_street"
                 placeholder="Rua"
                 icon={FiMapPin}
               />
+            </InputGroup>
 
+            <InputGroup>
               <Input
                 type="number"
                 name="financial_address_number"
                 placeholder="Número"
                 icon={FiMapPin}
               />
-            </InputGroup>
 
-            <InputGroup>
               <Input
                 name="financial_address_complement"
                 placeholder="Complemento"
                 icon={FiMapPin}
               />
+            </InputGroup>
 
+            <InputGroup>
               <Input
                 name="financial_address_neighborhood"
                 placeholder="Bairro"
                 icon={FiMapPin}
               />
-            </InputGroup>
 
-            <InputGroup>
               <Input
                 name="financial_address_city"
                 placeholder="Cidade"
-                icon={FiMapPin}
-              />
-
-              <Input
-                name="financial_address_cep"
-                placeholder="CEP"
                 icon={FiMapPin}
               />
             </InputGroup>
@@ -300,11 +377,25 @@ const FormPage: React.FC = () => {
             </InputGroup>
 
             <InputGroup>
-              <Input
-                name="supportive_education_level"
-                placeholder="Grau de instrução"
-                icon={FiInfo}
-              />
+              <Select name="supportive_education_level" icon={FiInfo}>
+                <option value="null">Grau de instrução</option>
+                <option value="elementary_incompleted">
+                  Fundamental incompleto
+                </option>
+                <option value="elementary_completed">
+                  Fundamental completo
+                </option>
+                <option value="highschool_incompleted">
+                  Segundo grau incompleto
+                </option>
+                <option value="highschool_completed">
+                  Segundo grau completo
+                </option>
+                <option value="university_incompleted">
+                  Superior incompleto
+                </option>
+                <option value="university_completed">Superior completo</option>
+              </Select>
 
               <Input
                 name="supportive_profission"
@@ -342,44 +433,55 @@ const FormPage: React.FC = () => {
             </InputGroup>
 
             <InputGroup>
+              <Checkbox
+                name="reaproove_address"
+                label="Utilizar o mesmo endereço do responsável financeiro?"
+                onChange={e => setReaprooveAddress(e.target.checked)}
+              />
+            </InputGroup>
+
+            <InputGroup>
+              <Input
+                name="supportive_address_cep"
+                placeholder="CEP"
+                icon={FiMapPin}
+                onBlur={e =>
+                  handleSearchAddressByCep(e.target.value, 'supportive')
+                }
+              />
+
               <Input
                 name="supportive_address_street"
                 placeholder="Rua"
                 icon={FiMapPin}
               />
+            </InputGroup>
 
+            <InputGroup>
               <Input
                 type="number"
                 name="supportive_address_number"
                 placeholder="Número"
                 icon={FiMapPin}
               />
-            </InputGroup>
 
-            <InputGroup>
               <Input
                 name="supportive_address_complement"
                 placeholder="Complemento"
                 icon={FiMapPin}
               />
+            </InputGroup>
 
+            <InputGroup>
               <Input
                 name="supportive_address_neighborhood"
                 placeholder="Bairro"
                 icon={FiMapPin}
               />
-            </InputGroup>
 
-            <InputGroup>
               <Input
                 name="supportive_address_city"
                 placeholder="Cidade"
-                icon={FiMapPin}
-              />
-
-              <Input
-                name="supportive_address_cep"
-                placeholder="CEP"
                 icon={FiMapPin}
               />
             </InputGroup>
