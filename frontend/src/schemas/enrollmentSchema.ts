@@ -103,5 +103,10 @@ export default Yup.object().shape({
   student_health_problem: Yup.string(),
   student_special_necessities: Yup.string(),
 
-  grade: Yup.string().required('Turma não informada'),
+  grade_name: Yup.string()
+    .matches(
+      /(maternal|first_period|second_period|first_year|second_year|third_year|fourth_year|fifth_year|sixth_year|seventh_year|eighth_year|nineth_year)/,
+      () => 'Turma inválida',
+    )
+    .required('Turma não informada'),
 });

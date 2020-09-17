@@ -1,6 +1,7 @@
 import React, { useCallback, useRef, useState } from 'react';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
+import { useHistory } from 'react-router-dom';
 import {
   FiActivity,
   FiBriefcase,
@@ -39,16 +40,20 @@ toast.configure();
 const FormPage: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
 
+  const history = useHistory();
+
   const [showHealthPlan, setShowHealthPlan] = useState(false);
   const [showFoodAlergy, setShowFoodAlergy] = useState(false);
   const [showHealthProblem, setShowHealthProblem] = useState(false);
   const [showMedicationAlergy, setShowMedicationAlergy] = useState(false);
   const [showSpecialNecessities, setShowSpecialNecessities] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmitForm = useCallback(
     async (data: ISendEnrollmentDTO, { reset }) => {
-      console.log(data);
       try {
+        setLoading(true);
+
         formRef.current?.setErrors({});
 
         const enrollment = data;
@@ -70,6 +75,8 @@ const FormPage: React.FC = () => {
         reset();
 
         toast.success('Dados enviados com sucesso!');
+
+        history.push('/success');
       } catch (err) {
         if (err instanceof YupValidationError) {
           const errors = getValidationErrors(err);
@@ -81,9 +88,11 @@ const FormPage: React.FC = () => {
         }
 
         toast.error('Erro interno do servidor!');
+      } finally {
+        setLoading(false);
       }
     },
-    [],
+    [history],
   );
 
   return (
@@ -235,6 +244,7 @@ const FormPage: React.FC = () => {
                 type="date"
                 name="financial_birth_date"
                 icon={FiCalendar}
+                label="Data de nascimento"
               />
             </InputGroup>
 
@@ -393,6 +403,7 @@ const FormPage: React.FC = () => {
                 type="date"
                 name="supportive_birth_date"
                 icon={FiCalendar}
+                label="Data de nascimento"
               />
             </InputGroup>
           </FormGroup>
@@ -447,17 +458,6 @@ const FormPage: React.FC = () => {
             </InputGroup>
 
             <InputGroup>
-              <Input type="date" name="student_birth_date" icon={FiCalendar} />
-
-              <Select name="grade" icon={FiSmile}>
-                <option value="null">Turma</option>
-                <option value="null">1º ano</option>
-                <option value="null">2º ano</option>
-                <option value="null">3º ano</option>
-              </Select>
-            </InputGroup>
-
-            <InputGroup>
               <Select name="student_gender" icon={FiInfo}>
                 <option value="null">Gênero</option>
                 <option value="male">Masculino</option>
@@ -471,6 +471,35 @@ const FormPage: React.FC = () => {
                 <option value="black">Negro</option>
                 <option value="indigenous">Indígena</option>
                 <option value="yellow">Amarelo</option>
+              </Select>
+            </InputGroup>
+
+            <InputGroup>
+              <Input
+                type="date"
+                name="student_birth_date"
+                icon={FiCalendar}
+                label="Data de nascimento"
+              />
+
+              <Select
+                name="grade_name"
+                icon={FiSmile}
+                label="Turma desejada para 2021"
+              >
+                <option value="null">Turma</option>
+                <option value="maternal">Maternal 2021</option>
+                <option value="first_period">1º período 2021</option>
+                <option value="second_period">2º período 2021</option>
+                <option value="first_year">1º ano 2021</option>
+                <option value="second_year">2º ano 2021</option>
+                <option value="third_year">3º ano 2021</option>
+                <option value="fourth_year">4º ano 2021</option>
+                <option value="fifth_year">5º ano 2021</option>
+                <option value="sixth_year">6º ano 2021</option>
+                <option value="seventh_year">7º ano 2021</option>
+                <option value="eighth_year">8º ano 2021</option>
+                <option value="nineth_year">9º ano 2021</option>
               </Select>
             </InputGroup>
 
@@ -587,7 +616,9 @@ const FormPage: React.FC = () => {
           </FormGroup>
 
           <ButtonGroup>
-            <Button type="submit">Enviar</Button>
+            <Button loading={loading} type="submit">
+              Enviar
+            </Button>
           </ButtonGroup>
         </Form>
       </div>

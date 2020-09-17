@@ -21,17 +21,3 @@
 [] formatar as datas
 [] formatar os preços
 [] e-mail
-
-## Front-end
-[] label da data de nascimento
-[] turmas
-    [] Maternal 2021
-    [] 1º período 2021
-    [] 2º período 2021
-    [] 1º ano 2021 --- 9º ano 2021
-    [] Turma desejada
-[] botão
-    [] carregamento
-[] página de sucesso
-    [] retornar para a página inicial
-    [] enviar outro formulário

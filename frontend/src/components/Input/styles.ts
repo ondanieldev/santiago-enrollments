@@ -2,21 +2,29 @@ import styled, { css } from 'styled-components';
 
 import Tooltip from '../Tooltip';
 
-interface ContainerProps {
+interface InputContainerProps {
   isFocused: boolean;
   isFilled: boolean;
   isErrored: boolean;
 }
 
-export const Container = styled.div<ContainerProps>`
+export const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  label {
+    margin-bottom: 4px;
+  }
+`;
+
+export const InputContainer = styled.div<InputContainerProps>`
   padding: 16px;
   border-radius: 5px;
   border: 0;
   background: var(--white);
-  width: 100%;
   display: flex;
   align-items: center;
-
   border: 2px solid var(--black);
   color: var(--black);
   transition: all 0.2s;

@@ -36,7 +36,7 @@ export const InputGroup = styled.div`
     margin-top: 12px;
   }
 
-  div {
+  > div {
     & + div {
       margin-left: 12px;
     }

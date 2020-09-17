@@ -9,18 +9,21 @@ import { IconBaseProps } from 'react-icons';
 import { FiAlertCircle } from 'react-icons/fi';
 import { useField } from '@unform/core';
 
-import { Container, Error } from './styles';
+import { Container, InputContainer, Error } from './styles';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   name: string;
   icon?: React.ComponentType<IconBaseProps>;
   search?: boolean;
+  label?: string;
 }
 
 const Input: React.FC<InputProps> = ({
   name,
   icon: Icon,
   autoComplete = 'off',
+  id,
+  label,
   ...rest
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -54,21 +57,29 @@ const Input: React.FC<InputProps> = ({
   }, [error]);
 
   return (
-    <Container isErrored={isErrored} isFilled={isFilled} isFocused={isFocused}>
-      {Icon && <Icon size={20} />}
-      <input
-        autoComplete={autoComplete}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-        name={name}
-        ref={inputRef}
-        {...rest}
-      />
-      {isErrored && error && (
-        <Error title={error}>
-          <FiAlertCircle color="#f44336" size={20} />
-        </Error>
-      )}
+    <Container>
+      {label && <label htmlFor={id}>{label}</label>}
+      <InputContainer
+        isErrored={isErrored}
+        isFilled={isFilled}
+        isFocused={isFocused}
+      >
+        {Icon && <Icon size={20} />}
+        <input
+          autoComplete={autoComplete}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          name={name}
+          ref={inputRef}
+          id={id}
+          {...rest}
+        />
+        {isErrored && error && (
+          <Error title={error}>
+            <FiAlertCircle color="#f44336" size={20} />
+          </Error>
+        )}
+      </InputContainer>
     </Container>
   );
 };
