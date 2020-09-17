@@ -97,7 +97,7 @@ export default Yup.object().shape({
     .matches(/(yes|no)/, () => 'Declaração inválida')
     .required('Facilidade em se relacionar não informada'),
   student_origin_school: Yup.string(),
-  student_healt_plan: Yup.string(),
+  student_health_plan: Yup.string(),
   student_food_alergy: Yup.string(),
   student_medication_alergy: Yup.string(),
   student_health_problem: Yup.string(),
