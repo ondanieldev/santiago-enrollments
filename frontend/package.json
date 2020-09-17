@@ -25,7 +25,7 @@
     "yup": "^0.29.3"
   },
   "scripts": {
-    "production": "forever start -c \"serve -s\" build",
+    "production": "forever start -c \"serve -s \" build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
