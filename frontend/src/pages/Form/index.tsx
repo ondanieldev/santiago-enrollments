@@ -1,6 +1,7 @@
 import React, { useCallback, useRef, useState, useEffect } from 'react';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
+import Recaptcha, { ReCAPTCHA } from 'react-google-recaptcha';
 import { useHistory } from 'react-router-dom';
 import {
   FiActivity,
@@ -41,6 +42,8 @@ toast.configure();
 
 const FormPage: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
+
+  const reCaptchaRef = useRef<ReCAPTCHA>(null);
 
   const history = useHistory();
 
@@ -112,8 +115,6 @@ const FormPage: React.FC = () => {
   const handleSubmitForm = useCallback(
     async (data: ISendEnrollmentDTO, { reset }) => {
       try {
-        console.log(data);
-
         setLoading(true);
 
         formRef.current?.setErrors({});
@@ -123,6 +124,11 @@ const FormPage: React.FC = () => {
         await enrollmentSchema.validate(enrollment, {
           abortEarly: false,
         });
+
+        if (!reCaptchaRef.current?.getValue()) {
+          toast.error('Captcha inválido!');
+          return;
+        }
 
         enrollment.financial_income_tax === 'yes'
           ? (enrollment.financial_income_tax = true)
@@ -715,6 +721,13 @@ const FormPage: React.FC = () => {
                   { id: 'ser1', label: 'Sim', value: 'yes' },
                   { id: 'ser2', label: 'Não', value: 'no', default: true },
                 ]}
+              />
+            </InputGroup>
+
+            <InputGroup>
+              <Recaptcha
+                ref={reCaptchaRef}
+                sitekey="6Lcfk80ZAAAAAKwggPCb14zT_XUFnVfHYzEkK9vb"
               />
             </InputGroup>
           </FormGroup>

@@ -37,6 +37,7 @@
       "react/jsx-props-no-spreading": "off",
       "camelcase": "off",
       "no-unused-expressions": "off",
+      "react/jsx-curly-newline": "off",
       "import/extensions": [
         "error",
         "ignorePackages",
