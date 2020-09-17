@@ -52,6 +52,8 @@ const FormPage: React.FC = () => {
   const handleSubmitForm = useCallback(
     async (data: ISendEnrollmentDTO, { reset }) => {
       try {
+        console.log(data);
+
         setLoading(true);
 
         formRef.current?.setErrors({});
@@ -516,7 +518,7 @@ const FormPage: React.FC = () => {
 
               {showHealthPlan && (
                 <Input
-                  name="health_plan"
+                  name="student_health_plan"
                   placeholder="Qual?"
                   icon={FiActivity}
                 />
@@ -536,7 +538,7 @@ const FormPage: React.FC = () => {
 
               {showMedicationAlergy && (
                 <Input
-                  name="medication_alergy"
+                  name="student_medication_alergy"
                   placeholder="Qual?"
                   icon={FiActivity}
                 />
@@ -556,7 +558,7 @@ const FormPage: React.FC = () => {
 
               {showFoodAlergy && (
                 <Input
-                  name="food_alergy"
+                  name="student_food_alergy"
                   placeholder="Qual?"
                   icon={FiActivity}
                 />
@@ -576,7 +578,7 @@ const FormPage: React.FC = () => {
 
               {showHealthProblem && (
                 <Input
-                  name="health_problem"
+                  name="student_health_problem"
                   placeholder="Qual?"
                   icon={FiActivity}
                 />
@@ -596,7 +598,7 @@ const FormPage: React.FC = () => {
 
               {showSpecialNecessities && (
                 <Input
-                  name="special_necessities"
+                  name="student_special_necessities"
                   placeholder="Qual?"
                   icon={FiActivity}
                 />

@@ -53,7 +53,7 @@ export default interface ISendEnrollmentDTO {
   student_race: 'white' | 'brown' | 'black' | 'indigenous' | 'yellow';
   student_ease_relating: 'yes' | 'no' | boolean;
   student_origin_school: string;
-  student_healt_plan: string;
+  student_health_plan: string;
   student_food_alergy: string;
   student_medication_alergy: string;
   student_health_problem: string;
