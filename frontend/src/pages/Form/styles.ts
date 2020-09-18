@@ -1,4 +1,8 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
+
+interface InputGroupProps {
+  displayColumn?: boolean;
+}
 
 export const Container = styled.div`
   display: flex;
@@ -11,15 +15,15 @@ export const Container = styled.div`
     margin-bottom: 24px;
   }
 
+  form {
+    width: 100%;
+    max-width: 700px;
+  }
+
   > div {
     display: flex;
     justify-content: center;
     width: 100%;
-
-    form {
-      flex: 1;
-      max-width: 700px;
-    }
   }
 `;
 
@@ -29,7 +33,7 @@ export const FormGroup = styled.div`
   }
 `;
 
-export const InputGroup = styled.div`
+export const InputGroup = styled.div<InputGroupProps>`
   display: flex;
 
   & + div {
@@ -41,6 +45,19 @@ export const InputGroup = styled.div`
       margin-left: 12px;
     }
   }
+
+  ${props =>
+    props.displayColumn &&
+    css`
+      flex-direction: column;
+
+      > div {
+        & + div {
+          margin-left: 0;
+          margin-top: 12px;
+        }
+      }
+    `}
 `;
 
 export const ButtonGroup = styled.div`
