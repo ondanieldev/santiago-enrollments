@@ -3,6 +3,7 @@ import 'dotenv/config';
 
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
+import path from 'path';
 import 'express-async-errors';
 
 import AppError from '@shared/errors/AppError';
@@ -14,6 +15,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(routes);
+app.use(
+    '/public',
+    express.static(path.resolve(__dirname, '..', '..', '..', '..', 'tmp')),
+);
 
 app.use((err: Error, request: Request, response: Response, _: NextFunction) => {
     if (err instanceof AppError) {

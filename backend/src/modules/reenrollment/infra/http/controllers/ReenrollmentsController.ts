@@ -2,10 +2,44 @@ import { Request, Response } from 'express';
 
 import NewReenrollmentDTO from '@modules/reenrollment/dtos/NewReenrollmentDTO';
 import NewReenrollmetService from '@modules/reenrollment/services/NewReenrollmetService';
-// import GenerateEnrollmentFormPdfService from '@modules/reenrollment/services/GenerateEnrollmentFormPdfService';
-// import GenerateContractPdfService from '@modules/reenrollment/services/GenerateContractPdfService';
+import IndexEnrollmentsByGradeService from '@modules/reenrollment/services/IndexReenrollmentsByGradeService';
+import GetReenrollmentDataService from '@modules/reenrollment/services/GetReenrollmentDataService';
+import GenerateReenrollmentFormPdfService from '@modules/reenrollment/services/GenerateReenrollmentFormPdfService';
+import GenerateContractPdfService from '@modules/reenrollment/services/GenerateContractPdfService';
+import GenerateChecklistPdfService from '@modules/reenrollment/services/GenerateChecklistPdfService';
 
 class ReenrollmentController {
+    public async index(
+        request: Request,
+        response: Response,
+    ): Promise<Response> {
+        const { grade_name } = request.query;
+
+        const indexEnrollmentsByGrade = new IndexEnrollmentsByGradeService();
+
+        if (typeof grade_name !== 'string') {
+            return response.json([]);
+        }
+
+        const reenrollments = await indexEnrollmentsByGrade.execute({
+            grade_name,
+        });
+
+        return response.json(reenrollments);
+    }
+
+    public async get(request: Request, response: Response): Promise<Response> {
+        const { _id } = request.params;
+
+        const getReenrollmentData = new GetReenrollmentDataService();
+
+        const reenrollment = await getReenrollmentData.execute({
+            _id,
+        });
+
+        return response.json(reenrollment);
+    }
+
     public async create(
         request: Request,
         response: Response,
@@ -136,15 +170,47 @@ class ReenrollmentController {
 
         await newReenrollmet.execute(data);
 
-        // const generateEnrollmentFormPdf = new GenerateEnrollmentFormPdfService();
-
-        // generateEnrollmentFormPdf.execute(data);
-
-        // const generateContractPdf = new GenerateContractPdfService();
-
-        // generateContractPdf.execute(data);
-
         return response.json({ ok: true });
+    }
+
+    public async update(
+        request: Request,
+        response: Response,
+    ): Promise<Response> {
+        const { _id } = request.params;
+
+        const generateReenrollmentFormPdf = new GenerateReenrollmentFormPdfService();
+
+        const reenrollmentForm = await generateReenrollmentFormPdf.execute({
+            _id,
+        });
+
+        const generateContractPdf = new GenerateContractPdfService();
+
+        const contract = await generateContractPdf.execute({
+            _id,
+        });
+
+        const generateChecklistPdf = new GenerateChecklistPdfService();
+
+        const checklist = await generateChecklistPdf.execute({
+            _id,
+        });
+
+        return response.json([
+            {
+                name: 'Ficha de rematrícula',
+                link: reenrollmentForm,
+            },
+            {
+                name: 'Contrato',
+                link: contract,
+            },
+            {
+                name: 'Checklist',
+                link: checklist,
+            },
+        ]);
     }
 }
 

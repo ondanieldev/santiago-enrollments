@@ -71,5 +71,17 @@ export default interface NewReenrollmentDTO {
     student_health_problem?: string;
     student_special_necessities?: string;
 
-    grade_name: string;
+    grade_name:
+        | 'maternal'
+        | 'first_period'
+        | 'second_period'
+        | 'first_year'
+        | 'second_year'
+        | 'third_year'
+        | 'fourth_year'
+        | 'fifth_year'
+        | 'sixth_year'
+        | 'seventh_year'
+        | 'eighth_year'
+        | 'nineth_year';
 }

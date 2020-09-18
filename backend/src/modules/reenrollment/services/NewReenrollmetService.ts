@@ -1,11 +1,17 @@
 import mongoose from 'mongoose';
 
 import NewReenrollmentDTO from '@modules/reenrollment/dtos/NewReenrollmentDTO';
-import ReenrollmentSchema from '@modules/reenrollment/infra/mongoose/schemas/ReenrollmentSchema';
+import {
+    ReenrollmentSchema,
+    IReenrollment,
+} from '@modules/reenrollment/infra/mongoose/schemas/ReenrollmentSchema';
 
 class NewEnrollmentService {
     public async execute(data: NewReenrollmentDTO): Promise<void> {
-        const Reenrollment = mongoose.model('Reenrollment', ReenrollmentSchema);
+        const Reenrollment = mongoose.model<IReenrollment>(
+            'Reenrollment',
+            ReenrollmentSchema,
+        );
 
         const reenrollment = new Reenrollment(data);
 

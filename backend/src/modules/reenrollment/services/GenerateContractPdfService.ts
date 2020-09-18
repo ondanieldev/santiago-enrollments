@@ -1,13 +1,35 @@
 import PDFKit from 'pdfkit';
+import mongoose from 'mongoose';
 import fs from 'fs';
 import { resolve } from 'path';
 import { v4 } from 'uuid';
 
-import NewReenrollmentDTO from '@modules/reenrollment/dtos/NewReenrollmentDTO';
+import AppError from '@shared/errors/AppError';
+import {
+    ReenrollmentSchema,
+    IReenrollment,
+} from '@modules/reenrollment/infra/mongoose/schemas/ReenrollmentSchema';
+
+interface IRequest {
+    _id: string;
+}
 
 class GenerateContractPdfService {
-    public execute(data: NewReenrollmentDTO): void {
+    public async execute({ _id }: IRequest): Promise<string> {
         const pdf = new PDFKit();
+
+        const Reenrollment = mongoose.model<IReenrollment>(
+            'Reenrollment',
+            ReenrollmentSchema,
+        );
+
+        const reenrollment = await Reenrollment.findOne({
+            student_name: _id,
+        });
+
+        if (!reenrollment) {
+            throw new AppError('Rematrícula inválida!');
+        }
 
         const arial = resolve(
             __dirname,
@@ -102,23 +124,29 @@ class GenerateContractPdfService {
             )
             .font(arial)
             .fontSize(7)
-            .text(`Sr./Sra.: ${data.financial_name}`)
-            .text(`Data de nascimento: ${data.financial_birth_date}`)
-            .text(`Parentesco com o aluno: ${data.financial_birth_date}`)
-            .text(`Nacionalidade: ${data.financial_nacionality}`)
-            .text(`Estado civil: ${data.financial_civil_state}`)
-            .text(`Profissão: ${data.financial_profission}`)
-            .text(`CPF: ${data.financial_cpf}`)
-            .text(`RG: ${data.financial_rg}`)
-            .text(`Rua: ${data.financial_address_street}`)
-            .text(`Nº: ${data.financial_address_number}`)
-            .text(`Bairro: ${data.financial_address_neighborhood}`)
-            .text(`Cidade: ${data.financial_address_city}`)
-            .text(`CEP: ${data.financial_address_cep}`)
-            .text(`Telefone residencial: ${data.financial_residencial_phone}`)
-            .text(`Telefone comercial: ${data.financial_commercial_phone}`)
-            .text(`Telefone celular: ${data.financial_personal_phone}`)
-            .text(`E-mail: ${data.financial_email}`)
+            .text(`Sr./Sra.: ${reenrollment.financial_name}`)
+            .text(`Data de nascimento: ${reenrollment.financial_birth_date}`)
+            .text(
+                `Parentesco com o aluno: ${reenrollment.financial_birth_date}`,
+            )
+            .text(`Nacionalidade: ${reenrollment.financial_nacionality}`)
+            .text(`Estado civil: ${reenrollment.financial_civil_state}`)
+            .text(`Profissão: ${reenrollment.financial_profission}`)
+            .text(`CPF: ${reenrollment.financial_cpf}`)
+            .text(`RG: ${reenrollment.financial_rg}`)
+            .text(`Rua: ${reenrollment.financial_address_street}`)
+            .text(`Nº: ${reenrollment.financial_address_number}`)
+            .text(`Bairro: ${reenrollment.financial_address_neighborhood}`)
+            .text(`Cidade: ${reenrollment.financial_address_city}`)
+            .text(`CEP: ${reenrollment.financial_address_cep}`)
+            .text(
+                `Telefone residencial: ${reenrollment.financial_residencial_phone}`,
+            )
+            .text(
+                `Telefone comercial: ${reenrollment.financial_commercial_phone}`,
+            )
+            .text(`Telefone celular: ${reenrollment.financial_personal_phone}`)
+            .text(`E-mail: ${reenrollment.financial_email}`)
             .moveDown()
             // Supportive Responsible
             .font(arialBold)
@@ -126,23 +154,29 @@ class GenerateContractPdfService {
             .text('IDENTIFICAÇÃO DO CONTRATANTE SOLIDÁRIO – (MAIOR DE 18 ANOS)')
             .font(arial)
             .fontSize(7)
-            .text(`Sr./Sra.: ${data.supportive_name}`)
-            .text(`Data de nascimento: ${data.supportive_birth_date}`)
-            .text(`Parentesco com o aluno: ${data.supportive_birth_date}`)
-            .text(`Nacionalidade: ${data.supportive_nacionality}`)
-            .text(`Estado civil: ${data.supportive_civil_state}`)
-            .text(`Profissão: ${data.supportive_profission}`)
-            .text(`CPF: ${data.supportive_cpf}`)
-            .text(`RG: ${data.supportive_rg}`)
-            .text(`Rua: ${data.supportive_address_street}`)
-            .text(`Nº: ${data.supportive_address_number}`)
-            .text(`Bairro: ${data.supportive_address_neighborhood}`)
-            .text(`Cidade: ${data.supportive_address_city}`)
-            .text(`CEP: ${data.supportive_address_cep}`)
-            .text(`Telefone residencial: ${data.supportive_residencial_phone}`)
-            .text(`Telefone comercial: ${data.supportive_commercial_phone}`)
-            .text(`Telefone celular: ${data.supportive_personal_phone}`)
-            .text(`E-mail: ${data.supportive_email}`)
+            .text(`Sr./Sra.: ${reenrollment.supportive_name}`)
+            .text(`Data de nascimento: ${reenrollment.supportive_birth_date}`)
+            .text(
+                `Parentesco com o aluno: ${reenrollment.supportive_birth_date}`,
+            )
+            .text(`Nacionalidade: ${reenrollment.supportive_nacionality}`)
+            .text(`Estado civil: ${reenrollment.supportive_civil_state}`)
+            .text(`Profissão: ${reenrollment.supportive_profission}`)
+            .text(`CPF: ${reenrollment.supportive_cpf}`)
+            .text(`RG: ${reenrollment.supportive_rg}`)
+            .text(`Rua: ${reenrollment.supportive_address_street}`)
+            .text(`Nº: ${reenrollment.supportive_address_number}`)
+            .text(`Bairro: ${reenrollment.supportive_address_neighborhood}`)
+            .text(`Cidade: ${reenrollment.supportive_address_city}`)
+            .text(`CEP: ${reenrollment.supportive_address_cep}`)
+            .text(
+                `Telefone residencial: ${reenrollment.supportive_residencial_phone}`,
+            )
+            .text(
+                `Telefone comercial: ${reenrollment.supportive_commercial_phone}`,
+            )
+            .text(`Telefone celular: ${reenrollment.supportive_personal_phone}`)
+            .text(`E-mail: ${reenrollment.supportive_email}`)
             .moveDown()
             // Student
             .font(arialBold)
@@ -152,11 +186,11 @@ class GenerateContractPdfService {
             )
             .font(arial)
             .fontSize(7)
-            .text(`Nome do aluno: ${data.student_name}`)
-            .text(`Data nascimento: ${data.financial_birth_date}`)
-            .text(`Natural de: ${data.student_birth_city}`)
-            .text(`Nacionalidade: ${data.student_nacionality}`)
-            .text(`Sério/ano/período que cursará: ${data.grade_name}`)
+            .text(`Nome do aluno: ${reenrollment.student_name}`)
+            .text(`Data nascimento: ${reenrollment.financial_birth_date}`)
+            .text(`Natural de: ${reenrollment.student_birth_city}`)
+            .text(`Nacionalidade: ${reenrollment.student_nacionality}`)
+            .text(`Sério/ano/período que cursará: ${reenrollment.grade_name}`)
             .moveDown()
             // First clausule
             .font(arialBold)
@@ -580,6 +614,8 @@ class GenerateContractPdfService {
 
         const fileHash = v4();
 
+        const fileName = `contrato-${fileHash}.pdf`;
+
         const filePath = resolve(
             __dirname,
             '..',
@@ -587,12 +623,40 @@ class GenerateContractPdfService {
             '..',
             '..',
             'tmp',
-            `contrato-${fileHash}.pdf`,
+            fileName,
         );
 
         pdf.pipe(fs.createWriteStream(`${filePath}`));
 
         pdf.end();
+
+        await Reenrollment.findOneAndUpdate(
+            {
+                student_name: _id,
+            },
+            {
+                contract: fileName,
+            },
+            {
+                useFindAndModify: false,
+            },
+        );
+
+        if (reenrollment.contract) {
+            const deletePath = resolve(
+                __dirname,
+                '..',
+                '..',
+                '..',
+                '..',
+                'tmp',
+                reenrollment.contract,
+            );
+
+            fs.unlinkSync(deletePath);
+        }
+
+        return fileName;
     }
 }
 
