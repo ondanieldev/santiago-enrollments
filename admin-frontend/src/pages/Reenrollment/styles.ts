@@ -60,9 +60,12 @@ export const Table = styled.table`
 `;
 
 export const DocumentGroup = styled.div`
-  width: 100%;
   display: flex;
-  max-width: 350px;
   margin-top: 24px;
-  justify-content: space-between;
+
+  > a {
+    & + a {
+      margin-left: 12px;
+    }
+  }
 `;

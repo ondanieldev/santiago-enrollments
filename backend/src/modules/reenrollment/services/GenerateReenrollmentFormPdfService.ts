@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import fs from 'fs';
 import { v4 } from 'uuid';
 import { resolve } from 'path';
+import { format as formatDate } from 'date-fns';
 
 import AppError from '@shared/errors/AppError';
 import {
@@ -56,89 +57,170 @@ class GenerateReenrollmentFormPdfService {
 
         // Header
         pdf.font(arialBold)
-            .fontSize(16)
+            .fontSize(14)
             .text('Ficha de Rematrícula - Ano 2021', { align: 'center' })
             .fontSize(12)
-            .text(`Contrato emitido em ${Date.now()}`, { align: 'center' })
+            .text(
+                `Contrato emitido em ${formatDate(new Date(), 'dd/MM/yyyy')}`,
+                { align: 'center' },
+            )
             .moveDown();
 
         // Student Data
         pdf.font(arialBold)
-            .fontSize(14)
-            .text('Identificação do aluno:', { align: 'center' })
+            .fontSize(12)
+            .text('Identificação do aluno:')
             .font(arial)
             .fontSize(12)
             .text(`Nome do aluno: ${reenrollment.student_name}`)
             .text(
-                `Data de nascimento: ${reenrollment.student_birth_date} | Naturalidade: ${reenrollment.student_birth_city} | UF: ${reenrollment.student_birth_state}`,
+                `Data de nascimento: ${formatDate(
+                    reenrollment.student_birth_date,
+                    'dd/MM/yyyy',
+                )}`,
+                {
+                    align: 'left',
+                    continued: true,
+                },
             )
+            .text(`Naturalidade: ${reenrollment.student_birth_city}`, {
+                align: 'center',
+                continued: true,
+            })
+            .text(`UF: ${reenrollment.student_birth_state}`, { align: 'right' })
+            .text(`Nacionalidade: ${reenrollment.student_nacionality}`, {
+                align: 'left',
+                continued: true,
+            })
+            .text(`Sexo: ${this.formatGender(reenrollment.student_gender)}`, {
+                align: 'right',
+            })
             .text(
-                `Nacionalidade: ${reenrollment.student_nacionality} | Sexo: ${reenrollment.student_gender}`,
-            )
-            .text(
-                `Cor/Raça (solicitação do senso escolar): ${reenrollment.student_race}`,
+                `Cor/Raça (solicitação do senso escolar): ${this.formatRace(
+                    reenrollment.student_race,
+                )}`,
             )
             .moveDown();
 
         // Financial Responsible reenrollment
         pdf.font(arialBold)
-            .fontSize(14)
-            .text('Responsável financeiro:', { align: 'center' })
+            .fontSize(12)
+            .text('Responsável financeiro:')
             .font(arial)
             .fontSize(12)
             .text(`Nome: ${reenrollment.financial_name}`)
             .text(
-                `Aniversário: ${reenrollment.financial_birth_date} | Profissão: ${reenrollment.financial_profission} | Grau de instrução: ${reenrollment.financial_education_level}`,
+                `Aniversário: ${formatDate(
+                    reenrollment.financial_birth_date,
+                    'MM/yyyy',
+                )}`,
+                { align: 'left', continued: true },
             )
-            .text(`E-mail: ${reenrollment.financial_email}`)
+            .text(`E-mail: ${reenrollment.financial_email}`, { align: 'right' })
+            .text(`Profissão: ${reenrollment.financial_profission}`, {
+                align: 'left',
+                continued: true,
+            })
             .text(
-                `CPF: ${reenrollment.financial_cpf} | RG: ${reenrollment.financial_rg}`,
+                `Grau de instrução: ${this.formatEducationLevel(
+                    reenrollment.financial_education_level,
+                )}`,
+                { align: 'right' },
+            )
+            .text(`RG: ${reenrollment.financial_rg}`, {
+                align: 'left',
+                continued: true,
+            })
+            .text(`CPF: ${reenrollment.financial_cpf}`, {
+                align: 'center',
+                continued: true,
+            })
+            .text(`CEP: ${reenrollment.financial_address_cep}`, {
+                align: 'right',
+            })
+            .text(
+                `Endereço: rua ${reenrollment.financial_address_street} - número ${reenrollment.financial_address_number} ${reenrollment.financial_address_complement} - bairro ${reenrollment.financial_address_neighborhood} - cidade ${reenrollment.financial_address_city}`,
             )
             .text(
-                `Endereço: rua ${reenrollment.financial_address_street} - número ${reenrollment.financial_address_number} - complemento ${reenrollment.financial_address_complement} - bairro ${reenrollment.financial_address_neighborhood} - cidade ${reenrollment.financial_address_city}`,
+                `Telefone fixo: ${reenrollment.financial_residencial_phone}`,
+                { align: 'left', continued: true },
             )
-            .text(`CEP: ${reenrollment.financial_address_cep}`)
             .text(
-                `Telefone fixo: ${reenrollment.financial_residencial_phone} | Telefone comercial: ${reenrollment.financial_commercial_phone}`,
+                `Telefone comercial: ${reenrollment.financial_commercial_phone}`,
+                { align: 'center', continued: true },
             )
-            .text(`Telefone celular: ${reenrollment.financial_personal_phone}`)
+            .text(
+                `Telefone celular: ${reenrollment.financial_personal_phone}`,
+                { align: 'right' },
+            )
             .moveDown();
 
         // Supportive Responsible reenrollment
         pdf.font(arialBold)
-            .fontSize(14)
-            .text('Responsável solidário:', { align: 'center' })
+            .fontSize(12)
+            .text('Responsável solidário:')
             .font(arial)
             .fontSize(12)
             .text(`Nome: ${reenrollment.supportive_name}`)
             .text(
-                `Aniversário: ${reenrollment.supportive_birth_date} | Profissão: ${reenrollment.supportive_profission} | Grau de instrução: ${reenrollment.supportive_education_level}`,
+                `Aniversário: ${formatDate(
+                    reenrollment.supportive_birth_date,
+                    'MM/yyyy',
+                )}`,
+                { align: 'left', continued: true },
             )
-            .text(`E-mail: ${reenrollment.supportive_email}`)
+            .text(`E-mail: ${reenrollment.supportive_email}`, {
+                align: 'right',
+            })
+            .text(`Profissão: ${reenrollment.supportive_profission}`, {
+                align: 'left',
+                continued: true,
+            })
             .text(
-                `CPF: ${reenrollment.supportive_cpf} | RG: ${reenrollment.supportive_rg}`,
+                `Grau de instrução: ${this.formatEducationLevel(
+                    reenrollment.supportive_education_level,
+                )}`,
+                { align: 'right' },
+            )
+            .text(`RG: ${reenrollment.supportive_rg}`, {
+                align: 'left',
+                continued: true,
+            })
+            .text(`CPF: ${reenrollment.supportive_cpf}`, {
+                align: 'center',
+                continued: true,
+            })
+            .text(`CEP: ${reenrollment.supportive_address_cep}`, {
+                align: 'right',
+            })
+            .text(
+                `Endereço: rua ${reenrollment.supportive_address_street} - número ${reenrollment.supportive_address_number} ${reenrollment.supportive_address_complement} - bairro ${reenrollment.supportive_address_neighborhood} - cidade ${reenrollment.supportive_address_city}`,
             )
             .text(
-                `Endereço: rua ${reenrollment.supportive_address_street} - número ${reenrollment.supportive_address_number} - complemento ${reenrollment.supportive_address_complement} - bairro ${reenrollment.supportive_address_neighborhood} - cidade ${reenrollment.supportive_address_city}`,
+                `Telefone fixo: ${reenrollment.supportive_residencial_phone}`,
+                { align: 'left', continued: true },
             )
-            .text(`CEP: ${reenrollment.supportive_address_cep}`)
             .text(
-                `Telefone fixo: ${reenrollment.supportive_residencial_phone} | Telefone comercial: ${reenrollment.supportive_commercial_phone}`,
+                `Telefone comercial: ${reenrollment.supportive_commercial_phone}`,
+                { align: 'center', continued: true },
             )
-            .text(`Telefone celular: ${reenrollment.supportive_personal_phone}`)
+            .text(
+                `Telefone celular: ${reenrollment.supportive_personal_phone}`,
+                { align: 'right' },
+            )
             .moveDown();
 
         // Complementar Student reenrollment
         pdf.font(arialBold)
-            .fontSize(14)
-            .text('Dados complementares:', { align: 'center' })
+            .fontSize(12)
+            .text('Dados complementares:')
             .font(arial)
             .fontSize(12)
             .text(`Escola de origem: ${reenrollment.student_origin_school}`)
             .text(
-                `Tem facilidade de se relacionar com as pessoas (colegas, professores)? ${
-                    reenrollment.student_ease_relating ? 'Sim' : 'Não'
-                }`,
+                `${
+                    reenrollment.student_ease_relating ? 'Tem' : 'Não tem'
+                } facilidade de se relacionar com as pessoas (colegas, professores)`,
             )
             .text(
                 `${
@@ -178,11 +260,10 @@ class GenerateReenrollmentFormPdfService {
             .moveDown();
 
         // Footer
-        pdf.moveDown()
-            .text(
-                'Comprometo-me a regularização dos documentos solicitados pelo colégio de acordo com a legislação em vigor. Esta ficha de matrícula é parte do contrato de Prestação de Serviços Educacionais por adesão, assinado entre as partes conforme o ano letivo em estudo.',
-                { align: 'justify' },
-            )
+        pdf.text(
+            'Comprometo-me a regularização dos documentos solicitados pelo colégio de acordo com a legislação em vigor. Esta ficha de matrícula é parte do contrato de Prestação de Serviços Educacionais por adesão, assinado entre as partes conforme o ano letivo em estudo.',
+            { align: 'justify' },
+        )
             .moveDown()
             .text('Assinatura do responsável:', { align: 'center' })
             .moveDown()
@@ -233,6 +314,63 @@ class GenerateReenrollmentFormPdfService {
         }
 
         return fileName;
+    }
+
+    private formatGender(gender: 'male' | 'female'): string {
+        switch (gender) {
+            case 'male':
+                return 'masculino';
+            case 'female':
+                return 'feminino';
+            default:
+                return '-';
+        }
+    }
+
+    private formatRace(
+        race: 'white' | 'brown' | 'black' | 'indigenous' | 'yellow',
+    ): string {
+        switch (race) {
+            case 'white':
+                return 'branco';
+            case 'brown':
+                return 'pardo';
+            case 'black':
+                return 'negro';
+            case 'indigenous':
+                return 'indígena';
+            case 'yellow':
+                return 'amarelo';
+            default:
+                return '-';
+        }
+    }
+
+    private formatEducationLevel(
+        educationLevel:
+            | 'elementary_incompleted'
+            | 'elementary_completed'
+            | 'highschool_incompleted'
+            | 'highschool_completed'
+            | 'university_incompleted'
+            | 'university_completed',
+    ): string {
+        switch (educationLevel) {
+            case 'elementary_incompleted':
+                return 'fundamental incompleto';
+            case 'elementary_completed':
+                return 'fundamental completo';
+            case 'highschool_incompleted':
+                return 'segundo grau imcompleto';
+            case 'highschool_completed':
+                return 'segundo grau completo';
+            case 'university_incompleted':
+                return 'superior incompleto';
+            case 'university_completed':
+                return 'superior completo';
+            default:
+                return '-';
+        }
     }
 }
 

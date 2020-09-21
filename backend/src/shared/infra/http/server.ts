@@ -6,10 +6,11 @@ import cors from 'cors';
 import path from 'path';
 import 'express-async-errors';
 
+import '@shared/infra/mongoose';
+
 import AppError from '@shared/errors/AppError';
 import routes from '@shared/infra/http/routes';
-
-import '@shared/infra/mongoose';
+import nodemailer from '@shared/infra/nodemailer';
 
 const app = express();
 app.use(cors());
@@ -28,7 +29,12 @@ app.use((err: Error, request: Request, response: Response, _: NextFunction) => {
         });
     }
 
-    console.log(err);
+    nodemailer.sendMail({
+        from: `"Daniel Oliveira" <${process.env.NODEMAILER_USER}>`,
+        to: 'matriculas@colegiosantiago.com.br',
+        subject: 'ERRO NO SERVIDOR',
+        text: `O servidor obteve o seguinte erro durante a execução: ${err}`,
+    });
 
     return response.status(500).json({
         statusCode: 500,

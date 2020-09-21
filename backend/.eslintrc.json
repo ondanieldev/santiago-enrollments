@@ -26,6 +26,9 @@
         "camelcase": "off",
         "class-methods-use-this": "off",
         "no-underscore-dangle": "off",
+        "@typescript-eslint/no-unused-vars": ["error", {
+            "argsIgnorePattern": "_"
+        }],
         "import/extensions": [
             "error",
             "ignorePackages",

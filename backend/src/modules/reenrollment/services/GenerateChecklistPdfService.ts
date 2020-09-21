@@ -60,58 +60,58 @@ class GenerateChecklistPdfService {
             .moveDown()
             .font(arial)
             .fontSize(12)
-            .text('(   ) 02 fotos 3x4', { align: 'left', continued: true })
+            .text('02 fotos 3x4', { align: 'left', continued: true })
             .text('Data: _____/_____/_____ Hora: _____/_____', {
                 align: 'right',
             })
-            .text('(   ) Certidão de nascimento do aluno', {
+            .text('Certidão de nascimento do aluno', {
                 align: 'left',
                 continued: true,
             })
             .text('Data: _____/_____/_____ Hora: _____/_____', {
                 align: 'right',
             })
-            .text('(   ) CPF', { align: 'left', continued: true })
+            .text('CPF', { align: 'left', continued: true })
             .text('Data: _____/_____/_____ Hora: _____/_____', {
                 align: 'right',
             })
-            .text('(   ) RG', { align: 'left', continued: true })
+            .text('RG', { align: 'left', continued: true })
             .text('Data: _____/_____/_____ Hora: _____/_____', {
                 align: 'right',
             })
-            .text('(   ) Comprovante de residência', {
+            .text('Comprovante de residência', {
                 align: 'left',
                 continued: true,
             })
             .text('Data: _____/_____/_____ Hora: _____/_____', {
                 align: 'right',
             })
-            .text('(   ) Carteira de plano de saúde', {
+            .text('Carteira de plano de saúde', {
                 align: 'left',
                 continued: true,
             })
             .text('Data: _____/_____/_____ Hora: _____/_____', {
                 align: 'right',
             })
-            .text('(   ) Declaração de transferência escolar', {
+            .text('Declaração de transferência escolar', {
                 align: 'left',
                 continued: true,
             })
             .text('Data: _____/_____/_____ Hora: _____/_____', {
                 align: 'right',
             })
-            .text('(   ) Declaração de quitação mensalidade', {
+            .text('Declaração de quitação mensalidade', {
                 align: 'left',
                 continued: true,
             })
             .text('Data: _____/_____/_____ Hora: _____/_____', {
                 align: 'right',
             })
-            .text('(   ) Histórico escolar', { align: 'left', continued: true })
+            .text('Histórico escolar', { align: 'left', continued: true })
             .text('Data: _____/_____/_____ Hora: _____/_____', {
                 align: 'right',
             })
-            .text('(   ) Cartão de vacina', { align: 'left', continued: true })
+            .text('Cartão de vacina', { align: 'left', continued: true })
             .text('Data: _____/_____/_____ Hora: _____/_____', {
                 align: 'right',
             });

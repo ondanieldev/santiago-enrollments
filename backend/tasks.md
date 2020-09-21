@@ -21,3 +21,9 @@
 [] formatar as datas
 [] formatar os preços
 [] e-mail
+## Checklist
+[] dados da matrícula
+    [] somente endereço do resp. financeiro
+[] assinatura
+## Dev
+[x] email de aviso no caso do banco falhar
