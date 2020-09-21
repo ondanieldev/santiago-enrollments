@@ -1,11 +1,11 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import * as Yup from 'yup';
 
-import { Container, DataGroup, Table, DocumentGroup } from './styles';
+import { Container, DataGroup, Table, DocumentGroup, Top } from './styles';
 import IReenrollmentDTO from '../../dtos/IReenrollmentDTO';
 import Heading from '../../components/Heading';
 import Input from '../../components/Input';
@@ -35,7 +35,8 @@ toast.configure();
 const Reenrollment: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
 
-  const params = useParams() as IParams;
+  const params = useParams<IParams>();
+  const history = useHistory();
 
   const [reenrollment, setReenrollment] = useState({} as IReenrollmentDTO);
   const [showFinancialData, setshowFinancialData] = useState(true);
@@ -134,7 +135,7 @@ const Reenrollment: React.FC = () => {
           abortEarly: false,
         });
 
-        const response = await api.put(
+        const response = await api.patch(
           `/reenrollments/${reenrollment.student_name}`,
           data,
         );
@@ -161,14 +162,29 @@ const Reenrollment: React.FC = () => {
     [reenrollment],
   );
 
+  const handleEditData = useCallback(() => {
+    const { reenrollment_id } = params;
+
+    history.push(`/edit/${reenrollment_id}`);
+  }, [params, history]);
+
   return (
     <Container>
-      <h1>Solicitação de Rematrícula</h1>
+      <Top>
+        <h1>Solicitação de Rematrícula</h1>
 
-      <strong>Analise os dados e preencha os campos de valor e desconto</strong>
+        <strong>
+          Analise os dados e preencha os campos de valor e desconto
+        </strong>
+
+        <Button type="button" onClick={handleEditData}>
+          Editar dados
+        </Button>
+      </Top>
 
       <DataGroup>
         <Heading
+          showIcon
           title="Responsável financeiro"
           showData={showFinancialData}
           onClick={() => setshowFinancialData(!showFinancialData)}
@@ -180,6 +196,10 @@ const Reenrollment: React.FC = () => {
               <tr>
                 <td>Nome</td>
                 <td>{reenrollment.financial_name}</td>
+              </tr>
+              <tr>
+                <td>Parentesco com o aluno</td>
+                <td>{reenrollment.financial_kinship}</td>
               </tr>
               <tr>
                 <td>Data de nascimento</td>
@@ -254,6 +274,7 @@ const Reenrollment: React.FC = () => {
 
       <DataGroup>
         <Heading
+          showIcon
           title="Responsável solidário"
           showData={showSupportiveData}
           onClick={() => setshowSupportiveData(!showSupportiveData)}
@@ -265,6 +286,10 @@ const Reenrollment: React.FC = () => {
               <tr>
                 <td>Nome</td>
                 <td>{reenrollment.supportive_name}</td>
+              </tr>
+              <tr>
+                <td>Parentesco com o aluno</td>
+                <td>{reenrollment.supportive_kinship}</td>
               </tr>
               <tr>
                 <td>Data de nascimento</td>
@@ -337,6 +362,7 @@ const Reenrollment: React.FC = () => {
 
       <DataGroup>
         <Heading
+          showIcon
           title="Aluno"
           showData={showStudentData}
           onClick={() => setshowStudentData(!showStudentData)}

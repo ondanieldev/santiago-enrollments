@@ -1,8 +1,7 @@
 import React, { useCallback, useRef, useState, useEffect } from 'react';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
-import Recaptcha, { ReCAPTCHA } from 'react-google-recaptcha';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import {
   FiActivity,
   FiBriefcase,
@@ -22,6 +21,8 @@ import {
 } from 'react-icons/fi';
 import { ValidationError as YupValidationError } from 'yup';
 import { toast } from 'react-toastify';
+import { AxiosResponse } from 'axios';
+import { parseISO, format } from 'date-fns';
 import cepPromise from 'cep-promise';
 
 import { Container, FormGroup, InputGroup, ButtonGroup } from './styles';
@@ -32,6 +33,7 @@ import Select from '../../components/Select';
 import Checkbox from '../../components/Checkbox';
 import Button from '../../components/Button';
 import ISendEnrollmentDTO from '../../dtos/ISendEnrollmentDTO';
+import IReenrollmentDTO from '../../dtos/IReenrollmentDTO';
 import enrollmentSchema from '../../schemas/enrollmentSchema';
 import getValidationErrors from '../../utils/getValidationErrors';
 import api from '../../services/api';
@@ -40,12 +42,15 @@ import 'react-toastify/dist/ReactToastify.css';
 
 toast.configure();
 
+interface IParams {
+  reenrollment_id: string;
+}
+
 const FormPage: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
 
-  const reCaptchaRef = useRef<ReCAPTCHA>(null);
-
   const history = useHistory();
+  const params = useParams<IParams>();
 
   const [showHealthPlan, setShowHealthPlan] = useState(false);
   const [showFoodAlergy, setShowFoodAlergy] = useState(false);
@@ -54,6 +59,76 @@ const FormPage: React.FC = () => {
   const [showSpecialNecessities, setShowSpecialNecessities] = useState(false);
   const [reaprooveAddress, setReaprooveAddress] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const { reenrollment_id } = params;
+
+    api
+      .get(`/reenrollments/${reenrollment_id}`)
+      .then((response: AxiosResponse<IReenrollmentDTO>) => {
+        formRef.current?.setData(response.data);
+
+        formRef.current?.setFieldValue(
+          'financial_birth_date',
+          format(parseISO(response.data.financial_birth_date), 'yyyy-MM-dd'),
+        );
+
+        formRef.current?.setFieldValue(
+          'supportive_birth_date',
+          format(parseISO(response.data.supportive_birth_date), 'yyyy-MM-dd'),
+        );
+
+        formRef.current?.setFieldValue(
+          'student_birth_date',
+          format(parseISO(response.data.student_birth_date), 'yyyy-MM-dd'),
+        );
+
+        if (response.data.student_health_plan) {
+          setShowHealthPlan(true);
+          formRef.current?.setFieldValue('has_health_plan', true);
+          formRef.current?.setFieldValue(
+            'student_health_plan',
+            response.data.student_health_plan,
+          );
+        }
+
+        if (response.data.student_medication_alergy) {
+          setShowMedicationAlergy(true);
+          formRef.current?.setFieldValue('has_medication_alergy', true);
+          formRef.current?.setFieldValue(
+            'student_medication_alergy',
+            response.data.student_medication_alergy,
+          );
+        }
+
+        if (response.data.student_food_alergy) {
+          setShowFoodAlergy(true);
+          formRef.current?.setFieldValue('has_food_alergy', true);
+          formRef.current?.setFieldValue(
+            'student_food_alergy',
+            response.data.student_food_alergy,
+          );
+        }
+
+        if (response.data.student_health_problem) {
+          setShowHealthProblem(true);
+          formRef.current?.setFieldValue('has_health_problem', true);
+          formRef.current?.setFieldValue(
+            'student_health_problem',
+            response.data.student_health_problem,
+          );
+        }
+
+        if (response.data.student_special_necessities) {
+          setShowSpecialNecessities(true);
+          formRef.current?.setFieldValue('has_special_necessities', true);
+          formRef.current?.setFieldValue(
+            'student_special_necessities',
+            response.data.student_special_necessities,
+          );
+        }
+      });
+  }, [params]);
 
   useEffect(() => {
     if (reaprooveAddress) {
@@ -125,11 +200,6 @@ const FormPage: React.FC = () => {
           abortEarly: false,
         });
 
-        if (!reCaptchaRef.current?.getValue()) {
-          toast.error('Captcha inválido!');
-          return;
-        }
-
         enrollment.student_health_plan = showHealthPlan
           ? enrollment.student_health_plan
           : '';
@@ -158,13 +228,15 @@ const FormPage: React.FC = () => {
           ? (enrollment.student_ease_relating = true)
           : (enrollment.student_ease_relating = false);
 
-        await api.post('/reenrollments', enrollment);
+        const { reenrollment_id } = params;
+
+        await api.put(`/reenrollments/${reenrollment_id}`, enrollment);
 
         reset();
 
-        toast.success('Dados enviados com sucesso!');
+        toast.success('Dados salvos com sucesso!');
 
-        history.push('/success');
+        history.push(`/reenrollment/${reenrollment_id}`);
       } catch (err) {
         if (err instanceof YupValidationError) {
           const errors = getValidationErrors(err);
@@ -182,6 +254,7 @@ const FormPage: React.FC = () => {
     },
     [
       history,
+      params,
       showHealthPlan,
       showSpecialNecessities,
       showMedicationAlergy,
@@ -192,7 +265,7 @@ const FormPage: React.FC = () => {
 
   return (
     <Container>
-      <h1>Ficha de Rematrícula - Ano 2021</h1>
+      <h1>Editar Pedido de Rematrícula</h1>
 
       <Form ref={formRef} onSubmit={handleSubmitForm}>
         <FormGroup>
@@ -737,18 +810,11 @@ const FormPage: React.FC = () => {
               ]}
             />
           </InputGroup>
-
-          <InputGroup displayColumn={window.innerWidth <= 700}>
-            <Recaptcha
-              ref={reCaptchaRef}
-              sitekey="6Lcfk80ZAAAAAKwggPCb14zT_XUFnVfHYzEkK9vb"
-            />
-          </InputGroup>
         </FormGroup>
 
         <ButtonGroup>
           <Button loading={loading} type="submit">
-            Enviar
+            Salvar
           </Button>
         </ButtonGroup>
       </Form>

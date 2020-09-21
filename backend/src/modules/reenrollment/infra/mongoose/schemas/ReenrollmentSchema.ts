@@ -2,6 +2,7 @@ import { Schema, Document } from 'mongoose';
 
 export const ReenrollmentSchema = new Schema({
     financial_name: String,
+    financial_kinship: String,
     financial_birth_date: Date,
     financial_nacionality: String,
     financial_civil_state: String,
@@ -24,6 +25,7 @@ export const ReenrollmentSchema = new Schema({
     financial_email: String,
 
     supportive_name: String,
+    supportive_kinship: String,
     supportive_birth_date: Date,
     supportive_nacionality: String,
     supportive_civil_state: String,
@@ -72,6 +74,7 @@ export interface IReenrollment extends Document {
     _id: string;
 
     financial_name: string;
+    financial_kinship: string;
     financial_birth_date: Date;
     financial_nacionality: string;
     financial_civil_state: string;
@@ -100,6 +103,7 @@ export interface IReenrollment extends Document {
     financial_email: string;
 
     supportive_name: string;
+    supportive_kinship: string;
     supportive_birth_date: Date;
     supportive_nacionality: string;
     supportive_civil_state: string;
@@ -149,5 +153,3 @@ export interface IReenrollment extends Document {
     contract: string;
     checklist: string;
 }
-
-export default ReenrollmentSchema;

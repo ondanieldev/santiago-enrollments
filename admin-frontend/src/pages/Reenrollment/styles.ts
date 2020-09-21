@@ -7,10 +7,6 @@ export const Container = styled.div`
   width: 100%;
   padding: 24px 48px;
 
-  strong {
-    margin-bottom: 24px;
-  }
-
   form {
     width: 100%;
     display: flex;
@@ -26,6 +22,17 @@ export const Container = styled.div`
       width: 100%;
       max-width: 350px;
     }
+  }
+`;
+
+export const Top = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 24px;
+
+  strong {
+    margin-bottom: 12px;
   }
 `;
 

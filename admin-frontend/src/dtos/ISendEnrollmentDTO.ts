@@ -1,9 +1,7 @@
-export default interface IReenrollmentDTO {
-  _id: string;
-
+export default interface ISendEnrollmentDTO {
   financial_name: string;
   financial_kinship: string;
-  financial_birth_date: string;
+  financial_birth_date: Date;
   financial_nacionality: string;
   financial_civil_state: string;
   financial_profission: string;
@@ -27,12 +25,12 @@ export default interface IReenrollmentDTO {
     | 'university_completed';
   financial_workplace: string;
   financial_monthly_income: number;
-  financial_income_tax: boolean;
+  financial_income_tax: 'yes' | 'no' | boolean;
   financial_email: string;
 
   supportive_name: string;
   supportive_kinship: string;
-  supportive_birth_date: string;
+  supportive_birth_date: Date;
   supportive_nacionality: string;
   supportive_civil_state: string;
   supportive_profission: string;
@@ -55,19 +53,19 @@ export default interface IReenrollmentDTO {
     | 'university_incompleted'
     | 'university_completed';
   supportive_workplace: string;
-  supportive_monthly_income: boolean;
+  supportive_monthly_income: 'yes' | 'no' | boolean;
   supportive_email: string;
 
   student_name: string;
   student_father_name: string;
   student_mother_name: string;
-  student_birth_date: string;
+  student_birth_date: Date;
   student_nacionality: string;
   student_birth_city: string;
   student_birth_state: string;
   student_gender: 'male' | 'female';
   student_race: 'white' | 'brown' | 'black' | 'indigenous' | 'yellow';
-  student_ease_relating: boolean;
+  student_ease_relating: 'yes' | 'no' | boolean;
   student_origin_school: string;
   student_health_plan: string;
   student_food_alergy: string;

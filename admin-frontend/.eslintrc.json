@@ -38,6 +38,7 @@
       "no-underscore-dangle": "off",
       "react/jsx-props-no-spreading": "off",
       "no-unused-expressions": "off",
+      "react/jsx-curly-newline": "off",
       "import/extensions": [
         "error",
         "ignorePackages",

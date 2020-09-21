@@ -5,16 +5,18 @@ import { Container } from './styles';
 
 interface IProps {
   title: string;
-  showData: boolean;
-  onClick(): void;
+  showIcon?: boolean;
+  showData?: boolean;
+  onClick?(): void;
 }
 
-const Heading: React.FC<IProps> = ({ title, showData, onClick }) => (
+const Heading: React.FC<IProps> = ({ title, showIcon, showData, onClick }) => (
   <Container>
-    <button type="button" onClick={onClick}>
-      {showData ? <FiEye size={25} /> : <FiEyeOff size={25} />}
-    </button>
-
+    {showIcon && (
+      <button type="button" onClick={onClick}>
+        {showData ? <FiEye size={25} /> : <FiEyeOff size={25} />}
+      </button>
+    )}
     <h2>{title}</h2>
   </Container>
 );

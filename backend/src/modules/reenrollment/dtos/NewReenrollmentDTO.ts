@@ -1,5 +1,6 @@
 export default interface NewReenrollmentDTO {
     financial_name: string;
+    financial_kinship: string;
     financial_birth_date: Date;
     financial_nacionality: string;
     financial_civil_state: string;
@@ -28,6 +29,7 @@ export default interface NewReenrollmentDTO {
     financial_email: string;
 
     supportive_name: string;
+    supportive_kinship: string;
     supportive_birth_date: Date;
     supportive_nacionality: string;
     supportive_civil_state: string;
