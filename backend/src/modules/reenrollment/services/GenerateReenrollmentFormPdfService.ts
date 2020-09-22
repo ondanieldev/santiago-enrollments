@@ -1,8 +1,9 @@
-import PDFKit from 'pdfkit';
+import PDFMake from 'pdfmake';
 import mongoose from 'mongoose';
 import fs from 'fs';
 import { v4 } from 'uuid';
 import { resolve } from 'path';
+import { TDocumentDefinitions } from 'pdfmake/interfaces';
 import { format as formatDate } from 'date-fns';
 
 import AppError from '@shared/errors/AppError';
@@ -17,8 +18,6 @@ interface IRequest {
 
 class GenerateReenrollmentFormPdfService {
     public async execute({ _id }: IRequest): Promise<string> {
-        const pdf = new PDFKit();
-
         const Reenrollment = mongoose.model<IReenrollment>(
             'Reenrollment',
             ReenrollmentSchema,
@@ -32,247 +31,431 @@ class GenerateReenrollmentFormPdfService {
             throw new AppError('Rematrícula inválida!');
         }
 
-        const arial = resolve(
-            __dirname,
-            '..',
-            '..',
-            '..',
-            'assets',
-            'fonts',
-            `arial.ttf`,
+        reenrollment.student_name = this.capitalize(reenrollment.student_name);
+        reenrollment.student_birth_city = this.capitalize(
+            reenrollment.student_birth_city,
+        );
+        reenrollment.student_birth_state = this.capitalize(
+            reenrollment.student_birth_state,
+        );
+        reenrollment.student_nacionality = this.capitalize(
+            reenrollment.student_nacionality,
+        );
+        reenrollment.financial_name = this.capitalize(
+            reenrollment.financial_name,
+        );
+        reenrollment.financial_email = reenrollment.financial_email.toLowerCase();
+        reenrollment.financial_address_street = this.capitalize(
+            reenrollment.financial_address_street,
+        );
+        reenrollment.financial_address_neighborhood = this.capitalize(
+            reenrollment.financial_address_neighborhood,
+        );
+        reenrollment.financial_address_complement = this.capitalize(
+            reenrollment.financial_address_complement,
+        );
+        reenrollment.financial_address_city = this.capitalize(
+            reenrollment.financial_address_city,
+        );
+        reenrollment.financial_profission = this.capitalize(
+            reenrollment.financial_profission,
+        );
+        reenrollment.supportive_name = this.capitalize(
+            reenrollment.supportive_name,
+        );
+        reenrollment.supportive_email = reenrollment.supportive_email.toLowerCase();
+        reenrollment.supportive_address_street = this.capitalize(
+            reenrollment.supportive_address_street,
+        );
+        reenrollment.supportive_address_neighborhood = this.capitalize(
+            reenrollment.supportive_address_neighborhood,
+        );
+        reenrollment.supportive_address_complement = this.capitalize(
+            reenrollment.supportive_address_complement,
+        );
+        reenrollment.supportive_address_city = this.capitalize(
+            reenrollment.supportive_address_city,
+        );
+        reenrollment.supportive_profission = this.capitalize(
+            reenrollment.supportive_profission,
+        );
+        reenrollment.student_origin_school = this.capitalize(
+            reenrollment.student_origin_school,
+        );
+        reenrollment.student_health_plan = this.capitalize(
+            reenrollment.student_health_plan,
+        );
+        reenrollment.student_food_alergy = this.capitalize(
+            reenrollment.student_food_alergy,
+        );
+        reenrollment.student_medication_alergy = this.capitalize(
+            reenrollment.student_medication_alergy,
+        );
+        reenrollment.student_health_problem = this.capitalize(
+            reenrollment.student_health_problem,
+        );
+        reenrollment.student_special_necessities = this.capitalize(
+            reenrollment.student_special_necessities,
         );
 
-        const arialBold = resolve(
-            __dirname,
-            '..',
-            '..',
-            '..',
-            'assets',
-            'fonts',
-            `arialbd.ttf`,
-        );
+        const fonts = {
+            Arial: {
+                normal: resolve(
+                    __dirname,
+                    '..',
+                    '..',
+                    '..',
+                    'assets',
+                    'fonts',
+                    `arial.ttf`,
+                ),
+                bold: resolve(
+                    __dirname,
+                    '..',
+                    '..',
+                    '..',
+                    'assets',
+                    'fonts',
+                    `arialbd.ttf`,
+                ),
+            },
+        };
 
-        // Defaults
-        pdf.lineGap(1.5);
+        const printer = new PDFMake(fonts);
 
-        // Header
-        pdf.font(arialBold)
-            .fontSize(14)
-            .text('Ficha de Rematrícula - Ano 2021', { align: 'center' })
-            .fontSize(12)
-            .text(
-                `Contrato emitido em ${formatDate(new Date(), 'dd/MM/yyyy')}`,
-                { align: 'center' },
-            )
-            .moveDown();
-
-        // Student Data
-        pdf.font(arialBold)
-            .fontSize(12)
-            .text('Identificação do aluno:')
-            .font(arial)
-            .fontSize(12)
-            .text(`Nome do aluno: ${reenrollment.student_name}`)
-            .text(
-                `Data de nascimento: ${formatDate(
-                    reenrollment.student_birth_date,
-                    'dd/MM/yyyy',
-                )}`,
+        const docDefinition = {
+            pageSize: 'A4',
+            pageOrientation: 'portrait',
+            pageMargins: [25, 25, 25, 25],
+            info: {
+                title: 'Ficha de Rematrícula',
+                author: 'Colégio Santiago',
+                subject: 'Ficha de Rematrícula',
+                keywords: 'Ficha, Rematrícula',
+                creator: 'Colégio Santiago',
+                producer: 'Colégio Santiago',
+            },
+            content: [
                 {
-                    align: 'left',
-                    continued: true,
+                    columns: [
+                        {
+                            image: resolve(
+                                __dirname,
+                                '..',
+                                '..',
+                                '..',
+                                'assets',
+                                'images',
+                                'logo.png',
+                            ),
+                            width: 90,
+                            alignment: 'center',
+                        },
+                        {
+                            text: `Ficha de Matrícula - Ano 2021\nEmitido em ${formatDate(
+                                new Date(),
+                                'dd/MM/yyyy',
+                            )}`,
+                            style: 'heading',
+                            alignment: 'center',
+                        },
+                        {
+                            text: '',
+                            width: 90,
+                        },
+                    ],
                 },
-            )
-            .text(`Naturalidade: ${reenrollment.student_birth_city}`, {
-                align: 'center',
-                continued: true,
-            })
-            .text(`UF: ${reenrollment.student_birth_state}`, { align: 'right' })
-            .text(`Nacionalidade: ${reenrollment.student_nacionality}`, {
-                align: 'left',
-                continued: true,
-            })
-            .text(`Sexo: ${this.formatGender(reenrollment.student_gender)}`, {
-                align: 'right',
-            })
-            .text(
-                `Cor/Raça (solicitação do senso escolar): ${this.formatRace(
-                    reenrollment.student_race,
-                )}`,
-            )
-            .moveDown();
-
-        // Financial Responsible reenrollment
-        pdf.font(arialBold)
-            .fontSize(12)
-            .text('Responsável financeiro:')
-            .font(arial)
-            .fontSize(12)
-            .text(`Nome: ${reenrollment.financial_name}`)
-            .text(
-                `Aniversário: ${formatDate(
-                    reenrollment.financial_birth_date,
-                    'MM/yyyy',
-                )}`,
-                { align: 'left', continued: true },
-            )
-            .text(`E-mail: ${reenrollment.financial_email}`, { align: 'right' })
-            .text(`Profissão: ${reenrollment.financial_profission}`, {
-                align: 'left',
-                continued: true,
-            })
-            .text(
-                `Grau de instrução: ${this.formatEducationLevel(
-                    reenrollment.financial_education_level,
-                )}`,
-                { align: 'right' },
-            )
-            .text(`RG: ${reenrollment.financial_rg}`, {
-                align: 'left',
-                continued: true,
-            })
-            .text(`CPF: ${reenrollment.financial_cpf}`, {
-                align: 'center',
-                continued: true,
-            })
-            .text(`CEP: ${reenrollment.financial_address_cep}`, {
-                align: 'right',
-            })
-            .text(
-                `Endereço: rua ${reenrollment.financial_address_street} - número ${reenrollment.financial_address_number} ${reenrollment.financial_address_complement} - bairro ${reenrollment.financial_address_neighborhood} - cidade ${reenrollment.financial_address_city}`,
-            )
-            .text(
-                `Telefone fixo: ${reenrollment.financial_residencial_phone}`,
-                { align: 'left', continued: true },
-            )
-            .text(
-                `Telefone comercial: ${reenrollment.financial_commercial_phone}`,
-                { align: 'center', continued: true },
-            )
-            .text(
-                `Telefone celular: ${reenrollment.financial_personal_phone}`,
-                { align: 'right' },
-            )
-            .moveDown();
-
-        // Supportive Responsible reenrollment
-        pdf.font(arialBold)
-            .fontSize(12)
-            .text('Responsável solidário:')
-            .font(arial)
-            .fontSize(12)
-            .text(`Nome: ${reenrollment.supportive_name}`)
-            .text(
-                `Aniversário: ${formatDate(
-                    reenrollment.supportive_birth_date,
-                    'MM/yyyy',
-                )}`,
-                { align: 'left', continued: true },
-            )
-            .text(`E-mail: ${reenrollment.supportive_email}`, {
-                align: 'right',
-            })
-            .text(`Profissão: ${reenrollment.supportive_profission}`, {
-                align: 'left',
-                continued: true,
-            })
-            .text(
-                `Grau de instrução: ${this.formatEducationLevel(
-                    reenrollment.supportive_education_level,
-                )}`,
-                { align: 'right' },
-            )
-            .text(`RG: ${reenrollment.supportive_rg}`, {
-                align: 'left',
-                continued: true,
-            })
-            .text(`CPF: ${reenrollment.supportive_cpf}`, {
-                align: 'center',
-                continued: true,
-            })
-            .text(`CEP: ${reenrollment.supportive_address_cep}`, {
-                align: 'right',
-            })
-            .text(
-                `Endereço: rua ${reenrollment.supportive_address_street} - número ${reenrollment.supportive_address_number} ${reenrollment.supportive_address_complement} - bairro ${reenrollment.supportive_address_neighborhood} - cidade ${reenrollment.supportive_address_city}`,
-            )
-            .text(
-                `Telefone fixo: ${reenrollment.supportive_residencial_phone}`,
-                { align: 'left', continued: true },
-            )
-            .text(
-                `Telefone comercial: ${reenrollment.supportive_commercial_phone}`,
-                { align: 'center', continued: true },
-            )
-            .text(
-                `Telefone celular: ${reenrollment.supportive_personal_phone}`,
-                { align: 'right' },
-            )
-            .moveDown();
-
-        // Complementar Student reenrollment
-        pdf.font(arialBold)
-            .fontSize(12)
-            .text('Dados complementares:')
-            .font(arial)
-            .fontSize(12)
-            .text(`Escola de origem: ${reenrollment.student_origin_school}`)
-            .text(
-                `${
-                    reenrollment.student_ease_relating ? 'Tem' : 'Não tem'
-                } facilidade de se relacionar com as pessoas (colegas, professores)`,
-            )
-            .text(
-                `${
-                    reenrollment.student_health_plan
-                        ? `Convênio de saúde: ${reenrollment.student_health_plan}`
-                        : 'Declarado pelo responsável que o aluno não possui convênio de sáude'
-                }`,
-            )
-            .text(
-                `${
-                    reenrollment.student_food_alergy
-                        ? `Alergia a alimentos: ${reenrollment.student_food_alergy}`
-                        : 'Declarado pelo responsável que o aluno não possui alergia a alimentos'
-                }`,
-            )
-            .text(
-                `${
-                    reenrollment.student_medication_alergy
-                        ? `Alergia a medicamentos: ${reenrollment.student_medication_alergy}`
-                        : 'Declarado pelo responsável que o aluno não possui alergia a medicamentos'
-                }`,
-            )
-            .text(
-                `${
-                    reenrollment.student_health_problem
-                        ? `Problema de sáude: ${reenrollment.student_health_problem}`
-                        : 'Declarado pelo responsável que o aluno não possui problema de saúde'
-                }`,
-            )
-            .text(
-                `${
-                    reenrollment.student_special_necessities
-                        ? `Necessidades especiais: ${reenrollment.student_special_necessities}`
-                        : 'Declarado pelo responsável que o aluno não é portador de necessidades especiais'
-                }`,
-            )
-            .moveDown();
-
-        // Footer
-        pdf.text(
-            'Comprometo-me a regularização dos documentos solicitados pelo colégio de acordo com a legislação em vigor. Esta ficha de matrícula é parte do contrato de Prestação de Serviços Educacionais por adesão, assinado entre as partes conforme o ano letivo em estudo.',
-            { align: 'justify' },
-        )
-            .moveDown()
-            .text('Assinatura do responsável:', { align: 'center' })
-            .moveDown()
-            .text('______________________________', { align: 'center' });
+                {
+                    text: '\nIdentificação do Aluno',
+                    style: 'subheading',
+                },
+                // ALUNO
+                {
+                    text: `Nome: ${reenrollment.student_name}`,
+                },
+                {
+                    columns: [
+                        {
+                            width: 'auto',
+                            text: `Data de Nascimento: ${formatDate(
+                                reenrollment.student_birth_date,
+                                'dd/MM/yyyy',
+                            )}`,
+                        },
+                        {
+                            width: '*',
+                            text: `Naturalidade: ${reenrollment.student_birth_city}`,
+                            alignment: 'center',
+                        },
+                        {
+                            width: 'auto',
+                            text: `UF: ${reenrollment.student_birth_state}`,
+                        },
+                    ],
+                },
+                {
+                    columns: [
+                        {
+                            width: 'auto',
+                            text: `Nacionalidade: ${reenrollment.student_nacionality}`,
+                        },
+                        {
+                            width: '*',
+                            text: `Sexo: ${this.formatGender(
+                                reenrollment.student_gender,
+                            )}`,
+                            alignment: 'center',
+                        },
+                        {
+                            width: 'auto',
+                            text: `Cor/Raça: ${this.formatRace(
+                                reenrollment.student_race,
+                            )}`,
+                        },
+                    ],
+                },
+                // RESPONSÁVEL FINANCEIRO
+                {
+                    text: '\nResponsável Financeiro',
+                    style: 'subheading',
+                },
+                {
+                    text: `Nome: ${reenrollment.financial_name}`,
+                },
+                {
+                    text: `E-mail: ${reenrollment.financial_email}`,
+                },
+                {
+                    text: `CEP: ${reenrollment.financial_address_cep}`,
+                },
+                {
+                    text: `Endereço: Rua ${reenrollment.financial_address_street} - Número ${reenrollment.financial_address_number} ${reenrollment.financial_address_complement} - Bairro ${reenrollment.financial_address_neighborhood} - Cidade ${reenrollment.financial_address_city}`,
+                },
+                {
+                    columns: [
+                        {
+                            width: '*',
+                            text: `RG: ${reenrollment.financial_rg}`,
+                        },
+                        {
+                            width: 'auto',
+                            text: `CPF: ${reenrollment.financial_cpf}`,
+                            alignment: 'right',
+                        },
+                    ],
+                },
+                {
+                    columns: [
+                        {
+                            width: '*',
+                            text: `Aniversário: ${formatDate(
+                                reenrollment.financial_birth_date,
+                                'MM/yyyy',
+                            )}`,
+                        },
+                        {
+                            width: 'auto',
+                            text: `Grau de Instrução: ${this.formatEducationLevel(
+                                reenrollment.financial_education_level,
+                            )}`,
+                            alignment: 'right',
+                        },
+                    ],
+                },
+                {
+                    columns: [
+                        {
+                            width: '*',
+                            text: `Profissão: ${reenrollment.financial_profission}`,
+                        },
+                        {
+                            width: 'auto',
+                            text: `Telefone Comercial: ${reenrollment.financial_commercial_phone}`,
+                            alignment: 'right',
+                        },
+                    ],
+                },
+                {
+                    columns: [
+                        {
+                            width: '*',
+                            text: `Telefone Fixo: ${reenrollment.financial_residencial_phone}`,
+                        },
+                        {
+                            width: 'auto',
+                            text: `Telefone Celular: ${reenrollment.financial_personal_phone}`,
+                            alignment: 'right',
+                        },
+                    ],
+                },
+                // RESPONSÁVEL SOLIDÁRIO
+                {
+                    text: '\nResponsável Solidário',
+                    style: 'subheading',
+                },
+                {
+                    text: `Nome: ${reenrollment.supportive_name}`,
+                },
+                {
+                    text: `E-mail: ${reenrollment.supportive_email}`,
+                },
+                {
+                    text: `CEP: ${reenrollment.supportive_address_cep}`,
+                },
+                {
+                    text: `Endereço: Rua ${reenrollment.supportive_address_street} - Número ${reenrollment.supportive_address_number} ${reenrollment.supportive_address_complement} - Bairro ${reenrollment.supportive_address_neighborhood} - Cidade ${reenrollment.supportive_address_city}`,
+                },
+                {
+                    columns: [
+                        {
+                            width: '*',
+                            text: `RG: ${reenrollment.supportive_rg}`,
+                        },
+                        {
+                            width: 'auto',
+                            text: `CPF: ${reenrollment.supportive_cpf}`,
+                            alignment: 'right',
+                        },
+                    ],
+                },
+                {
+                    columns: [
+                        {
+                            width: '*',
+                            text: `Aniversário: ${formatDate(
+                                reenrollment.supportive_birth_date,
+                                'MM/yyyy',
+                            )}`,
+                        },
+                        {
+                            width: 'auto',
+                            text: `Grau de Instrução: ${this.formatEducationLevel(
+                                reenrollment.supportive_education_level,
+                            )}`,
+                            alignment: 'right',
+                        },
+                    ],
+                },
+                {
+                    columns: [
+                        {
+                            width: '*',
+                            text: `Profissão: ${reenrollment.supportive_profission}`,
+                        },
+                        {
+                            width: 'auto',
+                            text: `Telefone Comercial: ${reenrollment.supportive_commercial_phone}`,
+                            alignment: 'right',
+                        },
+                    ],
+                },
+                {
+                    columns: [
+                        {
+                            width: '*',
+                            text: `Telefone Fixo: ${reenrollment.supportive_residencial_phone}`,
+                        },
+                        {
+                            width: 'auto',
+                            text: `Telefone Celular: ${reenrollment.supportive_personal_phone}`,
+                            alignment: 'right',
+                        },
+                    ],
+                },
+                // DADOS COMPLEMENTARES
+                {
+                    text: '\nDados complementares',
+                    style: 'subheading',
+                },
+                {
+                    text: `Escola de Origem: ${reenrollment.student_origin_school}`,
+                },
+                {
+                    text: `${
+                        reenrollment.student_ease_relating
+                            ? 'O aluno possui facilidade em se relacionar.'
+                            : 'O aluno não possui facilidade em se relacionar.'
+                    }`,
+                },
+                {
+                    text: `${
+                        reenrollment.student_health_plan
+                            ? `Plano de Saúde: ${reenrollment.student_health_plan}`
+                            : 'Declarado pelo responsável que o aluno não possui plano de saúde.'
+                    }`,
+                },
+                {
+                    text: `${
+                        reenrollment.student_food_alergy
+                            ? `Alergia a Alimentos: ${reenrollment.student_food_alergy}`
+                            : 'Declarado pelo responsável que o aluno não possui alergia a alimentos.'
+                    }`,
+                },
+                {
+                    text: `${
+                        reenrollment.student_medication_alergy
+                            ? `Plano de Saúde: ${reenrollment.student_medication_alergy}`
+                            : 'Declarado pelo responsável que o aluno não possui alergia a remédios'
+                    }`,
+                },
+                {
+                    text: `${
+                        reenrollment.student_health_problem
+                            ? `Problema de Saúde: ${reenrollment.student_health_problem}`
+                            : 'Declarado pelo responsável que o aluno não possui problema de saúde.'
+                    }`,
+                },
+                {
+                    text: `${
+                        reenrollment.student_special_necessities
+                            ? `Necessidades Especiais: ${reenrollment.student_special_necessities}`
+                            : 'Declarado pelo responsável que o aluno não é portador de necessidades especiais.'
+                    }`,
+                },
+                {
+                    text:
+                        '\nComprometo-me a regularização dos documentos solicitados pelo colégio de acordo com a legislação em vigor. Esta ficha de matrícula é parte do contrato de Prestação de Serviços Educacionais por adesão, assinado entre as partes conforme o ano letivo em estudo.',
+                    alignment: 'justify',
+                },
+                {
+                    text: '\nAssinatura do Responsável',
+                    alignment: 'center',
+                },
+                {
+                    text: '\n______________________________',
+                    alignment: 'center',
+                },
+                {
+                    text: reenrollment.financial_name,
+                    alignment: 'center',
+                },
+                {
+                    text: formatDate(new Date(), 'dd/MM/yyyy'),
+                    alignment: 'center',
+                },
+            ],
+            styles: {
+                heading: {
+                    font: 'Arial',
+                    fontSize: 12,
+                    bold: true,
+                    alignment: 'center',
+                },
+                subheading: {
+                    font: 'Arial',
+                    fontSize: 11,
+                    bold: true,
+                },
+            },
+            defaultStyle: {
+                font: 'Arial',
+                fontSize: 11,
+                lineHeight: 1.33,
+            },
+        } as TDocumentDefinitions;
 
         const fileHash = v4();
-
         const fileName = `ficha-${fileHash}.pdf`;
-
         const filePath = resolve(
             __dirname,
             '..',
@@ -283,9 +466,9 @@ class GenerateReenrollmentFormPdfService {
             fileName,
         );
 
-        pdf.pipe(fs.createWriteStream(`${filePath}`));
-
-        pdf.end();
+        const pdfDoc = printer.createPdfKitDocument(docDefinition);
+        pdfDoc.pipe(fs.createWriteStream(filePath));
+        pdfDoc.end();
 
         await Reenrollment.findOneAndUpdate(
             {
@@ -316,12 +499,23 @@ class GenerateReenrollmentFormPdfService {
         return fileName;
     }
 
+    private capitalize(str: string): string {
+        if (typeof str === 'string') {
+            return str
+                .toLowerCase()
+                .replace(/(^\w{1})|(\s+\w{1})/g, letter =>
+                    letter.toUpperCase(),
+                );
+        }
+        return '';
+    }
+
     private formatGender(gender: 'male' | 'female'): string {
         switch (gender) {
             case 'male':
-                return 'masculino';
+                return 'Masculino';
             case 'female':
-                return 'feminino';
+                return 'Feminino';
             default:
                 return '-';
         }
@@ -332,15 +526,15 @@ class GenerateReenrollmentFormPdfService {
     ): string {
         switch (race) {
             case 'white':
-                return 'branco';
+                return 'Branco';
             case 'brown':
-                return 'pardo';
+                return 'Pardo';
             case 'black':
-                return 'negro';
+                return 'Negro';
             case 'indigenous':
-                return 'indígena';
+                return 'Indígena';
             case 'yellow':
-                return 'amarelo';
+                return 'Amarelo';
             default:
                 return '-';
         }
@@ -357,17 +551,17 @@ class GenerateReenrollmentFormPdfService {
     ): string {
         switch (educationLevel) {
             case 'elementary_incompleted':
-                return 'fundamental incompleto';
+                return 'Fundamental Incompleto';
             case 'elementary_completed':
-                return 'fundamental completo';
+                return 'Fundamental Completo';
             case 'highschool_incompleted':
-                return 'segundo grau imcompleto';
+                return 'Segundo Grau Incompleto';
             case 'highschool_completed':
-                return 'segundo grau completo';
+                return 'Segundo Grau Completo';
             case 'university_incompleted':
-                return 'superior incompleto';
+                return 'Superior Incompleto';
             case 'university_completed':
-                return 'superior completo';
+                return 'Superior Completo';
             default:
                 return '-';
         }

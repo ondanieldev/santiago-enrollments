@@ -3,7 +3,7 @@ export default interface IReenrollmentDTO {
 
   financial_name: string;
   financial_kinship: string;
-  financial_birth_date: string;
+  financial_birth_date: Date;
   financial_nacionality: string;
   financial_civil_state: string;
   financial_profission: string;
@@ -32,7 +32,7 @@ export default interface IReenrollmentDTO {
 
   supportive_name: string;
   supportive_kinship: string;
-  supportive_birth_date: string;
+  supportive_birth_date: Date;
   supportive_nacionality: string;
   supportive_civil_state: string;
   supportive_profission: string;
@@ -61,7 +61,7 @@ export default interface IReenrollmentDTO {
   student_name: string;
   student_father_name: string;
   student_mother_name: string;
-  student_birth_date: string;
+  student_birth_date: Date;
   student_nacionality: string;
   student_birth_city: string;
   student_birth_state: string;

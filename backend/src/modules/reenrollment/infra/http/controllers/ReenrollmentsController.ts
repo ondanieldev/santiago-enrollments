@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { parseISO } from 'date-fns';
 
 import NewReenrollmentDTO from '@modules/reenrollment/dtos/NewReenrollmentDTO';
 import NewReenrollmetService from '@modules/reenrollment/services/NewReenrollmetService';
@@ -46,6 +47,16 @@ class ReenrollmentController {
 
         const newReenrollmet = new NewReenrollmetService();
 
+        data.financial_birth_date = parseISO(
+            data.financial_birth_date.toString(),
+        );
+
+        data.supportive_birth_date = parseISO(
+            data.supportive_birth_date.toString(),
+        );
+
+        data.student_birth_date = parseISO(data.student_birth_date.toString());
+
         await newReenrollmet.execute(data);
 
         return response.json({ ok: true });
@@ -60,6 +71,16 @@ class ReenrollmentController {
         const { _id } = request.params;
 
         const updateReenrollment = new UpdateReenrollmentService();
+
+        data.financial_birth_date = parseISO(
+            data.financial_birth_date.toString(),
+        );
+
+        data.supportive_birth_date = parseISO(
+            data.supportive_birth_date.toString(),
+        );
+
+        data.student_birth_date = parseISO(data.student_birth_date.toString());
 
         await updateReenrollment.execute({ _id, ...data });
 

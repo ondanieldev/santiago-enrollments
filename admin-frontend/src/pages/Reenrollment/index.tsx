@@ -50,7 +50,9 @@ const Reenrollment: React.FC = () => {
 
     api.get(`/reenrollments/${reenrollment_id}`).then(response => {
       const { data } = response;
+
       if (data) {
+        console.log(data);
         setReenrollment(data);
       }
     });
@@ -113,6 +115,24 @@ const Reenrollment: React.FC = () => {
       default:
         return '';
     }
+  }, []);
+
+  const formatDate = useCallback((date: Date) => {
+    const d = new Date(date);
+
+    let month = `${d.getMonth() + 1}`;
+    let day = `${d.getDate() + 1}`;
+    const year = d.getFullYear();
+
+    if (month.length < 2) {
+      month = `0${month}`;
+    }
+
+    if (day.length < 2) {
+      day = `0${day}`;
+    }
+
+    return [day, month, year].join('/');
   }, []);
 
   const handleSubmitForm = useCallback(
@@ -203,7 +223,7 @@ const Reenrollment: React.FC = () => {
               </tr>
               <tr>
                 <td>Data de nascimento</td>
-                <td>{reenrollment.financial_birth_date}</td>
+                <td>{formatDate(reenrollment.financial_birth_date)}</td>
               </tr>
               <tr>
                 <td>Nacionalidade</td>
@@ -293,7 +313,7 @@ const Reenrollment: React.FC = () => {
               </tr>
               <tr>
                 <td>Data de nascimento</td>
-                <td>{reenrollment.supportive_birth_date}</td>
+                <td>{formatDate(reenrollment.supportive_birth_date)}</td>
               </tr>
               <tr>
                 <td>Nacionalidade</td>
@@ -385,7 +405,7 @@ const Reenrollment: React.FC = () => {
               </tr>
               <tr>
                 <td>Data de nascimento</td>
-                <td>{reenrollment.student_birth_date}</td>
+                <td>{formatDate(reenrollment.student_birth_date)}</td>
               </tr>
               <tr>
                 <td>Nacionalidade</td>
@@ -479,6 +499,7 @@ const Reenrollment: React.FC = () => {
             <Document
               key={document.link}
               name={document.name}
+              // link={`http://162.241.93.179:3333/public/${document.link}`}
               link={`http://localhost:3333/public/${document.link}`}
             />
           ))}

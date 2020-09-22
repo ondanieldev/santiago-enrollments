@@ -1,10 +1,12 @@
 # Tasks Restantes
 
+[x] descomentar envio de e-mail em caso de erro
+
 ## Back-end
 ### Ficha de matrícula
-[] jogar os campos em paralelo
-[] data embaixo da assinatura
-[] logo
+[x] jogar os campos em paralelo
+[x] data embaixo da assinatura
+[x] logo
 ### Ficha de contrato
 [] receber o valor da mensalidade e o valor do desconto
 [] logo

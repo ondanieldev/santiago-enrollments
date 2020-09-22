@@ -22,7 +22,6 @@ import {
 import { ValidationError as YupValidationError } from 'yup';
 import { toast } from 'react-toastify';
 import { AxiosResponse } from 'axios';
-import { parseISO, format } from 'date-fns';
 import cepPromise from 'cep-promise';
 
 import { Container, FormGroup, InputGroup, ButtonGroup } from './styles';
@@ -60,6 +59,24 @@ const FormPage: React.FC = () => {
   const [reaprooveAddress, setReaprooveAddress] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const formatDate = useCallback((date: Date) => {
+    const d = new Date(date);
+
+    let month = `${d.getMonth() + 1}`;
+    let day = `${d.getDate() + 1}`;
+    const year = d.getFullYear();
+
+    if (month.length < 2) {
+      month = `0${month}`;
+    }
+
+    if (day.length < 2) {
+      day = `0${day}`;
+    }
+
+    return [year, month, day].join('-');
+  }, []);
+
   useEffect(() => {
     const { reenrollment_id } = params;
 
@@ -70,17 +87,17 @@ const FormPage: React.FC = () => {
 
         formRef.current?.setFieldValue(
           'financial_birth_date',
-          format(parseISO(response.data.financial_birth_date), 'yyyy-MM-dd'),
+          formatDate(response.data.financial_birth_date),
         );
 
         formRef.current?.setFieldValue(
           'supportive_birth_date',
-          format(parseISO(response.data.supportive_birth_date), 'yyyy-MM-dd'),
+          formatDate(response.data.supportive_birth_date),
         );
 
         formRef.current?.setFieldValue(
           'student_birth_date',
-          format(parseISO(response.data.student_birth_date), 'yyyy-MM-dd'),
+          formatDate(response.data.student_birth_date),
         );
 
         if (response.data.student_health_plan) {
@@ -128,7 +145,7 @@ const FormPage: React.FC = () => {
           );
         }
       });
-  }, [params]);
+  }, [params, formatDate]);
 
   useEffect(() => {
     if (reaprooveAddress) {

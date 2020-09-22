@@ -115,6 +115,7 @@ const FormPage: React.FC = () => {
   const handleSubmitForm = useCallback(
     async (data: ISendEnrollmentDTO, { reset }) => {
       try {
+        console.log(data);
         setLoading(true);
 
         formRef.current?.setErrors({});
