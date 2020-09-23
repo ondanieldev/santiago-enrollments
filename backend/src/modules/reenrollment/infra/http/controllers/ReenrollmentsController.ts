@@ -20,7 +20,21 @@ class ReenrollmentController {
 
         const indexEnrollmentsByGrade = new IndexEnrollmentsByGradeService();
 
-        if (typeof grade_name !== 'string') {
+        if (
+            grade_name !== 'maternal' &&
+            grade_name !== 'first_period' &&
+            grade_name !== 'second_period' &&
+            grade_name !== 'first_year' &&
+            grade_name !== 'second_year' &&
+            grade_name !== 'third_year' &&
+            grade_name !== 'fourth_year' &&
+            grade_name !== 'fifth_year' &&
+            grade_name !== 'fifth_year' &&
+            grade_name !== 'sixth_year' &&
+            grade_name !== 'seventh_year' &&
+            grade_name !== 'eighth_year' &&
+            grade_name !== 'nineth_year'
+        ) {
             return response.json([]);
         }
 
