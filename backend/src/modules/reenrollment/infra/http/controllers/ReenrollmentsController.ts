@@ -8,10 +8,6 @@ import GetReenrollmentDataService from '@modules/reenrollment/services/GetReenro
 import UpdateReenrollmentService from '@modules/reenrollment/services/UpdateReenrollmentService';
 
 class ReenrollmentController {
-    public async test(request: Request, response: Response): Promise<Response> {
-        return response.json({ ok: true });
-    }
-
     public async index(
         request: Request,
         response: Response,

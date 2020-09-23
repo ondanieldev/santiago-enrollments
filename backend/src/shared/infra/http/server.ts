@@ -36,6 +36,8 @@ app.use((err: Error, request: Request, response: Response, _: NextFunction) => {
         text: `O servidor obteve o seguinte erro durante a execução: ${err}`,
     });
 
+    console.log(err);
+
     return response.status(500).json({
         statusCode: 500,
         message: 'Internal server error.',
