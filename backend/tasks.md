@@ -8,24 +8,24 @@
 [x] data embaixo da assinatura
 [x] logo
 ### Ficha de contrato
-[] receber o valor da mensalidade e o valor do desconto
-[] logo
-[] arrancar número do contrato
-[] deixar dados em paralelo
+[x] receber o valor da mensalidade e o valor do desconto
+[x] logo
+[x] arrancar número do contrato
+[x] deixar dados em paralelo
 [] sublinhar cláusulas
-[] tabela
-    [] valor da mensalidade
-    [] valor da anuidade
-    [] valor do desconto
-    [] valor da mensalidade com desconto
-    [] valor da anuidade com desconto
-[] indexação parágrafo 3 clausula 3
-[] formatar as datas
+[x] tabela
+    [x] valor da mensalidade
+    [x] valor da anuidade
+    [x] valor do desconto
+    [x] valor da mensalidade com desconto
+    [x] valor da anuidade com desconto
+[x] indexação parágrafo 3 clausula 3
+[x] formatar as datas
 [] formatar os preços
-[] e-mail
 ## Checklist
 [] dados da matrícula
     [] somente endereço do resp. financeiro
 [] assinatura
 ## Dev
 [x] email de aviso no caso do banco falhar
+[] enviar e-mail para o responsável após a emissão dos documentos

@@ -1,8 +1,9 @@
-import PDFKit from 'pdfkit';
+import PDFMake from 'pdfmake';
 import mongoose from 'mongoose';
 import fs from 'fs';
 import { resolve } from 'path';
 import { v4 } from 'uuid';
+import { TDocumentDefinitions } from 'pdfmake/interfaces';
 
 import AppError from '@shared/errors/AppError';
 import {
@@ -16,8 +17,6 @@ interface IRequest {
 
 class GenerateChecklistPdfService {
     public async execute({ _id }: IRequest): Promise<string> {
-        const pdf = new PDFKit();
-
         const Reenrollment = mongoose.model<IReenrollment>(
             'Reenrollment',
             ReenrollmentSchema,
@@ -31,95 +30,127 @@ class GenerateChecklistPdfService {
             throw new AppError('Rematrícula inválida!');
         }
 
-        const arial = resolve(
-            __dirname,
-            '..',
-            '..',
-            '..',
-            'assets',
-            'fonts',
-            `arial.ttf`,
-        );
+        const fonts = {
+            Arial: {
+                normal: resolve(
+                    __dirname,
+                    '..',
+                    '..',
+                    '..',
+                    'assets',
+                    'fonts',
+                    `arial.ttf`,
+                ),
+                bold: resolve(
+                    __dirname,
+                    '..',
+                    '..',
+                    '..',
+                    'assets',
+                    'fonts',
+                    `arialbd.ttf`,
+                ),
+            },
+        };
 
-        const arialBold = resolve(
-            __dirname,
-            '..',
-            '..',
-            '..',
-            'assets',
-            'fonts',
-            `arialbd.ttf`,
-        );
-        // Defaults
-        pdf.lineGap(10);
+        const printer = new PDFMake(fonts);
 
-        // Checklist
-        pdf.font(arialBold)
-            .fontSize(14)
-            .text('Checklist', { align: 'center' })
-            .moveDown()
-            .font(arial)
-            .fontSize(12)
-            .text('02 fotos 3x4', { align: 'left', continued: true })
-            .text('Data: _____/_____/_____ Hora: _____/_____', {
-                align: 'right',
-            })
-            .text('Certidão de nascimento do aluno', {
-                align: 'left',
-                continued: true,
-            })
-            .text('Data: _____/_____/_____ Hora: _____/_____', {
-                align: 'right',
-            })
-            .text('CPF', { align: 'left', continued: true })
-            .text('Data: _____/_____/_____ Hora: _____/_____', {
-                align: 'right',
-            })
-            .text('RG', { align: 'left', continued: true })
-            .text('Data: _____/_____/_____ Hora: _____/_____', {
-                align: 'right',
-            })
-            .text('Comprovante de residência', {
-                align: 'left',
-                continued: true,
-            })
-            .text('Data: _____/_____/_____ Hora: _____/_____', {
-                align: 'right',
-            })
-            .text('Carteira de plano de saúde', {
-                align: 'left',
-                continued: true,
-            })
-            .text('Data: _____/_____/_____ Hora: _____/_____', {
-                align: 'right',
-            })
-            .text('Declaração de transferência escolar', {
-                align: 'left',
-                continued: true,
-            })
-            .text('Data: _____/_____/_____ Hora: _____/_____', {
-                align: 'right',
-            })
-            .text('Declaração de quitação mensalidade', {
-                align: 'left',
-                continued: true,
-            })
-            .text('Data: _____/_____/_____ Hora: _____/_____', {
-                align: 'right',
-            })
-            .text('Histórico escolar', { align: 'left', continued: true })
-            .text('Data: _____/_____/_____ Hora: _____/_____', {
-                align: 'right',
-            })
-            .text('Cartão de vacina', { align: 'left', continued: true })
-            .text('Data: _____/_____/_____ Hora: _____/_____', {
-                align: 'right',
-            });
+        const docDefinition = {
+            pageSize: 'A4',
+            pageOrientation: 'portrait',
+            pageMargins: [25, 25, 25, 25],
+            info: {
+                title: 'Ficha de Rematrícula',
+                author: 'Colégio Santiago',
+                subject: 'Ficha de Rematrícula',
+                keywords: 'Ficha, Rematrícula',
+                creator: 'Colégio Santiago',
+                producer: 'Colégio Santiago',
+            },
+            content: [],
+            styles: {
+                heading: {
+                    font: 'Arial',
+                    fontSize: 12,
+                    bold: true,
+                    alignment: 'center',
+                },
+                subheading: {
+                    font: 'Arial',
+                    fontSize: 11,
+                    bold: true,
+                },
+            },
+            defaultStyle: {
+                font: 'Arial',
+                fontSize: 11,
+                lineHeight: 1.33,
+            },
+        } as TDocumentDefinitions;
+
+        // .fontSize(14)
+        // .text('Checklist', { align: 'center' })
+        // .moveDown()
+        // .font(arial)
+        // .fontSize(12)
+        // .text('02 fotos 3x4', { align: 'left', continued: true })
+        // .text('Data: _____/_____/_____ Hora: _____/_____', {
+        //     align: 'right',
+        // })
+        // .text('Certidão de nascimento do aluno', {
+        //     align: 'left',
+        //     continued: true,
+        // })
+        // .text('Data: _____/_____/_____ Hora: _____/_____', {
+        //     align: 'right',
+        // })
+        // .text('CPF', { align: 'left', continued: true })
+        // .text('Data: _____/_____/_____ Hora: _____/_____', {
+        //     align: 'right',
+        // })
+        // .text('RG', { align: 'left', continued: true })
+        // .text('Data: _____/_____/_____ Hora: _____/_____', {
+        //     align: 'right',
+        // })
+        // .text('Comprovante de residência', {
+        //     align: 'left',
+        //     continued: true,
+        // })
+        // .text('Data: _____/_____/_____ Hora: _____/_____', {
+        //     align: 'right',
+        // })
+        // .text('Carteira de plano de saúde', {
+        //     align: 'left',
+        //     continued: true,
+        // })
+        // .text('Data: _____/_____/_____ Hora: _____/_____', {
+        //     align: 'right',
+        // })
+        // .text('Declaração de transferência escolar', {
+        //     align: 'left',
+        //     continued: true,
+        // })
+        // .text('Data: _____/_____/_____ Hora: _____/_____', {
+        //     align: 'right',
+        // })
+        // .text('Declaração de quitação mensalidade', {
+        //     align: 'left',
+        //     continued: true,
+        // })
+        // .text('Data: _____/_____/_____ Hora: _____/_____', {
+        //     align: 'right',
+        // })
+        // .text('Histórico escolar', { align: 'left', continued: true })
+        // .text('Data: _____/_____/_____ Hora: _____/_____', {
+        //     align: 'right',
+        // })
+        // .text('Cartão de vacina', { align: 'left', continued: true })
+        // .text('Data: _____/_____/_____ Hora: _____/_____', {
+        //     align: 'right',
+        // });
 
         const fileHash = v4();
-
         const fileName = `checklist-${fileHash}.pdf`;
-
         const filePath = resolve(
             __dirname,
             '..',
@@ -130,9 +161,9 @@ class GenerateChecklistPdfService {
             fileName,
         );
 
-        pdf.pipe(fs.createWriteStream(`${filePath}`));
-
-        pdf.end();
+        const pdfDoc = printer.createPdfKitDocument(docDefinition);
+        pdfDoc.pipe(fs.createWriteStream(filePath));
+        pdfDoc.end();
 
         await Reenrollment.findOneAndUpdate(
             {
