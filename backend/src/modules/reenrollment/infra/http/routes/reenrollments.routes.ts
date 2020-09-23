@@ -12,6 +12,5 @@ reenrollmentsRoutes.get('/:_id', reenrollmentsController.get);
 reenrollmentsRoutes.put('/:_id', reenrollmentsController.update);
 reenrollmentsRoutes.post('/', reenrollmentsController.create);
 reenrollmentsRoutes.patch('/:_id', reenrollmentsPDFsController.update);
-reenrollmentsRoutes.get('/test', reenrollmentsController.test);
 
 export default reenrollmentsRoutes;
