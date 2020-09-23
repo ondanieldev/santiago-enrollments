@@ -6,7 +6,19 @@ import {
 } from '@modules/reenrollment/infra/mongoose/schemas/ReenrollmentSchema';
 
 interface IRequest {
-    grade_name: string;
+    grade_name:
+        | 'maternal'
+        | 'first_period'
+        | 'second_period'
+        | 'first_year'
+        | 'second_year'
+        | 'third_year'
+        | 'fourth_year'
+        | 'fifth_year'
+        | 'sixth_year'
+        | 'seventh_year'
+        | 'eighth_year'
+        | 'nineth_year';
 }
 
 class IndexEnrollmentsStudentService {
