@@ -1,9 +1,10 @@
 # Tasks Restantes
 
-[x] descomentar envio de e-mail em caso de erro
-
 ## Back-end
-### Ficha de matrícula
+### Geral
+[x] descomentar envio de e-mail em caso de erro
+[x] login
+### Ficha de matrícula\
 [x] jogar os campos em paralelo
 [x] data embaixo da assinatura
 [x] logo
@@ -12,7 +13,7 @@
 [x] logo
 [x] arrancar número do contrato
 [x] deixar dados em paralelo
-[] sublinhar cláusulas
+[x] sublinhar cláusulas
 [x] tabela
     [x] valor da mensalidade
     [x] valor da anuidade
@@ -21,11 +22,12 @@
     [x] valor da anuidade com desconto
 [x] indexação parágrafo 3 clausula 3
 [x] formatar as datas
-[] formatar os preços
+[x] formatar os preços
+[x] ocultar desconto ?
 ## Checklist
-[] dados da matrícula
-    [] somente endereço do resp. financeiro
-[] assinatura
+[x] dados da matrícula
+    [x] somente endereço do resp. financeiro
+[x] assinatura
 ## Dev
 [x] email de aviso no caso do banco falhar
-[] enviar e-mail para o responsável após a emissão dos documentos
+[x] enviar e-mail para o responsável após a emissão dos documentos

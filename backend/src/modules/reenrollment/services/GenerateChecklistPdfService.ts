@@ -1,11 +1,11 @@
-import PDFMake from 'pdfmake';
 import mongoose from 'mongoose';
-import fs from 'fs';
 import { resolve } from 'path';
-import { v4 } from 'uuid';
 import { TDocumentDefinitions } from 'pdfmake/interfaces';
+import { format as formatDate } from 'date-fns';
 
 import AppError from '@shared/errors/AppError';
+import PrettierDataService from '@modules/reenrollment/services/PrettierDataService';
+import GeneratePDFService from '@modules/reenrollment/services/GeneratePDFService';
 import {
     ReenrollmentSchema,
     IReenrollment,
@@ -22,52 +22,30 @@ class GenerateChecklistPdfService {
             ReenrollmentSchema,
         );
 
-        const reenrollment = await Reenrollment.findOne({
+        const reenrollmentFromDB = await Reenrollment.findOne({
             student_name: _id,
         });
 
-        if (!reenrollment) {
+        if (!reenrollmentFromDB) {
             throw new AppError('Rematrícula inválida!');
         }
 
-        const fonts = {
-            Arial: {
-                normal: resolve(
-                    __dirname,
-                    '..',
-                    '..',
-                    '..',
-                    'assets',
-                    'fonts',
-                    `arial.ttf`,
-                ),
-                bold: resolve(
-                    __dirname,
-                    '..',
-                    '..',
-                    '..',
-                    'assets',
-                    'fonts',
-                    `arialbd.ttf`,
-                ),
-            },
-        };
+        const prettierData = new PrettierDataService();
 
-        const printer = new PDFMake(fonts);
+        const reenrollment = prettierData.execute(reenrollmentFromDB);
 
         const docDefinition = {
             pageSize: 'A4',
             pageOrientation: 'portrait',
             pageMargins: [25, 25, 25, 25],
             info: {
-                title: 'Ficha de Rematrícula',
+                title: 'Checklist',
                 author: 'Colégio Santiago',
-                subject: 'Ficha de Rematrícula',
+                subject: 'Checklist',
                 keywords: 'Ficha, Rematrícula',
                 creator: 'Colégio Santiago',
                 producer: 'Colégio Santiago',
             },
-            content: [],
             styles: {
                 heading: {
                     font: 'Arial',
@@ -83,87 +61,261 @@ class GenerateChecklistPdfService {
             },
             defaultStyle: {
                 font: 'Arial',
-                fontSize: 11,
+                fontSize: 10,
                 lineHeight: 1.33,
             },
+            content: [
+                {
+                    columns: [
+                        {
+                            image: resolve(
+                                __dirname,
+                                '..',
+                                '..',
+                                '..',
+                                'assets',
+                                'images',
+                                'logo.png',
+                            ),
+                            width: 90,
+                            alignment: 'center',
+                        },
+                        {
+                            text: [
+                                {
+                                    text: 'Checklist',
+                                    style: 'heading',
+                                    alignment: 'center',
+                                },
+                                {
+                                    text: `\nEmitido em ${formatDate(
+                                        new Date(),
+                                        'dd/MM/yyyy',
+                                    )}`,
+                                    style: 'subheading',
+                                    alignment: 'center',
+                                },
+                            ],
+                        },
+                        {
+                            text: '',
+                            width: 90,
+                        },
+                    ],
+                },
+                {
+                    text: '\nIdentificação do Aluno',
+                    style: 'subheading',
+                },
+                // ALUNO
+                `Nome: ${reenrollment.student_name}`,
+                {
+                    columns: [
+                        {
+                            width: 'auto',
+                            text: `Data de Nascimento: ${formatDate(
+                                reenrollment.student_birth_date,
+                                'dd/MM/yyyy',
+                            )}`,
+                        },
+                        {
+                            width: '*',
+                            text: `Naturalidade: ${reenrollment.student_birth_city}`,
+                            alignment: 'center',
+                        },
+                        {
+                            width: 'auto',
+                            text: `UF: ${reenrollment.student_birth_state}`,
+                        },
+                    ],
+                },
+                {
+                    columns: [
+                        {
+                            width: 'auto',
+                            text: `Nacionalidade: ${reenrollment.student_nacionality}`,
+                        },
+                        {
+                            width: '*',
+                            text: `Sexo: ${reenrollment.student_gender}`,
+                            alignment: 'center',
+                        },
+                        {
+                            width: 'auto',
+                            text: `Cor/Raça: ${reenrollment.student_race}`,
+                        },
+                    ],
+                },
+                // RESPONSÁVEL FINANCEIRO
+                {
+                    text: '\nResponsável Financeiro',
+                    style: 'subheading',
+                },
+                {
+                    text: `Nome: ${reenrollment.financial_name}`,
+                },
+                {
+                    text: `E-mail: ${reenrollment.financial_email}`,
+                },
+                {
+                    text: `CEP: ${reenrollment.financial_address_cep}`,
+                },
+                {
+                    text: `Endereço: Rua ${reenrollment.financial_address_street} - Número ${reenrollment.financial_address_number} ${reenrollment.financial_address_complement} - Bairro ${reenrollment.financial_address_neighborhood} - Cidade ${reenrollment.financial_address_city}`,
+                },
+                {
+                    columns: [
+                        {
+                            width: '*',
+                            text: `RG: ${reenrollment.financial_rg}`,
+                        },
+                        {
+                            width: 'auto',
+                            text: `CPF: ${reenrollment.financial_cpf}`,
+                            alignment: 'right',
+                        },
+                    ],
+                },
+                {
+                    columns: [
+                        {
+                            width: '*',
+                            text: `Aniversário: ${formatDate(
+                                reenrollment.financial_birth_date,
+                                'MM/yyyy',
+                            )}`,
+                        },
+                        {
+                            width: 'auto',
+                            text: `Grau de Instrução: ${reenrollment.financial_education_level}`,
+                            alignment: 'right',
+                        },
+                    ],
+                },
+                {
+                    columns: [
+                        {
+                            width: '*',
+                            text: `Profissão: ${reenrollment.financial_profission}`,
+                        },
+                        {
+                            width: 'auto',
+                            text: `Telefone Comercial: ${reenrollment.financial_commercial_phone}`,
+                            alignment: 'right',
+                        },
+                    ],
+                },
+                {
+                    columns: [
+                        {
+                            width: '*',
+                            text: `Telefone Fixo: ${reenrollment.financial_residencial_phone}`,
+                        },
+                        {
+                            width: 'auto',
+                            text: `Telefone Celular: ${reenrollment.financial_personal_phone}`,
+                            alignment: 'right',
+                        },
+                    ],
+                },
+                // RESPONSÁVEL SOLIDÁRIO
+                {
+                    text: '\nResponsável Solidário',
+                    style: 'subheading',
+                },
+                {
+                    text: `Nome: ${reenrollment.supportive_name}`,
+                },
+                {
+                    text: `E-mail: ${reenrollment.supportive_email}`,
+                },
+                {
+                    columns: [
+                        {
+                            width: '*',
+                            text: `RG: ${reenrollment.supportive_rg}`,
+                        },
+                        {
+                            width: 'auto',
+                            text: `CPF: ${reenrollment.supportive_cpf}`,
+                            alignment: 'right',
+                        },
+                    ],
+                },
+                {
+                    columns: [
+                        {
+                            width: 'auto',
+                            text: `Aniversário: ${formatDate(
+                                reenrollment.supportive_birth_date,
+                                'MM/yyyy',
+                            )}`,
+                        },
+                        {
+                            width: '*',
+                            text: `Grau de Instrução: ${reenrollment.supportive_education_level}`,
+                            alignment: 'center',
+                        },
+                        {
+                            width: 'auto',
+                            text: `Profissão: ${reenrollment.supportive_profission}`,
+                        },
+                    ],
+                },
+                // Checklist
+                {
+                    text: '\nChecklist',
+                    style: 'subheading',
+                },
+                {
+                    columns: [
+                        {
+                            width: 'auto',
+                            text: `
+                            02 fotos 3x4\n
+                            Certidão de nascimento do aluno\n
+                            CPF\n
+                            RG\n
+                            Comprovante de residência\n
+                            Carteira de plano de saúde\n
+                            Declaração de transferência escolar\n
+                            Histórico escolar\n
+                            Cartão de vacina\n
+                            `,
+                        },
+                        {
+                            width: '*',
+                            alignment: 'right',
+                            text: `
+                            Assinatura: _______________ Data: _____/_____/_____ Hora: _____/_____\n
+                            Assinatura: _______________ Data: _____/_____/_____ Hora: _____/_____\n
+                            Assinatura: _______________ Data: _____/_____/_____ Hora: _____/_____\n
+                            Assinatura: _______________ Data: _____/_____/_____ Hora: _____/_____\n
+                            Assinatura: _______________ Data: _____/_____/_____ Hora: _____/_____\n
+                            Assinatura: _______________ Data: _____/_____/_____ Hora: _____/_____\n
+                            Assinatura: _______________ Data: _____/_____/_____ Hora: _____/_____\n
+                            Assinatura: _______________ Data: _____/_____/_____ Hora: _____/_____\n
+                            Assinatura: _______________ Data: _____/_____/_____ Hora: _____/_____`,
+                        },
+                    ],
+                },
+                {
+                    columns: [
+                        '____________________\nSECRETARIA',
+                        '____________________\nRESPONSÁVEL',
+                        '____________________\nDIREÇÃO',
+                    ],
+                    alignment: 'center',
+                },
+            ],
         } as TDocumentDefinitions;
 
-        // .fontSize(14)
-        // .text('Checklist', { align: 'center' })
-        // .moveDown()
-        // .font(arial)
-        // .fontSize(12)
-        // .text('02 fotos 3x4', { align: 'left', continued: true })
-        // .text('Data: _____/_____/_____ Hora: _____/_____', {
-        //     align: 'right',
-        // })
-        // .text('Certidão de nascimento do aluno', {
-        //     align: 'left',
-        //     continued: true,
-        // })
-        // .text('Data: _____/_____/_____ Hora: _____/_____', {
-        //     align: 'right',
-        // })
-        // .text('CPF', { align: 'left', continued: true })
-        // .text('Data: _____/_____/_____ Hora: _____/_____', {
-        //     align: 'right',
-        // })
-        // .text('RG', { align: 'left', continued: true })
-        // .text('Data: _____/_____/_____ Hora: _____/_____', {
-        //     align: 'right',
-        // })
-        // .text('Comprovante de residência', {
-        //     align: 'left',
-        //     continued: true,
-        // })
-        // .text('Data: _____/_____/_____ Hora: _____/_____', {
-        //     align: 'right',
-        // })
-        // .text('Carteira de plano de saúde', {
-        //     align: 'left',
-        //     continued: true,
-        // })
-        // .text('Data: _____/_____/_____ Hora: _____/_____', {
-        //     align: 'right',
-        // })
-        // .text('Declaração de transferência escolar', {
-        //     align: 'left',
-        //     continued: true,
-        // })
-        // .text('Data: _____/_____/_____ Hora: _____/_____', {
-        //     align: 'right',
-        // })
-        // .text('Declaração de quitação mensalidade', {
-        //     align: 'left',
-        //     continued: true,
-        // })
-        // .text('Data: _____/_____/_____ Hora: _____/_____', {
-        //     align: 'right',
-        // })
-        // .text('Histórico escolar', { align: 'left', continued: true })
-        // .text('Data: _____/_____/_____ Hora: _____/_____', {
-        //     align: 'right',
-        // })
-        // .text('Cartão de vacina', { align: 'left', continued: true })
-        // .text('Data: _____/_____/_____ Hora: _____/_____', {
-        //     align: 'right',
-        // });
+        const generatePDF = new GeneratePDFService();
 
-        const fileHash = v4();
-        const fileName = `checklist-${fileHash}.pdf`;
-        const filePath = resolve(
-            __dirname,
-            '..',
-            '..',
-            '..',
-            '..',
-            'tmp',
-            fileName,
-        );
-
-        const pdfDoc = printer.createPdfKitDocument(docDefinition);
-        pdfDoc.pipe(fs.createWriteStream(filePath));
-        pdfDoc.end();
+        const fileName = generatePDF.execute({
+            docDefinition,
+            deleteFileName: reenrollment.checklist,
+        });
 
         await Reenrollment.findOneAndUpdate(
             {
@@ -176,20 +328,6 @@ class GenerateChecklistPdfService {
                 useFindAndModify: false,
             },
         );
-
-        if (reenrollment.checklist) {
-            const deletePath = resolve(
-                __dirname,
-                '..',
-                '..',
-                '..',
-                '..',
-                'tmp',
-                reenrollment.checklist,
-            );
-
-            fs.unlinkSync(deletePath);
-        }
 
         return fileName;
     }

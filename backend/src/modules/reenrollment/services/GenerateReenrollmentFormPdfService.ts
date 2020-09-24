@@ -1,11 +1,10 @@
-import PDFMake from 'pdfmake';
 import mongoose from 'mongoose';
-import fs from 'fs';
-import { v4 } from 'uuid';
 import { resolve } from 'path';
 import { TDocumentDefinitions } from 'pdfmake/interfaces';
 import { format as formatDate } from 'date-fns';
 
+import PrettierDataService from '@modules/reenrollment/services/PrettierDataService';
+import GeneratePDFService from '@modules/reenrollment/services/GeneratePDFService';
 import AppError from '@shared/errors/AppError';
 import {
     ReenrollmentSchema,
@@ -23,105 +22,17 @@ class GenerateReenrollmentFormPdfService {
             ReenrollmentSchema,
         );
 
-        const reenrollment = await Reenrollment.findOne({
+        const reenrollmentFromDB = await Reenrollment.findOne({
             student_name: _id,
         });
 
-        if (!reenrollment) {
+        if (!reenrollmentFromDB) {
             throw new AppError('Rematrícula inválida!');
         }
 
-        reenrollment.student_name = this.capitalize(reenrollment.student_name);
-        reenrollment.student_birth_city = this.capitalize(
-            reenrollment.student_birth_city,
-        );
-        reenrollment.student_birth_state = this.capitalize(
-            reenrollment.student_birth_state,
-        );
-        reenrollment.student_nacionality = this.capitalize(
-            reenrollment.student_nacionality,
-        );
-        reenrollment.financial_name = this.capitalize(
-            reenrollment.financial_name,
-        );
-        reenrollment.financial_email = reenrollment.financial_email.toLowerCase();
-        reenrollment.financial_address_street = this.capitalize(
-            reenrollment.financial_address_street,
-        );
-        reenrollment.financial_address_neighborhood = this.capitalize(
-            reenrollment.financial_address_neighborhood,
-        );
-        reenrollment.financial_address_complement = this.capitalize(
-            reenrollment.financial_address_complement,
-        );
-        reenrollment.financial_address_city = this.capitalize(
-            reenrollment.financial_address_city,
-        );
-        reenrollment.financial_profission = this.capitalize(
-            reenrollment.financial_profission,
-        );
-        reenrollment.supportive_name = this.capitalize(
-            reenrollment.supportive_name,
-        );
-        reenrollment.supportive_email = reenrollment.supportive_email.toLowerCase();
-        reenrollment.supportive_address_street = this.capitalize(
-            reenrollment.supportive_address_street,
-        );
-        reenrollment.supportive_address_neighborhood = this.capitalize(
-            reenrollment.supportive_address_neighborhood,
-        );
-        reenrollment.supportive_address_complement = this.capitalize(
-            reenrollment.supportive_address_complement,
-        );
-        reenrollment.supportive_address_city = this.capitalize(
-            reenrollment.supportive_address_city,
-        );
-        reenrollment.supportive_profission = this.capitalize(
-            reenrollment.supportive_profission,
-        );
-        reenrollment.student_origin_school = this.capitalize(
-            reenrollment.student_origin_school,
-        );
-        reenrollment.student_health_plan = this.capitalize(
-            reenrollment.student_health_plan,
-        );
-        reenrollment.student_food_alergy = this.capitalize(
-            reenrollment.student_food_alergy,
-        );
-        reenrollment.student_medication_alergy = this.capitalize(
-            reenrollment.student_medication_alergy,
-        );
-        reenrollment.student_health_problem = this.capitalize(
-            reenrollment.student_health_problem,
-        );
-        reenrollment.student_special_necessities = this.capitalize(
-            reenrollment.student_special_necessities,
-        );
+        const prettierData = new PrettierDataService();
 
-        const fonts = {
-            Arial: {
-                normal: resolve(
-                    __dirname,
-                    '..',
-                    '..',
-                    '..',
-                    'assets',
-                    'fonts',
-                    `arial.ttf`,
-                ),
-                bold: resolve(
-                    __dirname,
-                    '..',
-                    '..',
-                    '..',
-                    'assets',
-                    'fonts',
-                    `arialbd.ttf`,
-                ),
-            },
-        };
-
-        const printer = new PDFMake(fonts);
+        const reenrollment = prettierData.execute(reenrollmentFromDB);
 
         const docDefinition = {
             pageSize: 'A4',
@@ -201,16 +112,12 @@ class GenerateReenrollmentFormPdfService {
                         },
                         {
                             width: '*',
-                            text: `Sexo: ${this.formatGender(
-                                reenrollment.student_gender,
-                            )}`,
+                            text: `Sexo: ${reenrollment.student_gender}`,
                             alignment: 'center',
                         },
                         {
                             width: 'auto',
-                            text: `Cor/Raça: ${this.formatRace(
-                                reenrollment.student_race,
-                            )}`,
+                            text: `Cor/Raça: ${reenrollment.student_race}`,
                         },
                     ],
                 },
@@ -255,9 +162,7 @@ class GenerateReenrollmentFormPdfService {
                         },
                         {
                             width: 'auto',
-                            text: `Grau de Instrução: ${this.formatEducationLevel(
-                                reenrollment.financial_education_level,
-                            )}`,
+                            text: `Grau de Instrução: ${reenrollment.financial_education_level}`,
                             alignment: 'right',
                         },
                     ],
@@ -329,9 +234,7 @@ class GenerateReenrollmentFormPdfService {
                         },
                         {
                             width: 'auto',
-                            text: `Grau de Instrução: ${this.formatEducationLevel(
-                                reenrollment.supportive_education_level,
-                            )}`,
+                            text: `Grau de Instrução: ${reenrollment.supportive_education_level}`,
                             alignment: 'right',
                         },
                     ],
@@ -454,21 +357,12 @@ class GenerateReenrollmentFormPdfService {
             },
         } as TDocumentDefinitions;
 
-        const fileHash = v4();
-        const fileName = `ficha-${fileHash}.pdf`;
-        const filePath = resolve(
-            __dirname,
-            '..',
-            '..',
-            '..',
-            '..',
-            'tmp',
-            fileName,
-        );
+        const generatePDF = new GeneratePDFService();
 
-        const pdfDoc = printer.createPdfKitDocument(docDefinition);
-        pdfDoc.pipe(fs.createWriteStream(filePath));
-        pdfDoc.end();
+        const fileName = generatePDF.execute({
+            docDefinition,
+            deleteFileName: reenrollment.reenrollment_form,
+        });
 
         await Reenrollment.findOneAndUpdate(
             {
@@ -482,89 +376,7 @@ class GenerateReenrollmentFormPdfService {
             },
         );
 
-        if (reenrollment.reenrollment_form) {
-            const deletePath = resolve(
-                __dirname,
-                '..',
-                '..',
-                '..',
-                '..',
-                'tmp',
-                reenrollment.reenrollment_form,
-            );
-
-            fs.unlinkSync(deletePath);
-        }
-
         return fileName;
-    }
-
-    private capitalize(str: string): string {
-        if (typeof str === 'string') {
-            return str
-                .toLowerCase()
-                .replace(/(^\w{1})|(\s+\w{1})/g, letter =>
-                    letter.toUpperCase(),
-                );
-        }
-        return '';
-    }
-
-    private formatGender(gender: 'male' | 'female'): string {
-        switch (gender) {
-            case 'male':
-                return 'Masculino';
-            case 'female':
-                return 'Feminino';
-            default:
-                return '-';
-        }
-    }
-
-    private formatRace(
-        race: 'white' | 'brown' | 'black' | 'indigenous' | 'yellow',
-    ): string {
-        switch (race) {
-            case 'white':
-                return 'Branco';
-            case 'brown':
-                return 'Pardo';
-            case 'black':
-                return 'Negro';
-            case 'indigenous':
-                return 'Indígena';
-            case 'yellow':
-                return 'Amarelo';
-            default:
-                return '-';
-        }
-    }
-
-    private formatEducationLevel(
-        educationLevel:
-            | 'elementary_incompleted'
-            | 'elementary_completed'
-            | 'highschool_incompleted'
-            | 'highschool_completed'
-            | 'university_incompleted'
-            | 'university_completed',
-    ): string {
-        switch (educationLevel) {
-            case 'elementary_incompleted':
-                return 'Fundamental Incompleto';
-            case 'elementary_completed':
-                return 'Fundamental Completo';
-            case 'highschool_incompleted':
-                return 'Segundo Grau Incompleto';
-            case 'highschool_completed':
-                return 'Segundo Grau Completo';
-            case 'university_incompleted':
-                return 'Superior Incompleto';
-            case 'university_completed':
-                return 'Superior Completo';
-            default:
-                return '-';
-        }
     }
 }
 

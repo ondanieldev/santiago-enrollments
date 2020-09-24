@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 
 import GenerateReenrollmentFormPdfService from '@modules/reenrollment/services/GenerateReenrollmentFormPdfService';
 import GenerateContractPdfService from '@modules/reenrollment/services/GenerateContractPdfService';
-// import GenerateChecklistPdfService from '@modules/reenrollment/services/GenerateChecklistPdfService';
+import GenerateChecklistPdfService from '@modules/reenrollment/services/GenerateChecklistPdfService';
 
 class ReenrollmentsPDFsController {
     public async update(
@@ -10,6 +10,8 @@ class ReenrollmentsPDFsController {
         response: Response,
     ): Promise<Response> {
         const { _id } = request.params;
+
+        const { monthly_value, discount_percent } = request.body;
 
         const generateReenrollmentFormPdf = new GenerateReenrollmentFormPdfService();
 
@@ -21,13 +23,15 @@ class ReenrollmentsPDFsController {
 
         const contract = await generateContractPdf.execute({
             _id,
+            monthly_value,
+            discount_percent,
         });
 
-        // const generateChecklistPdf = new GenerateChecklistPdfService();
+        const generateChecklistPdf = new GenerateChecklistPdfService();
 
-        // const checklist = await generateChecklistPdf.execute({
-        //     _id,
-        // });
+        const checklist = await generateChecklistPdf.execute({
+            _id,
+        });
 
         return response.json([
             {
@@ -38,10 +42,10 @@ class ReenrollmentsPDFsController {
                 name: 'Contrato',
                 link: contract,
             },
-            // {
-            //     name: 'Checklist',
-            //     link: checklist,
-            // },
+            {
+                name: 'Checklist',
+                link: checklist,
+            },
         ]);
     }
 }

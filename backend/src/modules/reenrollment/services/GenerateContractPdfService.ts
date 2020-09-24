@@ -7,6 +7,8 @@ import { format as formatDate } from 'date-fns';
 import { TDocumentDefinitions } from 'pdfmake/interfaces';
 
 import AppError from '@shared/errors/AppError';
+import PrettierDataService from '@modules/reenrollment/services/PrettierDataService';
+import GeneratePDFService from '@modules/reenrollment/services/GeneratePDFService';
 import {
     ReenrollmentSchema,
     IReenrollment,
@@ -14,126 +16,90 @@ import {
 
 interface IRequest {
     _id: string;
+    monthly_value: number;
+    discount_percent: number;
 }
 
 class GenerateContractPdfService {
-    public async execute({ _id }: IRequest): Promise<string> {
+    public async execute({
+        _id,
+        monthly_value,
+        discount_percent,
+    }: IRequest): Promise<string> {
         const Reenrollment = mongoose.model<IReenrollment>(
             'Reenrollment',
             ReenrollmentSchema,
         );
 
-        const reenrollment = await Reenrollment.findOne({
+        const reenrollmentFromDB = await Reenrollment.findOne({
             student_name: _id,
         });
 
-        if (!reenrollment) {
+        if (!reenrollmentFromDB) {
             throw new AppError('Rematrícula inválida!');
         }
 
-        reenrollment.student_name = this.capitalize(reenrollment.student_name);
-        reenrollment.student_birth_city = this.capitalize(
-            reenrollment.student_birth_city,
-        );
-        reenrollment.student_birth_state = this.capitalize(
-            reenrollment.student_birth_state,
-        );
-        reenrollment.student_nacionality = this.capitalize(
-            reenrollment.student_nacionality,
-        );
-        reenrollment.financial_name = this.capitalize(
-            reenrollment.financial_name,
-        );
-        reenrollment.financial_email = reenrollment.financial_email.toLowerCase();
-        reenrollment.financial_nacionality = this.capitalize(
-            reenrollment.financial_nacionality,
-        );
-        reenrollment.financial_civil_state = this.capitalize(
-            reenrollment.financial_civil_state,
-        );
-        reenrollment.financial_address_street = this.capitalize(
-            reenrollment.financial_address_street,
-        );
-        reenrollment.financial_address_neighborhood = this.capitalize(
-            reenrollment.financial_address_neighborhood,
-        );
-        reenrollment.financial_address_complement = this.capitalize(
-            reenrollment.financial_address_complement,
-        );
-        reenrollment.financial_address_city = this.capitalize(
-            reenrollment.financial_address_city,
-        );
-        reenrollment.financial_profission = this.capitalize(
-            reenrollment.financial_profission,
-        );
-        reenrollment.supportive_name = this.capitalize(
-            reenrollment.supportive_name,
-        );
-        reenrollment.supportive_email = reenrollment.supportive_email.toLowerCase();
-        reenrollment.supportive_nacionality = this.capitalize(
-            reenrollment.supportive_nacionality,
-        );
-        reenrollment.supportive_civil_state = this.capitalize(
-            reenrollment.supportive_civil_state,
-        );
-        reenrollment.supportive_address_street = this.capitalize(
-            reenrollment.supportive_address_street,
-        );
-        reenrollment.supportive_address_neighborhood = this.capitalize(
-            reenrollment.supportive_address_neighborhood,
-        );
-        reenrollment.supportive_address_complement = this.capitalize(
-            reenrollment.supportive_address_complement,
-        );
-        reenrollment.supportive_address_city = this.capitalize(
-            reenrollment.supportive_address_city,
-        );
-        reenrollment.supportive_profission = this.capitalize(
-            reenrollment.supportive_profission,
-        );
-        reenrollment.student_origin_school = this.capitalize(
-            reenrollment.student_origin_school,
-        );
-        reenrollment.student_health_plan = this.capitalize(
-            reenrollment.student_health_plan,
-        );
-        reenrollment.student_food_alergy = this.capitalize(
-            reenrollment.student_food_alergy,
-        );
-        reenrollment.student_medication_alergy = this.capitalize(
-            reenrollment.student_medication_alergy,
-        );
-        reenrollment.student_health_problem = this.capitalize(
-            reenrollment.student_health_problem,
-        );
-        reenrollment.student_special_necessities = this.capitalize(
-            reenrollment.student_special_necessities,
-        );
+        const prettierData = new PrettierDataService();
 
-        const fonts = {
-            Arial: {
-                normal: resolve(
-                    __dirname,
-                    '..',
-                    '..',
-                    '..',
-                    'assets',
-                    'fonts',
-                    `arial.ttf`,
-                ),
-                bold: resolve(
-                    __dirname,
-                    '..',
-                    '..',
-                    '..',
-                    'assets',
-                    'fonts',
-                    `arialbd.ttf`,
-                ),
-            },
-        };
+        const reenrollment = prettierData.execute(reenrollmentFromDB);
 
-        const printer = new PDFMake(fonts);
+        const valuesTable =
+            discount_percent > 0
+                ? {
+                      body: [
+                          [
+                              {
+                                  text: 'PARCELA (12 MENSALIDADES)',
+                                  bold: true,
+                              },
+                              {
+                                  text: 'TOTAL DA ANUIDADE ESCOLAR',
+                                  bold: true,
+                              },
+                              {
+                                  text: 'VALOR DO DESCONTO',
+                                  bold: true,
+                              },
+                              {
+                                  text: 'VALOR DA MENSALIDADE COM DESCONTO',
+                                  bold: true,
+                              },
+                              {
+                                  text: 'VALOR DA ANUIDADE COM DESCONTO',
+                                  bold: true,
+                              },
+                          ],
+                          [
+                              `R$ ${monthly_value}`,
+                              `R$ ${monthly_value * 12}`,
+                              `${discount_percent}%`,
+                              `R$ ${
+                                  (monthly_value * (100 - discount_percent)) /
+                                  100
+                              }`,
+                              `R$ ${
+                                  ((monthly_value * (100 - discount_percent)) /
+                                      100) *
+                                  12
+                              }`,
+                          ],
+                      ],
+                  }
+                : {
+                      body: [
+                          [
+                              {
+                                  text: 'PARCELA (12 MENSALIDADES)',
+                                  bold: true,
+                              },
+                              {
+                                  text: 'TOTAL DA ANUIDADE ESCOLAR',
+                                  bold: true,
+                              },
+                          ],
+                          [`R$ ${monthly_value}`, `R$ ${monthly_value * 12}`],
+                      ],
+                  };
 
         const docDefinition = {
             pageSize: 'A4',
@@ -444,9 +410,7 @@ class GenerateContractPdfService {
                         },
                     ],
                 },
-                `Série/Ano/Período que Cursará: ${this.formatGrade(
-                    reenrollment.grade_name,
-                )}`,
+                `Série/Ano/Período que Cursará: ${reenrollment.grade_name}`,
                 // CLÁUSULAS
                 // 1ª
                 {
@@ -486,33 +450,7 @@ class GenerateContractPdfService {
                     alignment: 'justify',
                 },
                 {
-                    table: {
-                        body: [
-                            [
-                                {
-                                    text: 'PARCELA (12 MENSALIDADES)',
-                                    bold: true,
-                                },
-                                {
-                                    text: 'TOTAL DA ANUIDADE ESCOLAR',
-                                    bold: true,
-                                },
-                                {
-                                    text: 'VALOR DO DESCONTO',
-                                    bold: true,
-                                },
-                                {
-                                    text: 'VALOR DA MENSALIDADE COM DESCONTO',
-                                    bold: true,
-                                },
-                                {
-                                    text: 'VALOR DA ANUIDADE COM DESCONTO',
-                                    bold: true,
-                                },
-                            ],
-                            ['\n\n', '\n\n', '\n\n', '\n\n', '\n\n'],
-                        ],
-                    },
+                    table: valuesTable,
                 },
                 {
                     text: [
@@ -824,30 +762,20 @@ class GenerateContractPdfService {
                     text: `BETIM, MG, ${formatDate(
                         new Date(),
                         'dd',
-                    )} de ${formatDate(new Date(), 'MM')} de ${formatDate(
-                        new Date(),
-                        'yyyy',
-                    )}`,
+                    )} DE ${this.formatMonth(
+                        formatDate(new Date(), 'MMMM'),
+                    )} DE ${formatDate(new Date(), 'yyyy')}`,
                     alignment: 'center',
                 },
             ],
         } as TDocumentDefinitions;
 
-        const fileHash = v4();
-        const fileName = `contrato-${fileHash}.pdf`;
-        const filePath = resolve(
-            __dirname,
-            '..',
-            '..',
-            '..',
-            '..',
-            'tmp',
-            fileName,
-        );
+        const generatePDF = new GeneratePDFService();
 
-        const pdfDoc = printer.createPdfKitDocument(docDefinition);
-        pdfDoc.pipe(fs.createWriteStream(filePath));
-        pdfDoc.end();
+        const fileName = generatePDF.execute({
+            docDefinition,
+            deleteFileName: reenrollment.contract,
+        });
 
         await Reenrollment.findOneAndUpdate(
             {
@@ -861,76 +789,37 @@ class GenerateContractPdfService {
             },
         );
 
-        if (reenrollment.contract) {
-            const deletePath = resolve(
-                __dirname,
-                '..',
-                '..',
-                '..',
-                '..',
-                'tmp',
-                reenrollment.contract,
-            );
-
-            fs.unlinkSync(deletePath);
-        }
-
         return fileName;
     }
 
-    private capitalize(str: string): string {
-        if (typeof str === 'string') {
-            return str
-                .toLowerCase()
-                .replace(/(^\w{1})|(\s+\w{1})/g, letter =>
-                    letter.toUpperCase(),
-                );
-        }
-        return '';
-    }
-
-    private formatGrade(
-        grade:
-            | 'maternal'
-            | 'first_period'
-            | 'second_period'
-            | 'first_year'
-            | 'second_year'
-            | 'third_year'
-            | 'fourth_year'
-            | 'fifth_year'
-            | 'sixth_year'
-            | 'seventh_year'
-            | 'eighth_year'
-            | 'nineth_year',
-    ): string {
-        switch (grade) {
-            case 'maternal':
-                return 'Maternal';
-            case 'first_period':
-                return 'Primeiro Período';
-            case 'second_period':
-                return 'Segundo Período';
-            case 'first_year':
-                return '1º Ano';
-            case 'second_year':
-                return '2º Ano';
-            case 'third_year':
-                return '3º Ano';
-            case 'fourth_year':
-                return '4º Ano';
-            case 'fifth_year':
-                return '5º Ano';
-            case 'sixth_year':
-                return '6º Ano';
-            case 'seventh_year':
-                return '7º Ano';
-            case 'eighth_year':
-                return '8º Ano';
-            case 'nineth_year':
-                return '9º Ano';
+    private formatMonth(month: string) {
+        switch (month) {
+            case 'January':
+                return 'JANEIRO';
+            case 'February':
+                return 'FEVEREIRO';
+            case 'March':
+                return 'MARÇO';
+            case 'April':
+                return 'ABRIL';
+            case 'May':
+                return 'MAIO';
+            case 'June':
+                return 'JUNHO';
+            case 'July':
+                return 'JULHO';
+            case 'August':
+                return 'AGOSTO';
+            case 'September':
+                return 'SETEMBRO';
+            case 'October':
+                return 'OUTUBRO';
+            case 'November':
+                return 'NOVEMBRO';
+            case 'December':
+                return 'DEZEMBRO';
             default:
-                return '-';
+                return ' ';
         }
     }
 }

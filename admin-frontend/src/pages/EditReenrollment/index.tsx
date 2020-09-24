@@ -31,11 +31,13 @@ import RadioInput from '../../components/RadioInput';
 import Select from '../../components/Select';
 import Checkbox from '../../components/Checkbox';
 import Button from '../../components/Button';
+import IconBar from '../../components/IconBar';
 import ISendEnrollmentDTO from '../../dtos/ISendEnrollmentDTO';
 import IReenrollmentDTO from '../../dtos/IReenrollmentDTO';
 import enrollmentSchema from '../../schemas/enrollmentSchema';
 import getValidationErrors from '../../utils/getValidationErrors';
 import api from '../../services/api';
+import { formatDate } from '../../utils/formatFunctions';
 
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -58,24 +60,6 @@ const FormPage: React.FC = () => {
   const [showSpecialNecessities, setShowSpecialNecessities] = useState(false);
   const [reaprooveAddress, setReaprooveAddress] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  const formatDate = useCallback((date: Date) => {
-    const d = new Date(date);
-
-    let month = `${d.getMonth() + 1}`;
-    let day = `${d.getDate() + 1}`;
-    const year = d.getFullYear();
-
-    if (month.length < 2) {
-      month = `0${month}`;
-    }
-
-    if (day.length < 2) {
-      day = `0${day}`;
-    }
-
-    return [year, month, day].join('-');
-  }, []);
 
   useEffect(() => {
     const { reenrollment_id } = params;
@@ -145,7 +129,7 @@ const FormPage: React.FC = () => {
           );
         }
       });
-  }, [params, formatDate]);
+  }, [params]);
 
   useEffect(() => {
     if (reaprooveAddress) {
@@ -282,6 +266,8 @@ const FormPage: React.FC = () => {
 
   return (
     <Container>
+      <IconBar />
+
       <h1>Editar Pedido de Rematrícula</h1>
 
       <Form ref={formRef} onSubmit={handleSubmitForm}>

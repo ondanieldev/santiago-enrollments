@@ -2,9 +2,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { Container, GradesList } from './styles';
+import IconBar from '../../components/IconBar';
 
 const Grades: React.FC = () => (
   <Container>
+    <IconBar hideGoBack hideGoHome />
+
     <h1>Turmas</h1>
 
     <strong>Selecione uma turma</strong>

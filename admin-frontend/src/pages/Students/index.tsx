@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
 import { Container, StudentsList } from './styles';
+import IconBar from '../../components/IconBar';
 import api from '../../services/api';
 
 interface IParams {
@@ -28,6 +29,8 @@ const Students: React.FC = () => {
 
   return (
     <Container>
+      <IconBar />
+
       <h1>Alunos</h1>
 
       <strong>Selecione um aluno</strong>

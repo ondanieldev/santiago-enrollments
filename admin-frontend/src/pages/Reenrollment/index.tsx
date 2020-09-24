@@ -11,8 +11,15 @@ import Heading from '../../components/Heading';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import Document from '../../components/Document';
+import IconBar from '../../components/IconBar';
 import api from '../../services/api';
 import getValidationErrors from '../../utils/getValidationErrors';
+import {
+  formatDate,
+  formatEducationLevel,
+  formatGender,
+  formatRace,
+} from '../../utils/formatFunctions';
 
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -52,88 +59,10 @@ const Reenrollment: React.FC = () => {
       const { data } = response;
 
       if (data) {
-        console.log(data);
         setReenrollment(data);
       }
     });
   }, [params]);
-
-  const formatEducationLevel = useCallback(educationLevel => {
-    switch (educationLevel) {
-      case 'elementary_incompleted':
-        return 'Fundamental incompleto';
-
-      case 'elementary_completed':
-        return 'Fundamental completo';
-
-      case 'highschool_incompleted':
-        return 'Segundo grau incompleto';
-
-      case 'highschool_completed':
-        return 'Segundo grau completo';
-
-      case 'university_incompleted':
-        return 'Superior incompleto';
-
-      case 'university_completed':
-        return 'Superior completo';
-      default:
-        return '';
-    }
-  }, []);
-
-  const formatGender = useCallback(gender => {
-    switch (gender) {
-      case 'male':
-        return 'Masculino';
-
-      case 'female':
-        return 'Feminino';
-
-      default:
-        return '';
-    }
-  }, []);
-
-  const formatRace = useCallback(race => {
-    switch (race) {
-      case 'white':
-        return 'Branco';
-
-      case 'brown':
-        return 'Pardo';
-
-      case 'black':
-        return 'Negro';
-
-      case 'indigenous':
-        return 'Indígena';
-
-      case 'yellow':
-        return 'Amarelo';
-
-      default:
-        return '';
-    }
-  }, []);
-
-  const formatDate = useCallback((date: Date) => {
-    const d = new Date(date);
-
-    let month = `${d.getMonth() + 1}`;
-    let day = `${d.getDate() + 1}`;
-    const year = d.getFullYear();
-
-    if (month.length < 2) {
-      month = `0${month}`;
-    }
-
-    if (day.length < 2) {
-      day = `0${day}`;
-    }
-
-    return [day, month, year].join('/');
-  }, []);
 
   const handleSubmitForm = useCallback(
     async (data: IFormData) => {
@@ -156,7 +85,7 @@ const Reenrollment: React.FC = () => {
         });
 
         const response = await api.patch(
-          `/reenrollments/${reenrollment.student_name}`,
+          `/reenrollments/pdfs/${reenrollment.student_name}`,
           data,
         );
 
@@ -188,9 +117,35 @@ const Reenrollment: React.FC = () => {
     history.push(`/edit/${reenrollment_id}`);
   }, [params, history]);
 
+  const handleSendMail = useCallback(async () => {
+    try {
+      setLoading(true);
+
+      const { financial_name, student_gender, student_name } = reenrollment;
+
+      await api.post('/reenrollments/mail', {
+        reenrollmentForm: documents[0].link,
+        contract: documents[1].link,
+        checklist: documents[2].link,
+        responsibleEmail: 'oficial.danieloliveira@gmail.com',
+        responsibleName: financial_name,
+        studentGender: student_gender,
+        studentName: student_name,
+      });
+
+      toast.success('E-mail enviado com sucesso!');
+    } catch (err) {
+      toast.error('Erro ao enviar e-mail para o responsável!');
+    } finally {
+      setLoading(false);
+    }
+  }, [reenrollment, documents]);
+
   return (
     <Container>
       <Top>
+        <IconBar />
+
         <h1>Solicitação de Rematrícula</h1>
 
         <strong>
@@ -490,7 +445,11 @@ const Reenrollment: React.FC = () => {
             </Button>
           </>
         )}
-        {documents.length > 0 && <Button type="button">Enviar e-mail</Button>}
+        {documents.length > 0 && (
+          <Button type="button" loading={loading} onClick={handleSendMail}>
+            Enviar e-mail
+          </Button>
+        )}
       </Form>
 
       {documents.length > 0 && (
@@ -499,7 +458,6 @@ const Reenrollment: React.FC = () => {
             <Document
               key={document.link}
               name={document.name}
-              // link={`http://162.241.93.179:3333/public/${document.link}`}
               link={`http://localhost:3333/public/${document.link}`}
             />
           ))}
