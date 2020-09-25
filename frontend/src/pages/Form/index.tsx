@@ -123,6 +123,10 @@ const FormPage: React.FC = () => {
           abortEarly: false,
         });
 
+        enrollment.student_origin_school = showOriginSchool
+          ? enrollment.student_origin_school
+          : '';
+
         enrollment.student_health_plan = showHealthPlan
           ? enrollment.student_health_plan
           : '';
@@ -180,12 +184,13 @@ const FormPage: React.FC = () => {
       showMedicationAlergy,
       showHealthProblem,
       showFoodAlergy,
+      showOriginSchool,
     ],
   );
 
   return (
     <Container>
-      <h1>Ficha de Matrícula - Ano 2021</h1>
+      <h1>Ficha de Matrícula/Rematrícula - Ano 2021</h1>
 
       <Form ref={formRef} onSubmit={handleSubmitForm}>
         <FormGroup>
@@ -726,7 +731,7 @@ const FormPage: React.FC = () => {
           <InputGroup displayColumn={window.innerWidth <= 700}>
             <RadioInput
               name="has_special_necessities"
-              label="Possui alguma necessidade especial?"
+              label="Possui alguma necessidade especial ou deficiência?"
               options={[
                 { id: 'hsn1', label: 'Sim', value: 'yes' },
                 { id: 'hsn2', label: 'Não', value: 'no', default: true },
@@ -746,7 +751,7 @@ const FormPage: React.FC = () => {
           <InputGroup displayColumn={window.innerWidth <= 700}>
             <RadioInput
               name="student_ease_relating"
-              label="Tem facilidade de se relacionar?"
+              label="Tem facilidade de se relacionar com as pessoas?"
               options={[
                 { id: 'ser1', label: 'Sim', value: 'yes' },
                 { id: 'ser2', label: 'Não', value: 'no', default: true },
