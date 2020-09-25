@@ -1,8 +1,5 @@
-import PDFMake from 'pdfmake';
 import mongoose from 'mongoose';
-import fs from 'fs';
 import { resolve } from 'path';
-import { v4 } from 'uuid';
 import { format as formatDate } from 'date-fns';
 import { TDocumentDefinitions } from 'pdfmake/interfaces';
 
