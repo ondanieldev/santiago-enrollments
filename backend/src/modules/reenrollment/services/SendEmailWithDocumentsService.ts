@@ -52,7 +52,7 @@ class SendEmailWithDocumentsService {
         );
 
         nodemailer.sendMail({
-            from: `"Daniel Oliveira" <${process.env.NODEMAILER_USER}>`,
+            from: `"Colégio Santiago" <${process.env.NODEMAILER_USER}>`,
             to: responsibleEmail,
             subject: 'Solicitação de Rematrícula',
             text:
