@@ -28,6 +28,8 @@
         "no-underscore-dangle": "off",
         "no-extend-native": "off",
         "no-restricted-syntax": "off",
+        "@typescript-eslint/no-this-alias": "off",
+        "func-names": "off",
         "@typescript-eslint/no-unused-vars": ["error", {
             "argsIgnorePattern": "_"
         }],

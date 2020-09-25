@@ -1,5 +1,7 @@
 import { Schema, Document } from 'mongoose';
 
+import autoIncrementModelID from '@modules/reenrollment/infra/mongoose/schemas/CounterSchema';
+
 const ReenrollmentSchema = new Schema({
     enrollment_number: Number,
 
@@ -169,5 +171,14 @@ interface IReenrollment extends Document {
     contract: string;
     checklist: string;
 }
+
+ReenrollmentSchema.pre('save', function (next) {
+    if (!this.isNew) {
+        next();
+        return;
+    }
+
+    autoIncrementModelID('Reenrollment', this, next);
+});
 
 export { ReenrollmentSchema, IReenrollment };
