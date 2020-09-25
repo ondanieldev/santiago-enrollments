@@ -57,7 +57,7 @@ class SendEmailWithDocumentsService {
             subject: 'Solicitação de Rematrícula',
             text:
                 `Olá, ${this.capitalize(responsibleName)}!\n\n` +
-                `O processo de rematricula para o ano de 2021 ${
+                `O processo de matricula para o ano de 2021 ${
                     studentGender === 'male' ? 'do' : 'da'
                 } ${this.capitalize(studentName)} foi iniciado!` +
                 ' Segue em anexo o contrato de prestação de serviços educacionais,' +

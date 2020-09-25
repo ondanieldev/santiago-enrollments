@@ -44,6 +44,7 @@ const FormPage: React.FC = () => {
 
   const history = useHistory();
 
+  const [showOriginSchool, setShowOriginSchool] = useState(false);
   const [showHealthPlan, setShowHealthPlan] = useState(false);
   const [showFoodAlergy, setShowFoodAlergy] = useState(false);
   const [showHealthProblem, setShowHealthProblem] = useState(false);
@@ -184,7 +185,7 @@ const FormPage: React.FC = () => {
 
   return (
     <Container>
-      <h1>Ficha de Rematrícula - Ano 2021</h1>
+      <h1>Ficha de Matrícula - Ano 2021</h1>
 
       <Form ref={formRef} onSubmit={handleSubmitForm}>
         <FormGroup>
@@ -537,24 +538,18 @@ const FormPage: React.FC = () => {
               placeholder="Nacionalidade"
               icon={FiFlag}
             />
+          </InputGroup>
 
+          <InputGroup displayColumn={window.innerWidth <= 700}>
             <Input
               name="student_birth_city"
               placeholder="Cidade natal"
               icon={FiMapPin}
             />
-          </InputGroup>
 
-          <InputGroup displayColumn={window.innerWidth <= 700}>
             <Input
               name="student_birth_state"
               placeholder="Estado natal"
-              icon={FiMapPin}
-            />
-
-            <Input
-              name="student_origin_school"
-              placeholder="Escola de origem"
               icon={FiMapPin}
             />
           </InputGroup>
@@ -617,6 +612,30 @@ const FormPage: React.FC = () => {
               <option value="eighth_year">8º ano 2021</option>
               <option value="nineth_year">9º ano 2021</option>
             </Select>
+          </InputGroup>
+
+          <InputGroup displayColumn={window.innerWidth <= 700}>
+            <RadioInput
+              name="has_origin_school"
+              label="Selecione uma opção:"
+              options={[
+                { id: 'hos1', label: 'Matrícula', value: 'no', default: true },
+                {
+                  id: 'hos2',
+                  label: 'Rematrícula',
+                  value: 'yes',
+                },
+              ]}
+              change={value => setShowOriginSchool(value === 'yes')}
+            />
+
+            {showOriginSchool && (
+              <Input
+                name="student_origin_school"
+                placeholder="Escola de origem"
+                icon={FiMapPin}
+              />
+            )}
           </InputGroup>
 
           <InputGroup displayColumn={window.innerWidth <= 700}>

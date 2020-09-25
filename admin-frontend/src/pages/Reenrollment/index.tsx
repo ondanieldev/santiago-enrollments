@@ -348,7 +348,13 @@ const Reenrollment: React.FC = () => {
             <tbody>
               <tr>
                 <td>Nome</td>
-                <td>{reenrollment.student_name}</td>
+                <td>
+                  {`${reenrollment.student_name} - ${
+                    reenrollment.student_origin_school
+                      ? 'MATRÍCULA'
+                      : 'REMATRÍCULA'
+                  }`}
+                </td>
               </tr>
               <tr>
                 <td>Nome do pai</td>
