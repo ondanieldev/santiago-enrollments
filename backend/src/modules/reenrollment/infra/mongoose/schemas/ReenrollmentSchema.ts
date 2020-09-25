@@ -1,5 +1,4 @@
 import { Schema, Document } from 'mongoose';
-import { plugin } from 'mongoose-auto-increment';
 
 const ReenrollmentSchema = new Schema({
     enrollment_number: Number,
@@ -170,10 +169,5 @@ interface IReenrollment extends Document {
     contract: string;
     checklist: string;
 }
-
-ReenrollmentSchema.plugin(plugin, {
-    model: 'Reenrollment',
-    field: 'enrollment_number',
-});
 
 export { ReenrollmentSchema, IReenrollment };
