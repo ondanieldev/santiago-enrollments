@@ -30,8 +30,8 @@ app.use((err: Error, request: Request, response: Response, _: NextFunction) => {
     }
 
     nodemailer.sendMail({
-        from: `"Daniel Oliveira" <${process.env.NODEMAILER_USER}>`,
-        to: 'matriculas@colegiosantiago.com.br',
+        from: `"Colégio Santiago" <${process.env.NODEMAILER_USER}>`,
+        to: process.env.NODEMAILER_USER,
         subject: 'ERRO NO SERVIDOR',
         text: `O servidor obteve o seguinte erro durante a execução: ${err}`,
     });
