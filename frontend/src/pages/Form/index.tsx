@@ -619,11 +619,16 @@ const FormPage: React.FC = () => {
               name="has_origin_school"
               label="Selecione uma opção:"
               options={[
-                { id: 'hos1', label: 'Matrícula', value: 'no', default: true },
+                {
+                  id: 'hos1',
+                  label: 'Matrícula',
+                  value: 'yes',
+                },
                 {
                   id: 'hos2',
                   label: 'Rematrícula',
-                  value: 'yes',
+                  value: 'no',
+                  default: true,
                 },
               ]}
               change={value => setShowOriginSchool(value === 'yes')}
