@@ -31,3 +31,7 @@
 ## Dev
 [x] email de aviso no caso do banco falhar
 [x] enviar e-mail para o responsável após a emissão dos documentos
+[] id para consultas
+[] atributo incrementável
+[] atributo de pagamento
+[] número de contrato

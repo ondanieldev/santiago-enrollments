@@ -1,6 +1,9 @@
 import { Schema, Document } from 'mongoose';
+import { plugin } from 'mongoose-auto-increment';
 
-export const ReenrollmentSchema = new Schema({
+const ReenrollmentSchema = new Schema({
+    enrollment_number: Number,
+
     financial_name: String,
     financial_kinship: String,
     financial_birth_date: Date,
@@ -70,8 +73,10 @@ export const ReenrollmentSchema = new Schema({
     checklist: String,
 });
 
-export interface IReenrollment extends Document {
+interface IReenrollment extends Document {
     _id: string;
+
+    enrollment_number: number;
 
     financial_name: string;
     financial_kinship: string;
@@ -165,3 +170,10 @@ export interface IReenrollment extends Document {
     contract: string;
     checklist: string;
 }
+
+ReenrollmentSchema.plugin(plugin, {
+    model: 'Reenrollment',
+    field: 'enrollment_number',
+});
+
+export { ReenrollmentSchema, IReenrollment };

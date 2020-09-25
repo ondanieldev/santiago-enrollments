@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import autoIncrement from 'mongoose-auto-increment';
 
 mongoose
     .connect(
@@ -8,9 +9,10 @@ mongoose
             useUnifiedTopology: true,
         },
     )
-    .then(() => {
+    .then(res => {
         const msg = 'MongoDB connected!';
         console.log('\x1b[42m\x1b[30m%s', msg, '\x1b[0m');
+        autoIncrement.initialize(res.connection);
     })
     .catch(err => {
         const msg = 'ERRO! Não foi possível conectar com o MongoDB!';

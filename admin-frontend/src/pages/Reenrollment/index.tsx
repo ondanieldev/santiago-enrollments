@@ -15,7 +15,7 @@ import IconBar from '../../components/IconBar';
 import api from '../../services/api';
 import getValidationErrors from '../../utils/getValidationErrors';
 import {
-  formatDate,
+  prettyDate,
   formatEducationLevel,
   formatGender,
   formatRace,
@@ -178,7 +178,7 @@ const Reenrollment: React.FC = () => {
               </tr>
               <tr>
                 <td>Data de nascimento</td>
-                <td>{formatDate(reenrollment.financial_birth_date)}</td>
+                <td>{prettyDate(reenrollment.financial_birth_date)}</td>
               </tr>
               <tr>
                 <td>Nacionalidade</td>
@@ -268,7 +268,7 @@ const Reenrollment: React.FC = () => {
               </tr>
               <tr>
                 <td>Data de nascimento</td>
-                <td>{formatDate(reenrollment.supportive_birth_date)}</td>
+                <td>{prettyDate(reenrollment.supportive_birth_date)}</td>
               </tr>
               <tr>
                 <td>Nacionalidade</td>
@@ -366,7 +366,7 @@ const Reenrollment: React.FC = () => {
               </tr>
               <tr>
                 <td>Data de nascimento</td>
-                <td>{formatDate(reenrollment.student_birth_date)}</td>
+                <td>{prettyDate(reenrollment.student_birth_date)}</td>
               </tr>
               <tr>
                 <td>Nacionalidade</td>
@@ -392,10 +392,12 @@ const Reenrollment: React.FC = () => {
                 <td>Facilidade em se relacionar</td>
                 <td>{reenrollment.student_ease_relating ? 'Sim' : 'Não'}</td>
               </tr>
-              <tr>
-                <td>Escola de origem</td>
-                <td>{reenrollment.student_origin_school}</td>
-              </tr>
+              {reenrollment.student_origin_school && (
+                <tr>
+                  <td>Escola de origem</td>
+                  <td>{reenrollment.student_origin_school}</td>
+                </tr>
+              )}
               {reenrollment.student_health_plan && (
                 <tr>
                   <td>Plano de saúde</td>
@@ -465,6 +467,7 @@ const Reenrollment: React.FC = () => {
               key={document.link}
               name={document.name}
               link={`http://162.241.93.179:3333/public/${document.link}`}
+              // link={`http://localhost:3333/public/${document.link}`}
             />
           ))}
         </DocumentGroup>

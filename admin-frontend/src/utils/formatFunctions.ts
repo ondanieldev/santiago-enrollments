@@ -16,6 +16,24 @@ export const formatDate = (date: Date): string => {
   return [year, month, day].join('-');
 };
 
+export const prettyDate = (date: Date): string => {
+  const d = new Date(date);
+
+  let month = `${d.getMonth() + 1}`;
+  let day = `${d.getDate() + 1}`;
+  const year = d.getFullYear();
+
+  if (month.length < 2) {
+    month = `0${month}`;
+  }
+
+  if (day.length < 2) {
+    day = `0${day}`;
+  }
+
+  return [day, month, year].join('/');
+};
+
 export const formatEducationLevel = (educationLevel: string): string => {
   switch (educationLevel) {
     case 'elementary_incompleted':
