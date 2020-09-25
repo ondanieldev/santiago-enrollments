@@ -464,7 +464,7 @@ const Reenrollment: React.FC = () => {
             <Document
               key={document.link}
               name={document.name}
-              link={`http://localhost:3333/public/${document.link}`}
+              link={`http://162.241.93.179:3333/public/${document.link}`}
             />
           ))}
         </DocumentGroup>
