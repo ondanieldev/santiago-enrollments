@@ -72,6 +72,8 @@ const ReenrollmentSchema = new Schema({
     reenrollment_form: String,
     contract: String,
     checklist: String,
+
+    paid: { type: Boolean, default: false },
 });
 
 interface IReenrollment extends Document {
@@ -170,6 +172,8 @@ interface IReenrollment extends Document {
     reenrollment_form: string;
     contract: string;
     checklist: string;
+
+    paid: boolean;
 }
 
 ReenrollmentSchema.pre('save', function (next) {

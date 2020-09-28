@@ -32,6 +32,7 @@ import Select from '../../components/Select';
 import Checkbox from '../../components/Checkbox';
 import Button from '../../components/Button';
 import IconBar from '../../components/IconBar';
+import Loading from '../../components/Loading';
 import ISendEnrollmentDTO from '../../dtos/ISendEnrollmentDTO';
 import IReenrollmentDTO from '../../dtos/IReenrollmentDTO';
 import enrollmentSchema from '../../schemas/enrollmentSchema';
@@ -44,7 +45,7 @@ import 'react-toastify/dist/ReactToastify.css';
 toast.configure();
 
 interface IParams {
-  reenrollment_id: string;
+  reenrollment_number: string;
 }
 
 const FormPage: React.FC = () => {
@@ -53,6 +54,7 @@ const FormPage: React.FC = () => {
   const history = useHistory();
   const params = useParams<IParams>();
 
+  const [loadingData, setLoadingData] = useState(true);
   const [showHealthPlan, setShowHealthPlan] = useState(false);
   const [showFoodAlergy, setShowFoodAlergy] = useState(false);
   const [showHealthProblem, setShowHealthProblem] = useState(false);
@@ -62,10 +64,10 @@ const FormPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const { reenrollment_id } = params;
+    const { reenrollment_number } = params;
 
     api
-      .get(`/reenrollments/${reenrollment_id}`)
+      .get(`/reenrollments/${reenrollment_number}`)
       .then((response: AxiosResponse<IReenrollmentDTO>) => {
         formRef.current?.setData(response.data);
 
@@ -128,6 +130,9 @@ const FormPage: React.FC = () => {
             response.data.student_special_necessities,
           );
         }
+      })
+      .finally(() => {
+        setLoadingData(false);
       });
   }, [params]);
 
@@ -229,15 +234,15 @@ const FormPage: React.FC = () => {
           ? (enrollment.student_ease_relating = true)
           : (enrollment.student_ease_relating = false);
 
-        const { reenrollment_id } = params;
+        const { reenrollment_number } = params;
 
-        await api.put(`/reenrollments/${reenrollment_id}`, enrollment);
+        await api.put(`/reenrollments/${reenrollment_number}`, enrollment);
 
         reset();
 
         toast.success('Dados salvos com sucesso!');
 
-        history.push(`/reenrollment/${reenrollment_id}`);
+        history.push(`/reenrollment/${reenrollment_number}`);
       } catch (err) {
         if (err instanceof YupValidationError) {
           const errors = getValidationErrors(err);
@@ -266,6 +271,8 @@ const FormPage: React.FC = () => {
 
   return (
     <Container>
+      <Loading show={loadingData} />
+
       <IconBar />
 
       <h1>Editar Pedido de Rematrícula</h1>

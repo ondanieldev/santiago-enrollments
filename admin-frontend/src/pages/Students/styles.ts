@@ -1,4 +1,8 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
+
+interface IStudentProps {
+  paid: boolean;
+}
 
 export const Container = styled.div`
   display: flex;
@@ -18,11 +22,22 @@ export const StudentsList = styled.div`
   border: 2px solid #013c64;
   border-radius: 4px;
   overflow: hidden;
+`;
+
+export const Student = styled.div<IStudentProps>`
+  display: flex;
+  align-items: center;
 
   a {
-    display: block;
+    flex: 1;
     padding: 12px 24px;
     transition: background-color 0.15s;
+
+    ${props =>
+      props.paid &&
+      css`
+        color: #4caf50;
+      `}
 
     &:nth-child(even) {
       background-color: #ced4da;
@@ -31,5 +46,12 @@ export const StudentsList = styled.div`
     &:hover {
       background-color: #ffcf00;
     }
+  }
+
+  button {
+    max-width: 25px;
+    max-height: 25px;
+    padding: 0;
+    margin: 0 12px;
   }
 `;

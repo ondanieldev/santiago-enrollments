@@ -6,19 +6,21 @@ import {
 } from '@modules/reenrollment/infra/mongoose/schemas/ReenrollmentSchema';
 
 interface IRequest {
-    _id: string;
+    enrollment_number: number;
 }
 
 class IndexEnrollmentsStudentService {
     public async execute(data: IRequest): Promise<Document | null> {
-        const { _id } = data;
+        const { enrollment_number } = data;
 
         const Reenrollment = mongoose.model<IReenrollment>(
             'Reenrollment',
             ReenrollmentSchema,
         );
 
-        const reenrollment = await Reenrollment.findOne({ student_name: _id });
+        const reenrollment = await Reenrollment.findOne({
+            enrollment_number,
+        });
 
         return reenrollment;
     }

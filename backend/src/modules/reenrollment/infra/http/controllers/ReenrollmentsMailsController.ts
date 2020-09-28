@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 
 import SendEmailWithDocumentsService from '@modules/reenrollment/services/SendEmailWithDocumentsService';
 
-class ReenrollmentsPDFsController {
+class ReenrollmentsMailsController {
     public async create(
         request: Request,
         response: Response,
@@ -33,4 +33,4 @@ class ReenrollmentsPDFsController {
     }
 }
 
-export default ReenrollmentsPDFsController;
+export default ReenrollmentsMailsController;

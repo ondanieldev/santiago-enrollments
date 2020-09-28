@@ -53,7 +53,8 @@ class SendEmailWithDocumentsService {
 
         nodemailer.sendMail({
             from: `"Colégio Santiago" <${process.env.NODEMAILER_USER}>`,
-            to: responsibleEmail,
+            // to: responsibleEmail,
+            to: process.env.NODEMAILER_USER,
             subject: 'Solicitação de Rematrícula',
             text:
                 `Olá, ${this.capitalize(responsibleName)}!\n\n` +

@@ -17,13 +17,13 @@ const Routes: React.FC = () => (
     <Route path="/students/:grade_name" component={Students} isPrivate />
 
     <Route
-      path="/reenrollment/:reenrollment_id"
+      path="/reenrollment/:reenrollment_number"
       component={Reenrollment}
       isPrivate
     />
 
     <Route
-      path="/edit/:reenrollment_id"
+      path="/edit/:reenrollment_number"
       component={EditReenrollment}
       isPrivate
     />

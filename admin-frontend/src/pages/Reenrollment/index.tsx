@@ -12,6 +12,7 @@ import Input from '../../components/Input';
 import Button from '../../components/Button';
 import Document from '../../components/Document';
 import IconBar from '../../components/IconBar';
+import Loading from '../../components/Loading';
 import api from '../../services/api';
 import getValidationErrors from '../../utils/getValidationErrors';
 import {
@@ -24,7 +25,7 @@ import {
 import 'react-toastify/dist/ReactToastify.css';
 
 interface IParams {
-  reenrollment_id: string;
+  reenrollment_number: string;
 }
 
 interface IFormData {
@@ -45,6 +46,7 @@ const Reenrollment: React.FC = () => {
   const params = useParams<IParams>();
   const history = useHistory();
 
+  const [loadingData, setLoadingData] = useState(true);
   const [reenrollment, setReenrollment] = useState({} as IReenrollmentDTO);
   const [showFinancialData, setshowFinancialData] = useState(true);
   const [showSupportiveData, setshowSupportiveData] = useState(true);
@@ -53,15 +55,20 @@ const Reenrollment: React.FC = () => {
   const [documents, setDocuments] = useState([] as IDocument[]);
 
   useEffect(() => {
-    const { reenrollment_id } = params;
+    const { reenrollment_number } = params;
 
-    api.get(`/reenrollments/${reenrollment_id}`).then(response => {
-      const { data } = response;
+    api
+      .get(`/reenrollments/${reenrollment_number}`)
+      .then(response => {
+        const { data } = response;
 
-      if (data) {
-        setReenrollment(data);
-      }
-    });
+        if (data) {
+          setReenrollment(data);
+        }
+      })
+      .finally(() => {
+        setLoadingData(false);
+      });
   }, [params]);
 
   const handleSubmitForm = useCallback(
@@ -77,7 +84,7 @@ const Reenrollment: React.FC = () => {
             .required('Mensalidade obrigatória!'),
           discount_percent: Yup.number()
             .typeError('Desconto inválida!')
-            .required('Desconto obrigatória!'),
+            .required('Desconto obrigatório!'),
         });
 
         await schema.validate(data, {
@@ -85,7 +92,7 @@ const Reenrollment: React.FC = () => {
         });
 
         const response = await api.patch(
-          `/reenrollments/pdfs/${reenrollment.student_name}`,
+          `/reenrollments/pdfs/${reenrollment.enrollment_number}`,
           data,
         );
 
@@ -112,22 +119,27 @@ const Reenrollment: React.FC = () => {
   );
 
   const handleEditData = useCallback(() => {
-    const { reenrollment_id } = params;
+    const { reenrollment_number } = params;
 
-    history.push(`/edit/${reenrollment_id}`);
+    history.push(`/edit/${reenrollment_number}`);
   }, [params, history]);
 
   const handleSendMail = useCallback(async () => {
     try {
       setLoading(true);
 
-      const { financial_name, student_gender, student_name } = reenrollment;
+      const {
+        financial_name,
+        student_gender,
+        student_name,
+        financial_email,
+      } = reenrollment;
 
       await api.post('/reenrollments/mail', {
         reenrollmentForm: documents[0].link,
         contract: documents[1].link,
         checklist: documents[2].link,
-        responsibleEmail: 'oficial.danieloliveira@gmail.com',
+        responsibleEmail: financial_email,
         responsibleName: financial_name,
         studentGender: student_gender,
         studentName: student_name,
@@ -144,6 +156,8 @@ const Reenrollment: React.FC = () => {
   return (
     <Container>
       <Top>
+        <Loading show={loadingData} />
+
         <IconBar />
 
         <h1>Solicitação de Rematrícula</h1>

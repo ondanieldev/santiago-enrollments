@@ -1,5 +1,6 @@
 export default interface IReenrollmentDTO {
   _id: string;
+  enrollment_number: number;
 
   financial_name: string;
   financial_kinship: string;

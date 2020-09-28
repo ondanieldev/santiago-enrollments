@@ -30,6 +30,8 @@
         "no-restricted-syntax": "off",
         "@typescript-eslint/no-this-alias": "off",
         "func-names": "off",
+        "no-empty": "off",
+        "import/first": "off",
         "@typescript-eslint/no-unused-vars": ["error", {
             "argsIgnorePattern": "_"
         }],

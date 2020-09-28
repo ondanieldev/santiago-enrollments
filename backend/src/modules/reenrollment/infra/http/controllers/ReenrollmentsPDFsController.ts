@@ -9,20 +9,22 @@ class ReenrollmentsPDFsController {
         request: Request,
         response: Response,
     ): Promise<Response> {
-        const { _id } = request.params;
+        const { enrollment_number } = request.params;
 
         const { monthly_value, discount_percent } = request.body;
+
+        const number = parseInt(enrollment_number, 10);
 
         const generateReenrollmentFormPdf = new GenerateReenrollmentFormPdfService();
 
         const reenrollmentForm = await generateReenrollmentFormPdf.execute({
-            _id,
+            enrollment_number: number,
         });
 
         const generateContractPdf = new GenerateContractPdfService();
 
         const contract = await generateContractPdf.execute({
-            _id,
+            enrollment_number: number,
             monthly_value,
             discount_percent,
         });
@@ -30,7 +32,7 @@ class ReenrollmentsPDFsController {
         const generateChecklistPdf = new GenerateChecklistPdfService();
 
         const checklist = await generateChecklistPdf.execute({
-            _id,
+            enrollment_number: number,
         });
 
         return response.json([

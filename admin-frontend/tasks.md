@@ -6,8 +6,8 @@
   [x] deixar responsivo
 [x] formatar dados
 [x] edição de dados
-[] matrículas pagas / não pagas
-[] carregamento
-[] mensagem de aviso quando não houver aluno listados
-[] id's
-[] API URL
+[x] matrículas pagas / não pagas
+[x] carregamento
+[x] mensagem de aviso quando não houver aluno listados
+[x] id's
+[x] API URL

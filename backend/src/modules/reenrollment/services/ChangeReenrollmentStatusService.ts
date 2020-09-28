@@ -1,20 +1,19 @@
 import mongoose from 'mongoose';
 
-import NewReenrollmentDTO from '@modules/reenrollment/dtos/NewReenrollmentDTO';
-
 import {
-    ReenrollmentSchema,
     IReenrollment,
+    ReenrollmentSchema,
 } from '@modules/reenrollment/infra/mongoose/schemas/ReenrollmentSchema';
 
-interface IRequest extends NewReenrollmentDTO {
+interface IRequest {
     enrollment_number: number;
+    status: boolean;
 }
 
-class NewEnrollmentService {
+class ChangeReenrollmentStatusService {
     public async execute({
         enrollment_number,
-        ...rest
+        status,
     }: IRequest): Promise<void> {
         const Reenrollment = mongoose.model<IReenrollment>(
             'Reenrollment',
@@ -26,7 +25,7 @@ class NewEnrollmentService {
                 enrollment_number,
             },
             {
-                ...rest,
+                paid: status,
             },
             {
                 useFindAndModify: false,
@@ -35,4 +34,4 @@ class NewEnrollmentService {
     }
 }
 
-export default NewEnrollmentService;
+export default ChangeReenrollmentStatusService;

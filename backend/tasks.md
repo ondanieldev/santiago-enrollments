@@ -31,7 +31,13 @@
 ## Dev
 [x] email de aviso no caso do banco falhar
 [x] enviar e-mail para o responsável após a emissão dos documentos
-[] id para consultas
-[] atributo incrementável
-[] atributo de pagamento
-[] número de contrato
+[x] id para consultas
+[x] atributo incrementável
+[x] atributo de pagamento
+[x] número de contrato
+[] e-mail quando contrato for criado
+[] atualizar cláusulas
+[] revisar textos
+## Quando finalizado
+[] /mail -> enviar e-mail para o responsável
+[] .env -> credenciais do e-mail do colégio

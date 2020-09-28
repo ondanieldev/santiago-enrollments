@@ -42,12 +42,14 @@ class ReenrollmentController {
     }
 
     public async get(request: Request, response: Response): Promise<Response> {
-        const { _id } = request.params;
+        const { enrollment_number } = request.params;
 
         const getReenrollmentData = new GetReenrollmentDataService();
 
+        const number = parseInt(enrollment_number, 10);
+
         const reenrollment = await getReenrollmentData.execute({
-            _id,
+            enrollment_number: number,
         });
 
         return response.json(reenrollment);
@@ -82,7 +84,9 @@ class ReenrollmentController {
     ): Promise<Response> {
         const data: NewReenrollmentDTO = request.body;
 
-        const { _id } = request.params;
+        const { enrollment_number } = request.params;
+
+        const number = parseInt(enrollment_number, 10);
 
         const updateReenrollment = new UpdateReenrollmentService();
 
@@ -96,9 +100,12 @@ class ReenrollmentController {
 
         data.student_birth_date = parseISO(data.student_birth_date.toString());
 
-        await updateReenrollment.execute({ _id, ...data });
+        await updateReenrollment.execute({
+            enrollment_number: number,
+            ...data,
+        });
 
-        return response.json(_id);
+        return response.json(number);
     }
 }
 

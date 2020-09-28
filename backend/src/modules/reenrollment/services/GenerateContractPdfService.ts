@@ -12,14 +12,14 @@ import {
 } from '@modules/reenrollment/infra/mongoose/schemas/ReenrollmentSchema';
 
 interface IRequest {
-    _id: string;
+    enrollment_number: number;
     monthly_value: number;
     discount_percent: number;
 }
 
 class GenerateContractPdfService {
     public async execute({
-        _id,
+        enrollment_number,
         monthly_value,
         discount_percent,
     }: IRequest): Promise<string> {
@@ -29,7 +29,7 @@ class GenerateContractPdfService {
         );
 
         const reenrollmentFromDB = await Reenrollment.findOne({
-            student_name: _id,
+            enrollment_number,
         });
 
         if (!reenrollmentFromDB) {
@@ -776,7 +776,7 @@ class GenerateContractPdfService {
 
         await Reenrollment.findOneAndUpdate(
             {
-                student_name: _id,
+                enrollment_number,
             },
             {
                 contract: fileName,

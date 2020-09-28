@@ -32,7 +32,7 @@ class IndexEnrollmentsStudentService {
 
         const reenrollments = await Reenrollment.find(
             { grade_name },
-            '_id student_name',
+            'enrollment_number student_name paid',
         ).exec();
 
         return reenrollments;

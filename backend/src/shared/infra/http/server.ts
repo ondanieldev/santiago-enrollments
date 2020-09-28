@@ -1,5 +1,10 @@
+import dotenv from 'dotenv';
+
+dotenv.config({
+    path: process.env.NODE_ENV === 'test' ? '.env.testing' : '.env',
+});
+
 import 'reflect-metadata';
-import 'dotenv/config';
 
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
@@ -29,12 +34,14 @@ app.use((err: Error, request: Request, response: Response, _: NextFunction) => {
         });
     }
 
-    nodemailer.sendMail({
-        from: `"Colégio Santiago" <${process.env.NODEMAILER_USER}>`,
-        to: process.env.NODEMAILER_USER,
-        subject: 'ERRO NO SERVIDOR',
-        text: `O servidor obteve o seguinte erro durante a execução: ${err}`,
-    });
+    try {
+        nodemailer.sendMail({
+            from: `"Colégio Santiago" <${process.env.NODEMAILER_USER}>`,
+            to: process.env.NODEMAILER_USER,
+            subject: 'ERRO NO SERVIDOR',
+            text: `O servidor obteve o seguinte erro durante a execução: ${err}`,
+        });
+    } catch {}
 
     console.log(err);
 

@@ -12,18 +12,18 @@ import {
 } from '@modules/reenrollment/infra/mongoose/schemas/ReenrollmentSchema';
 
 interface IRequest {
-    _id: string;
+    enrollment_number: number;
 }
 
 class GenerateReenrollmentFormPdfService {
-    public async execute({ _id }: IRequest): Promise<string> {
+    public async execute({ enrollment_number }: IRequest): Promise<string> {
         const Reenrollment = mongoose.model<IReenrollment>(
             'Reenrollment',
             ReenrollmentSchema,
         );
 
         const reenrollmentFromDB = await Reenrollment.findOne({
-            student_name: _id,
+            enrollment_number,
         });
 
         if (!reenrollmentFromDB) {
@@ -366,7 +366,7 @@ class GenerateReenrollmentFormPdfService {
 
         await Reenrollment.findOneAndUpdate(
             {
-                student_name: _id,
+                enrollment_number,
             },
             {
                 reenrollment_form: fileName,
