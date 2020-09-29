@@ -1,8 +1,11 @@
 import { Request, Response } from 'express';
 
+import GetReenrollmentDataService from '@modules/reenrollment/services/GetReenrollmentDataService';
+import PrettierDataService from '@modules/reenrollment/services/PrettierDataService';
 import GenerateReenrollmentFormPdfService from '@modules/reenrollment/services/GenerateReenrollmentFormPdfService';
 import GenerateContractPdfService from '@modules/reenrollment/services/GenerateContractPdfService';
 import GenerateChecklistPdfService from '@modules/reenrollment/services/GenerateChecklistPdfService';
+import AppError from '@shared/errors/AppError';
 
 class ReenrollmentsPDFsController {
     public async update(
@@ -15,23 +18,37 @@ class ReenrollmentsPDFsController {
 
         const number = parseInt(enrollment_number, 10);
 
-        const generateReenrollmentFormPdf = new GenerateReenrollmentFormPdfService();
+        const getReenrollmentData = new GetReenrollmentDataService();
 
-        const reenrollmentForm = await generateReenrollmentFormPdf.execute({
+        const reenrollment = await getReenrollmentData.execute({
             enrollment_number: number,
         });
+
+        if (!reenrollment) {
+            throw new AppError('Número de matrícula inválido!');
+        }
+
+        const prettierData = new PrettierDataService();
+
+        const prettierReenrollment = prettierData.execute(reenrollment);
+
+        const generateReenrollmentFormPdf = new GenerateReenrollmentFormPdfService();
+
+        const reenrollmentForm = await generateReenrollmentFormPdf.execute(
+            prettierReenrollment,
+        );
 
         const generateContractPdf = new GenerateContractPdfService();
 
-        const contract = await generateContractPdf.execute({
-            enrollment_number: number,
-        });
+        const contract = await generateContractPdf.execute(
+            prettierReenrollment,
+        );
 
         const generateChecklistPdf = new GenerateChecklistPdfService();
 
-        const checklist = await generateChecklistPdf.execute({
-            enrollment_number: number,
-        });
+        const checklist = await generateChecklistPdf.execute(
+            prettierReenrollment,
+        );
 
         return response.json([
             {

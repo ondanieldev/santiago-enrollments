@@ -1,37 +1,20 @@
-import mongoose from 'mongoose';
-
 import NewReenrollmentDTO from '@modules/reenrollment/dtos/NewReenrollmentDTO';
-
-import {
-    ReenrollmentSchema,
-    IReenrollment,
-} from '@modules/reenrollment/infra/mongoose/schemas/ReenrollmentSchema';
+import ReenrollmentsRepository from '@modules/reenrollment/infra/mongoose/repositories/ReenrollmentsRepository';
+import { IReenrollmentsRepository } from '@modules/reenrollment/repositories/IReenrollmentsRepository';
 
 interface IRequest extends NewReenrollmentDTO {
     enrollment_number: number;
 }
 
 class NewEnrollmentService {
-    public async execute({
-        enrollment_number,
-        ...rest
-    }: IRequest): Promise<void> {
-        const Reenrollment = mongoose.model<IReenrollment>(
-            'Reenrollment',
-            ReenrollmentSchema,
-        );
+    private reenrollmentsRepository: IReenrollmentsRepository;
 
-        await Reenrollment.findOneAndUpdate(
-            {
-                enrollment_number,
-            },
-            {
-                ...rest,
-            },
-            {
-                useFindAndModify: false,
-            },
-        );
+    constructor() {
+        this.reenrollmentsRepository = new ReenrollmentsRepository();
+    }
+
+    public async execute(data: IRequest): Promise<void> {
+        await this.reenrollmentsRepository.update(data);
     }
 }
 

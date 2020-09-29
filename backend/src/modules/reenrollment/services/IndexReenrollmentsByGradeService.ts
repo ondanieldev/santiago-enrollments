@@ -1,9 +1,6 @@
-import mongoose, { Document } from 'mongoose';
-
-import {
-    ReenrollmentSchema,
-    IReenrollment,
-} from '@modules/reenrollment/infra/mongoose/schemas/ReenrollmentSchema';
+import ReenrollmentsRepository from '@modules/reenrollment/infra/mongoose/repositories/ReenrollmentsRepository';
+import { IReenrollment } from '@modules/reenrollment/infra/mongoose/schemas/ReenrollmentSchema';
+import { IReenrollmentsRepository } from '@modules/reenrollment/repositories/IReenrollmentsRepository';
 
 interface IRequest {
     grade_name:
@@ -22,18 +19,18 @@ interface IRequest {
 }
 
 class IndexEnrollmentsStudentService {
-    public async execute(data: IRequest): Promise<Document[] | []> {
+    private reenrollmentsRepository: IReenrollmentsRepository;
+
+    constructor() {
+        this.reenrollmentsRepository = new ReenrollmentsRepository();
+    }
+
+    public async execute(data: IRequest): Promise<IReenrollment[] | []> {
         const { grade_name } = data;
 
-        const Reenrollment = mongoose.model<IReenrollment>(
-            'Reenrollment',
-            ReenrollmentSchema,
+        const reenrollments = await this.reenrollmentsRepository.indexByGrade(
+            grade_name,
         );
-
-        const reenrollments = await Reenrollment.find(
-            { grade_name },
-            'enrollment_number student_name paid',
-        ).exec();
 
         return reenrollments;
     }

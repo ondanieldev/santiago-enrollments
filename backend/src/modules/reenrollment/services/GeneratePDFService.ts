@@ -1,5 +1,5 @@
 import PDFMake from 'pdfmake';
-import { TDocumentDefinitions } from 'pdfmake/interfaces';
+import { TDocumentDefinitions } from 'pdfmake/interfaces'; // eslint-disable-line
 import { resolve } from 'path';
 import { v4 } from 'uuid';
 import fs from 'fs';

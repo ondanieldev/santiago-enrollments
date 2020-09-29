@@ -1,26 +1,24 @@
-import mongoose, { Document } from 'mongoose';
-
-import {
-    ReenrollmentSchema,
-    IReenrollment,
-} from '@modules/reenrollment/infra/mongoose/schemas/ReenrollmentSchema';
+import ReenrollmentsRepository from '@modules/reenrollment/infra/mongoose/repositories/ReenrollmentsRepository';
+import { IReenrollment } from '@modules/reenrollment/infra/mongoose/schemas/ReenrollmentSchema';
+import { IReenrollmentsRepository } from '@modules/reenrollment/repositories/IReenrollmentsRepository';
 
 interface IRequest {
     enrollment_number: number;
 }
 
 class IndexEnrollmentsStudentService {
-    public async execute(data: IRequest): Promise<Document | null> {
+    private reenrollmentsRepository: IReenrollmentsRepository;
+
+    constructor() {
+        this.reenrollmentsRepository = new ReenrollmentsRepository();
+    }
+
+    public async execute(data: IRequest): Promise<IReenrollment | null> {
         const { enrollment_number } = data;
 
-        const Reenrollment = mongoose.model<IReenrollment>(
-            'Reenrollment',
-            ReenrollmentSchema,
-        );
-
-        const reenrollment = await Reenrollment.findOne({
+        const reenrollment = await this.reenrollmentsRepository.getByEnrollmentNumber(
             enrollment_number,
-        });
+        );
 
         return reenrollment;
     }

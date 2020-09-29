@@ -1,42 +1,23 @@
-import mongoose from 'mongoose';
 import { resolve } from 'path';
 import { format as formatDate } from 'date-fns';
 import { TDocumentDefinitions } from 'pdfmake/interfaces'; // eslint-disable-line
 
-import AppError from '@shared/errors/AppError';
-import PrettierDataService from '@modules/reenrollment/services/PrettierDataService';
+import ReenrollmentsRepository from '@modules/reenrollment/infra/mongoose/repositories/ReenrollmentsRepository';
 import GeneratePDFService from '@modules/reenrollment/services/GeneratePDFService';
-import {
-    ReenrollmentSchema,
-    IReenrollment,
-} from '@modules/reenrollment/infra/mongoose/schemas/ReenrollmentSchema';
-
-interface IRequest {
-    enrollment_number: number;
-}
+import IPrettierEnrollmentDTO from '@modules/reenrollment/dtos/IPrettierEnrollmentDTO';
+import { IReenrollmentsRepository } from '@modules/reenrollment/repositories/IReenrollmentsRepository';
 
 class GenerateContractPdfService {
-    public async execute({ enrollment_number }: IRequest): Promise<string> {
-        const Reenrollment = mongoose.model<IReenrollment>(
-            'Reenrollment',
-            ReenrollmentSchema,
-        );
+    private reenrollmentsRepository: IReenrollmentsRepository;
 
-        const reenrollmentFromDB = await Reenrollment.findOne({
-            enrollment_number,
-        });
+    constructor() {
+        this.reenrollmentsRepository = new ReenrollmentsRepository();
+    }
 
-        if (!reenrollmentFromDB) {
-            throw new AppError('Rematrícula inválida!');
-        }
-
-        const monthlyValue = this.getMonthlyValue(
-            reenrollmentFromDB.grade_name,
-        );
-
-        const prettierData = new PrettierDataService();
-
-        const reenrollment = prettierData.execute(reenrollmentFromDB);
+    public async execute(
+        reenrollment: IPrettierEnrollmentDTO,
+    ): Promise<string> {
+        const monthlyValue = this.getMonthlyValue(reenrollment.grade_name);
 
         const docDefinition = {
             pageSize: 'A4',
@@ -714,60 +695,39 @@ class GenerateContractPdfService {
             deleteFileName: reenrollment.contract,
         });
 
-        await Reenrollment.findOneAndUpdate(
-            {
-                enrollment_number,
-            },
-            {
-                contract: fileName,
-            },
-            {
-                useFindAndModify: false,
-            },
-        );
+        await this.reenrollmentsRepository.updateContract({
+            enrollment_number: reenrollment.enrollment_number,
+            contract: fileName,
+        });
 
         return fileName;
     }
 
-    private getMonthlyValue(
-        grade_name:
-            | 'maternal'
-            | 'first_period'
-            | 'second_period'
-            | 'first_year'
-            | 'second_year'
-            | 'third_year'
-            | 'fourth_year'
-            | 'fifth_year'
-            | 'sixth_year'
-            | 'seventh_year'
-            | 'eighth_year'
-            | 'nineth_year',
-    ): number {
+    private getMonthlyValue(grade_name: string): number {
         switch (grade_name) {
-            case 'maternal':
+            case 'Maternal':
                 return 584;
-            case 'first_period':
+            case 'Primeiro Preríodo':
                 return 584;
-            case 'second_period':
+            case 'Segundo Período':
                 return 584;
-            case 'first_year':
+            case 'Primeiro Ano':
                 return 767;
-            case 'second_year':
+            case 'Segundo Ano':
                 return 767;
-            case 'third_year':
+            case 'Terceiro Ano':
                 return 767;
-            case 'fourth_year':
+            case 'Quarto Ano':
                 return 767;
-            case 'fifth_year':
+            case 'Quinto Ano':
                 return 767;
-            case 'sixth_year':
+            case 'Sexto Ano':
                 return 820;
-            case 'seventh_year':
+            case 'Sétimo Ano':
                 return 820;
-            case 'eighth_year':
+            case 'Oitavo Ano':
                 return 820;
-            case 'nineth_year':
+            case 'Nono Ano':
                 return 820;
             default:
                 return 0;

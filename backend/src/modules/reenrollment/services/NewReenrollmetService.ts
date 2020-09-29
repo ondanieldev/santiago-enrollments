@@ -1,22 +1,17 @@
-import mongoose from 'mongoose';
-
 import nodemailer from '@shared/infra/nodemailer';
 import NewReenrollmentDTO from '@modules/reenrollment/dtos/NewReenrollmentDTO';
-import {
-    ReenrollmentSchema,
-    IReenrollment,
-} from '@modules/reenrollment/infra/mongoose/schemas/ReenrollmentSchema';
+import ReenrollmentsRepository from '@modules/reenrollment/infra/mongoose/repositories/ReenrollmentsRepository';
+import { IReenrollmentsRepository } from '@modules/reenrollment/repositories/IReenrollmentsRepository';
 
 class NewEnrollmentService {
+    private reenrollmentsRepository: IReenrollmentsRepository;
+
+    constructor() {
+        this.reenrollmentsRepository = new ReenrollmentsRepository();
+    }
+
     public async execute(data: NewReenrollmentDTO): Promise<void> {
-        const Reenrollment = mongoose.model<IReenrollment>(
-            'Reenrollment',
-            ReenrollmentSchema,
-        );
-
-        const reenrollment = new Reenrollment(data);
-
-        await reenrollment.save();
+        await this.reenrollmentsRepository.create(data);
 
         nodemailer.sendMail({
             from: `"Colégio Santiago" <${process.env.NODEMAILER_USER}>`,

@@ -1,9 +1,5 @@
-import mongoose from 'mongoose';
-
-import {
-    IReenrollment,
-    ReenrollmentSchema,
-} from '@modules/reenrollment/infra/mongoose/schemas/ReenrollmentSchema';
+import ReenrollmentsRepository from '@modules/reenrollment/infra/mongoose/repositories/ReenrollmentsRepository';
+import { IReenrollmentsRepository } from '@modules/reenrollment/repositories/IReenrollmentsRepository';
 
 interface IRequest {
     enrollment_number: number;
@@ -11,26 +7,20 @@ interface IRequest {
 }
 
 class ChangeReenrollmentStatusService {
+    private reenrollmentsRepository: IReenrollmentsRepository;
+
+    constructor() {
+        this.reenrollmentsRepository = new ReenrollmentsRepository();
+    }
+
     public async execute({
         enrollment_number,
         status,
     }: IRequest): Promise<void> {
-        const Reenrollment = mongoose.model<IReenrollment>(
-            'Reenrollment',
-            ReenrollmentSchema,
-        );
-
-        await Reenrollment.findOneAndUpdate(
-            {
-                enrollment_number,
-            },
-            {
-                paid: status,
-            },
-            {
-                useFindAndModify: false,
-            },
-        );
+        await this.reenrollmentsRepository.updatePaidStatus({
+            enrollment_number,
+            paid: status,
+        });
     }
 }
 

@@ -18,6 +18,10 @@ export const Container = styled.div`
       margin-bottom: 12px;
     }
 
+    span {
+      margin-bottom: 12px;
+    }
+
     button {
       width: 100%;
       max-width: 350px;

@@ -1,39 +1,22 @@
-import mongoose from 'mongoose';
 import { resolve } from 'path';
 import { TDocumentDefinitions } from 'pdfmake/interfaces'; // eslint-disable-line
 import { format as formatDate } from 'date-fns';
 
-import AppError from '@shared/errors/AppError';
-import PrettierDataService from '@modules/reenrollment/services/PrettierDataService';
+import ReenrollmentsRepository from '@modules/reenrollment/infra/mongoose/repositories/ReenrollmentsRepository';
 import GeneratePDFService from '@modules/reenrollment/services/GeneratePDFService';
-import {
-    ReenrollmentSchema,
-    IReenrollment,
-} from '@modules/reenrollment/infra/mongoose/schemas/ReenrollmentSchema';
-
-interface IRequest {
-    enrollment_number: number;
-}
+import IPrettierEnrollmentDTO from '@modules/reenrollment/dtos/IPrettierEnrollmentDTO';
+import { IReenrollmentsRepository } from '@modules/reenrollment/repositories/IReenrollmentsRepository';
 
 class GenerateChecklistPdfService {
-    public async execute({ enrollment_number }: IRequest): Promise<string> {
-        const Reenrollment = mongoose.model<IReenrollment>(
-            'Reenrollment',
-            ReenrollmentSchema,
-        );
+    private reenrollmentsRepository: IReenrollmentsRepository;
 
-        const reenrollmentFromDB = await Reenrollment.findOne({
-            enrollment_number,
-        });
+    constructor() {
+        this.reenrollmentsRepository = new ReenrollmentsRepository();
+    }
 
-        if (!reenrollmentFromDB) {
-            throw new AppError('Rematrícula inválida!');
-        }
-
-        const prettierData = new PrettierDataService();
-
-        const reenrollment = prettierData.execute(reenrollmentFromDB);
-
+    public async execute(
+        reenrollment: IPrettierEnrollmentDTO,
+    ): Promise<string> {
         const docDefinition = {
             pageSize: 'A4',
             pageOrientation: 'portrait',
@@ -317,17 +300,10 @@ class GenerateChecklistPdfService {
             deleteFileName: reenrollment.checklist,
         });
 
-        await Reenrollment.findOneAndUpdate(
-            {
-                enrollment_number,
-            },
-            {
-                checklist: fileName,
-            },
-            {
-                useFindAndModify: false,
-            },
-        );
+        await this.reenrollmentsRepository.updateChecklist({
+            enrollment_number: reenrollment.enrollment_number,
+            checklist: fileName,
+        });
 
         return fileName;
     }

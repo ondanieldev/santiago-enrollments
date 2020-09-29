@@ -45,7 +45,7 @@ const Reenrollment: React.FC = () => {
   const params = useParams<IParams>();
   const history = useHistory();
 
-  const [monthlyValue, setMonthlyValue] = useState(true);
+  const [monthlyValue, setMonthlyValue] = useState(0);
   const [loadingData, setLoadingData] = useState(true);
   const [reenrollment, setReenrollment] = useState({} as IReenrollmentDTO);
   const [showFinancialData, setshowFinancialData] = useState(true);
@@ -71,9 +71,58 @@ const Reenrollment: React.FC = () => {
       });
   }, [params]);
 
-  const handleCalcMonthlyValue = useCallback((discount_percent: number) => {
-    console.log(discount_percent);
-  }, []);
+  const handleCalcMonthlyValue = useCallback(
+    (discountPercent: string): void => {
+      let baseValue = 0;
+
+      switch (reenrollment.grade_name) {
+        case 'maternal':
+          baseValue = 584;
+          break;
+        case 'first_period':
+          baseValue = 584;
+          break;
+        case 'second_period':
+          baseValue = 584;
+          break;
+        case 'first_year':
+          baseValue = 767;
+          break;
+        case 'second_year':
+          baseValue = 767;
+          break;
+        case 'third_year':
+          baseValue = 767;
+          break;
+        case 'fourth_year':
+          baseValue = 767;
+          break;
+        case 'fifth_year':
+          baseValue = 767;
+          break;
+        case 'sixth_year':
+          baseValue = 820;
+          break;
+        case 'seventh_year':
+          baseValue = 820;
+          break;
+        case 'eighth_year':
+          baseValue = 820;
+          break;
+        case 'nineth_year':
+          baseValue = 820;
+          break;
+        default:
+          baseValue = 0;
+          break;
+      }
+
+      const parsedDiscount = parseInt(discountPercent, 10);
+
+      setMonthlyValue(baseValue - (baseValue * parsedDiscount) / 100 || 0);
+    },
+    [reenrollment],
+  );
 
   const handleSubmitForm = useCallback(
     async (data: IFormData) => {
@@ -458,7 +507,7 @@ const Reenrollment: React.FC = () => {
               onChange={e => handleCalcMonthlyValue(e.target.value)}
             />
 
-            <span>{`Valor da mensalidade com desconto: ${monthlyValue}`}</span>
+            <span>{`Valor da mensalidade com desconto: R$ ${monthlyValue}`}</span>
 
             <Button loading={loading} type="submit">
               Gerar documentos
@@ -479,7 +528,6 @@ const Reenrollment: React.FC = () => {
               key={document.link}
               name={document.name}
               link={`http://162.241.93.179:3333/public/${document.link}`}
-              // link={`http://localhost:3333/public/${document.link}`}
             />
           ))}
         </DocumentGroup>
