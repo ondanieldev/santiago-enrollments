@@ -119,7 +119,9 @@ const Reenrollment: React.FC = () => {
 
       const parsedDiscount = parseInt(discountPercent, 10);
 
-      setMonthlyValue(baseValue - (baseValue * parsedDiscount) / 100 || 0);
+      setMonthlyValue(
+        baseValue - (baseValue * parsedDiscount) / 100 || baseValue,
+      );
     },
     [reenrollment],
   );
