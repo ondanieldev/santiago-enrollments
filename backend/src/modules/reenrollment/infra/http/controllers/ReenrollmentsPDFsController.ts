@@ -11,7 +11,7 @@ class ReenrollmentsPDFsController {
     ): Promise<Response> {
         const { enrollment_number } = request.params;
 
-        const { monthly_value, discount_percent } = request.body;
+        // const { monthly_value, discount_percent } = request.body;
 
         const number = parseInt(enrollment_number, 10);
 
@@ -25,8 +25,6 @@ class ReenrollmentsPDFsController {
 
         const contract = await generateContractPdf.execute({
             enrollment_number: number,
-            monthly_value,
-            discount_percent,
         });
 
         const generateChecklistPdf = new GenerateChecklistPdfService();

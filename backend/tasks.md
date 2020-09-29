@@ -35,9 +35,9 @@
 [x] atributo incrementável
 [x] atributo de pagamento
 [x] número de contrato
-[] e-mail quando contrato for criado
-[] atualizar cláusulas
+[x] e-mail quando contrato for criado
+[x] atualizar cláusulas
 [] revisar textos
 ## Quando finalizado
 [] /mail -> enviar e-mail para o responsável
-[] .env -> credenciais do e-mail do colégio
+[x] .env -> credenciais do e-mail do colégio

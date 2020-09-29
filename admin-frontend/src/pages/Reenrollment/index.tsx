@@ -29,7 +29,6 @@ interface IParams {
 }
 
 interface IFormData {
-  monthly_value: number;
   discount_percent: number;
 }
 
@@ -46,6 +45,7 @@ const Reenrollment: React.FC = () => {
   const params = useParams<IParams>();
   const history = useHistory();
 
+  const [monthlyValue, setMonthlyValue] = useState(true);
   const [loadingData, setLoadingData] = useState(true);
   const [reenrollment, setReenrollment] = useState({} as IReenrollmentDTO);
   const [showFinancialData, setshowFinancialData] = useState(true);
@@ -71,6 +71,10 @@ const Reenrollment: React.FC = () => {
       });
   }, [params]);
 
+  const handleCalcMonthlyValue = useCallback((discount_percent: number) => {
+    console.log(discount_percent);
+  }, []);
+
   const handleSubmitForm = useCallback(
     async (data: IFormData) => {
       try {
@@ -79,9 +83,6 @@ const Reenrollment: React.FC = () => {
         formRef.current?.setErrors({});
 
         const schema = Yup.object().shape({
-          monthly_value: Yup.number()
-            .typeError('Mensalidade inválida!')
-            .required('Mensalidade obrigatória!'),
           discount_percent: Yup.number()
             .typeError('Desconto inválida!')
             .required('Desconto obrigatório!'),
@@ -452,15 +453,12 @@ const Reenrollment: React.FC = () => {
           <>
             <Input
               type="number"
-              name="monthly_value"
-              placeholder="Valor da mensalidade"
-            />
-
-            <Input
-              type="number"
               name="discount_percent"
               placeholder="Valor do desconto em %"
+              onChange={e => handleCalcMonthlyValue(e.target.value)}
             />
+
+            <span>{`Valor da mensalidade com desconto: ${monthlyValue}`}</span>
 
             <Button loading={loading} type="submit">
               Gerar documentos

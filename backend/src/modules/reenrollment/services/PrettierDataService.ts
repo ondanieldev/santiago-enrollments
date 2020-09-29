@@ -3,6 +3,8 @@ import { IReenrollment } from '@modules/reenrollment/infra/mongoose/schemas/Reen
 interface IPrettierEnrollment {
     _id: string;
 
+    enrollment_number: number;
+
     financial_name: string;
     financial_kinship: string;
     financial_birth_date: Date;

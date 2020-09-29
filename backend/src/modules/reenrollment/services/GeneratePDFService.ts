@@ -70,11 +70,13 @@ class GeneratePDFService {
                 deleteFileName,
             );
 
-            const fileAlreadyExists = await fs.promises.stat(deletePath);
+            try {
+                const fileAlreadyExists = await fs.promises.stat(deletePath);
 
-            if (fileAlreadyExists) {
-                await fs.promises.unlink(deletePath);
-            }
+                if (fileAlreadyExists) {
+                    await fs.promises.unlink(deletePath);
+                }
+            } catch {}
         }
 
         return fileName;
