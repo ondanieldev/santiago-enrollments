@@ -10,7 +10,10 @@ interface IRequest {
 }
 
 class GeneratePDFService {
-    public execute({ docDefinition, deleteFileName }: IRequest): string {
+    public async execute({
+        docDefinition,
+        deleteFileName,
+    }: IRequest): Promise<string> {
         const fonts = {
             Arial: {
                 normal: resolve(
@@ -67,7 +70,11 @@ class GeneratePDFService {
                 deleteFileName,
             );
 
-            fs.unlinkSync(deletePath);
+            const fileAlreadyExists = await fs.promises.stat(deletePath);
+
+            if (fileAlreadyExists) {
+                await fs.promises.unlink(deletePath);
+            }
         }
 
         return fileName;

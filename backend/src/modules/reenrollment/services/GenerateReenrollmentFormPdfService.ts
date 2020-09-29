@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { resolve } from 'path';
-import { TDocumentDefinitions } from 'pdfmake/interfaces';
+import { TDocumentDefinitions } from 'pdfmake/interfaces'; // eslint-disable-line
 import { format as formatDate } from 'date-fns';
 
 import PrettierDataService from '@modules/reenrollment/services/PrettierDataService';
@@ -359,7 +359,7 @@ class GenerateReenrollmentFormPdfService {
 
         const generatePDF = new GeneratePDFService();
 
-        const fileName = generatePDF.execute({
+        const fileName = await generatePDF.execute({
             docDefinition,
             deleteFileName: reenrollment.reenrollment_form,
         });

@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { resolve } from 'path';
-import { TDocumentDefinitions } from 'pdfmake/interfaces';
+import { TDocumentDefinitions } from 'pdfmake/interfaces'; // eslint-disable-line
 import { format as formatDate } from 'date-fns';
 
 import AppError from '@shared/errors/AppError';
@@ -312,7 +312,7 @@ class GenerateChecklistPdfService {
 
         const generatePDF = new GeneratePDFService();
 
-        const fileName = generatePDF.execute({
+        const fileName = await generatePDF.execute({
             docDefinition,
             deleteFileName: reenrollment.checklist,
         });
