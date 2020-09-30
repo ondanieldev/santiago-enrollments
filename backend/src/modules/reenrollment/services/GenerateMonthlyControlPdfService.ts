@@ -8,7 +8,7 @@ import { IReenrollmentsRepository } from '@modules/reenrollment/repositories/IRe
 
 interface IRequest {
     reenrollment: IPrettierEnrollmentDTO;
-    monthly_with_discount: number;
+    discount_percent: number;
 }
 
 class GenerateMonthlyControlPdfService {
@@ -20,8 +20,12 @@ class GenerateMonthlyControlPdfService {
 
     public async execute({
         reenrollment,
-        monthly_with_discount,
+        discount_percent,
     }: IRequest): Promise<string> {
+        const monthlyValue = reenrollment.monthly_value || 0;
+        const monthlyWithDiscount =
+            monthlyValue - (monthlyValue * discount_percent) / 100;
+
         const logoImage = path.resolve(
             __dirname,
             '..',
@@ -115,11 +119,14 @@ class GenerateMonthlyControlPdfService {
                         {
                             text: [
                                 { text: 'Mensalidade: ', bold: true },
-                                `R$ ${reenrollment.monthly_value}`,
+                                `R$ ${monthlyValue}`,
                             ],
                         },
                         {
-                            text: [{ text: 'Desconto: ', bold: true }, '10%'],
+                            text: [
+                                { text: 'Desconto: ', bold: true },
+                                `${discount_percent}%`,
+                            ],
                             alignment: 'center',
                         },
                         {
@@ -128,7 +135,7 @@ class GenerateMonthlyControlPdfService {
                                     text: 'Mensalidade com desconto: ',
                                     bold: true,
                                 },
-                                `R$ ${monthly_with_discount}`,
+                                `R$ ${monthlyWithDiscount}`,
                             ],
                             alignment: 'right',
                         },

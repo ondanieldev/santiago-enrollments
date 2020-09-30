@@ -61,13 +61,9 @@ class ReenrollmentsPDFsController {
 
         const generateMonthlyControlPdf = new GenerateMonthlyControlPdfService();
 
-        const monthlyWithDiscount =
-            prettierReenrollment.monthly_value -
-            (prettierReenrollment.monthly_value * discount_percent) / 100;
-
         const monthlyControl = await generateMonthlyControlPdf.execute({
             reenrollment: prettierReenrollment,
-            monthly_with_discount: monthlyWithDiscount,
+            discount_percent,
         });
 
         return response.json([
