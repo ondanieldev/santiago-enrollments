@@ -17,7 +17,7 @@ class ReenrollmentsPDFsController {
 
         const { discount_percent } = request.body;
 
-        if (discount_percent < 0) {
+        if (discount_percent !== 0 && !discount_percent) {
             throw new AppError('Desconto inválido!');
         }
 
@@ -39,32 +39,30 @@ class ReenrollmentsPDFsController {
 
         const prettierData = new PrettierDataService();
 
-        const prettierReenrollment = prettierData.execute(reenrollment);
-
         const generateReenrollmentFormPdf = new GenerateReenrollmentFormPdfService();
-
-        const reenrollmentForm = await generateReenrollmentFormPdf.execute(
-            prettierReenrollment,
-        );
 
         const generateContractPdf = new GenerateContractPdfService();
 
-        const contract = await generateContractPdf.execute(
-            prettierReenrollment,
-        );
-
         const generateChecklistPdf = new GenerateChecklistPdfService();
-
-        const checklist = await generateChecklistPdf.execute(
-            prettierReenrollment,
-        );
 
         const generateMonthlyControlPdf = new GenerateMonthlyControlPdfService();
 
-        const monthlyControl = await generateMonthlyControlPdf.execute({
-            reenrollment: prettierReenrollment,
-            discount_percent,
-        });
+        const prettierReenrollment = prettierData.execute(reenrollment);
+
+        const [
+            reenrollmentForm,
+            contract,
+            checklist,
+            monthlyControl,
+        ] = await Promise.all([
+            generateReenrollmentFormPdf.execute(prettierReenrollment),
+            generateContractPdf.execute(prettierReenrollment),
+            generateChecklistPdf.execute(prettierReenrollment),
+            generateMonthlyControlPdf.execute({
+                reenrollment: prettierReenrollment,
+                discount_percent,
+            }),
+        ]);
 
         return response.json([
             {

@@ -1,4 +1,4 @@
-import { resolve } from 'path';
+import path from 'path';
 import { TDocumentDefinitions } from 'pdfmake/interfaces'; // eslint-disable-line
 import { format as formatDate } from 'date-fns';
 
@@ -17,45 +17,72 @@ class GenerateReenrollmentFormPdfService {
     public async execute(
         reenrollment: IPrettierEnrollmentDTO,
     ): Promise<string> {
+        const imageLogo = path.resolve(
+            __dirname,
+            '..',
+            '..',
+            '..',
+            'assets',
+            'images',
+            'logo.png',
+        );
+
         const docDefinition = {
             pageSize: 'A4',
             pageOrientation: 'portrait',
-            pageMargins: [25, 25, 25, 25],
+            pageMargins: [20, 20, 20, 20],
             info: {
-                title: 'Ficha de Rematrícula',
+                title: 'Ficha de Matrícula',
                 author: 'Colégio Santiago',
-                subject: 'Ficha de Rematrícula',
-                keywords: 'Ficha, Rematrícula',
+                subject: 'Ficha de Matrícula',
+                keywords: 'Ficha, Matrícula',
                 creator: 'Colégio Santiago',
                 producer: 'Colégio Santiago',
+            },
+            styles: {
+                heading: {
+                    fontSize: 12,
+                    bold: true,
+                    alignment: 'center',
+                },
+                subheading: {
+                    fontSize: 10,
+                    bold: true,
+                },
+            },
+            defaultStyle: {
+                font: 'Arial',
+                fontSize: 10,
+                lineHeight: 1.25,
+                alignment: 'justify',
             },
             content: [
                 {
                     columns: [
                         {
-                            image: resolve(
-                                __dirname,
-                                '..',
-                                '..',
-                                '..',
-                                'assets',
-                                'images',
-                                'logo.png',
-                            ),
-                            width: 90,
+                            image: imageLogo,
+                            width: 65,
                             alignment: 'center',
                         },
                         {
-                            text: `Ficha de Matrícula - Ano 2021\nEmitido em ${formatDate(
-                                new Date(),
-                                'dd/MM/yyyy',
-                            )}`,
-                            style: 'heading',
-                            alignment: 'center',
+                            text: [
+                                {
+                                    text: 'Ficha de Matrícula - Ano 2021',
+                                    style: 'heading',
+                                },
+                                {
+                                    text: `\nDocumento Emitido em ${formatDate(
+                                        new Date(),
+                                        'dd/MM/yyyy',
+                                    )}`,
+                                    style: 'subheading',
+                                    alignment: 'center',
+                                },
+                            ],
                         },
                         {
                             text: '',
-                            width: 90,
+                            width: 65,
                         },
                     ],
                 },
@@ -64,43 +91,35 @@ class GenerateReenrollmentFormPdfService {
                     style: 'subheading',
                 },
                 // ALUNO
-                {
-                    text: `Nome: ${reenrollment.student_name}`,
-                },
+                `Nome: ${reenrollment.student_name}`,
                 {
                     columns: [
+                        `Data de Nascimento: ${formatDate(
+                            reenrollment.student_birth_date,
+                            'dd/MM/yyyy',
+                        )}`,
                         {
-                            width: 'auto',
-                            text: `Data de Nascimento: ${formatDate(
-                                reenrollment.student_birth_date,
-                                'dd/MM/yyyy',
-                            )}`,
-                        },
-                        {
-                            width: '*',
                             text: `Naturalidade: ${reenrollment.student_birth_city}`,
                             alignment: 'center',
+                            width: '*',
                         },
                         {
-                            width: 'auto',
                             text: `UF: ${reenrollment.student_birth_state}`,
+                            alignment: 'right',
                         },
                     ],
                 },
                 {
                     columns: [
+                        `Nacionalidade: ${reenrollment.student_nacionality}`,
                         {
-                            width: 'auto',
-                            text: `Nacionalidade: ${reenrollment.student_nacionality}`,
-                        },
-                        {
-                            width: '*',
                             text: `Sexo: ${reenrollment.student_gender}`,
                             alignment: 'center',
+                            width: '*',
                         },
                         {
-                            width: 'auto',
                             text: `Cor/Raça: ${reenrollment.student_race}`,
+                            alignment: 'right',
                         },
                     ],
                 },
@@ -109,26 +128,14 @@ class GenerateReenrollmentFormPdfService {
                     text: '\nResponsável Financeiro',
                     style: 'subheading',
                 },
-                {
-                    text: `Nome: ${reenrollment.financial_name}`,
-                },
-                {
-                    text: `E-mail: ${reenrollment.financial_email}`,
-                },
-                {
-                    text: `CEP: ${reenrollment.financial_address_cep}`,
-                },
-                {
-                    text: `Endereço: Rua ${reenrollment.financial_address_street} - Número ${reenrollment.financial_address_number} ${reenrollment.financial_address_complement} - Bairro ${reenrollment.financial_address_neighborhood} - Cidade ${reenrollment.financial_address_city}`,
-                },
+                `Nome: ${reenrollment.financial_name}`,
+                `E-mail: ${reenrollment.financial_email}`,
+                `CEP: ${reenrollment.financial_address_cep}`,
+                `Endereço: Rua ${reenrollment.financial_address_street} - Número ${reenrollment.financial_address_number} ${reenrollment.financial_address_complement} - Bairro ${reenrollment.financial_address_neighborhood} - Cidade ${reenrollment.financial_address_city}`,
                 {
                     columns: [
+                        `RG: ${reenrollment.financial_rg}`,
                         {
-                            width: '*',
-                            text: `RG: ${reenrollment.financial_rg}`,
-                        },
-                        {
-                            width: 'auto',
                             text: `CPF: ${reenrollment.financial_cpf}`,
                             alignment: 'right',
                         },
@@ -136,15 +143,11 @@ class GenerateReenrollmentFormPdfService {
                 },
                 {
                     columns: [
+                        `Aniversário: ${formatDate(
+                            reenrollment.financial_birth_date,
+                            'MM/yyyy',
+                        )}`,
                         {
-                            width: '*',
-                            text: `Aniversário: ${formatDate(
-                                reenrollment.financial_birth_date,
-                                'MM/yyyy',
-                            )}`,
-                        },
-                        {
-                            width: 'auto',
                             text: `Grau de Instrução: ${reenrollment.financial_education_level}`,
                             alignment: 'right',
                         },
@@ -152,12 +155,8 @@ class GenerateReenrollmentFormPdfService {
                 },
                 {
                     columns: [
+                        `Profissão: ${reenrollment.financial_profission}`,
                         {
-                            width: '*',
-                            text: `Profissão: ${reenrollment.financial_profission}`,
-                        },
-                        {
-                            width: 'auto',
                             text: `Telefone Comercial: ${reenrollment.financial_commercial_phone}`,
                             alignment: 'right',
                         },
@@ -165,12 +164,8 @@ class GenerateReenrollmentFormPdfService {
                 },
                 {
                     columns: [
+                        `Telefone Fixo: ${reenrollment.financial_residencial_phone}`,
                         {
-                            width: '*',
-                            text: `Telefone Fixo: ${reenrollment.financial_residencial_phone}`,
-                        },
-                        {
-                            width: 'auto',
                             text: `Telefone Celular: ${reenrollment.financial_personal_phone}`,
                             alignment: 'right',
                         },
@@ -181,26 +176,14 @@ class GenerateReenrollmentFormPdfService {
                     text: '\nResponsável Solidário',
                     style: 'subheading',
                 },
-                {
-                    text: `Nome: ${reenrollment.supportive_name}`,
-                },
-                {
-                    text: `E-mail: ${reenrollment.supportive_email}`,
-                },
-                {
-                    text: `CEP: ${reenrollment.supportive_address_cep}`,
-                },
-                {
-                    text: `Endereço: Rua ${reenrollment.supportive_address_street} - Número ${reenrollment.supportive_address_number} ${reenrollment.supportive_address_complement} - Bairro ${reenrollment.supportive_address_neighborhood} - Cidade ${reenrollment.supportive_address_city}`,
-                },
+                `Nome: ${reenrollment.supportive_name}`,
+                `E-mail: ${reenrollment.supportive_email}`,
+                `CEP: ${reenrollment.supportive_address_cep}`,
+                `Endereço: Rua ${reenrollment.supportive_address_street} - Número ${reenrollment.supportive_address_number} ${reenrollment.supportive_address_complement} - Bairro ${reenrollment.supportive_address_neighborhood} - Cidade ${reenrollment.supportive_address_city}`,
                 {
                     columns: [
+                        `RG: ${reenrollment.supportive_rg}`,
                         {
-                            width: '*',
-                            text: `RG: ${reenrollment.supportive_rg}`,
-                        },
-                        {
-                            width: 'auto',
                             text: `CPF: ${reenrollment.supportive_cpf}`,
                             alignment: 'right',
                         },
@@ -208,15 +191,11 @@ class GenerateReenrollmentFormPdfService {
                 },
                 {
                     columns: [
+                        `Aniversário: ${formatDate(
+                            reenrollment.supportive_birth_date,
+                            'MM/yyyy',
+                        )}`,
                         {
-                            width: '*',
-                            text: `Aniversário: ${formatDate(
-                                reenrollment.supportive_birth_date,
-                                'MM/yyyy',
-                            )}`,
-                        },
-                        {
-                            width: 'auto',
                             text: `Grau de Instrução: ${reenrollment.supportive_education_level}`,
                             alignment: 'right',
                         },
@@ -224,12 +203,8 @@ class GenerateReenrollmentFormPdfService {
                 },
                 {
                     columns: [
+                        `Profissão: ${reenrollment.supportive_profission}`,
                         {
-                            width: '*',
-                            text: `Profissão: ${reenrollment.supportive_profission}`,
-                        },
-                        {
-                            width: 'auto',
                             text: `Telefone Comercial: ${reenrollment.supportive_commercial_phone}`,
                             alignment: 'right',
                         },
@@ -237,12 +212,8 @@ class GenerateReenrollmentFormPdfService {
                 },
                 {
                     columns: [
+                        `Telefone Fixo: ${reenrollment.supportive_residencial_phone}`,
                         {
-                            width: '*',
-                            text: `Telefone Fixo: ${reenrollment.supportive_residencial_phone}`,
-                        },
-                        {
-                            width: 'auto',
                             text: `Telefone Celular: ${reenrollment.supportive_personal_phone}`,
                             alignment: 'right',
                         },
@@ -254,7 +225,9 @@ class GenerateReenrollmentFormPdfService {
                     style: 'subheading',
                 },
                 {
-                    text: `Escola de Origem: ${reenrollment.student_origin_school}`,
+                    text: `Escola de Origem: ${
+                        reenrollment.student_origin_school || 'Colégio Santiago'
+                    }`,
                 },
                 {
                     text: `${
@@ -298,21 +271,21 @@ class GenerateReenrollmentFormPdfService {
                             : 'Declarado pelo responsável que o aluno não é portador de necessidades especiais.'
                     }`,
                 },
+                '\nComprometo-me a regularização dos documentos solicitados pelo colégio de acordo com a legislação em vigor. Esta ficha de matrícula é parte do contrato de Prestação de Serviços Educacionais por adesão, assinado entre as partes conforme o ano letivo em estudo.',
                 {
-                    text:
-                        '\nComprometo-me a regularização dos documentos solicitados pelo colégio de acordo com a legislação em vigor. Esta ficha de matrícula é parte do contrato de Prestação de Serviços Educacionais por adesão, assinado entre as partes conforme o ano letivo em estudo.',
-                    alignment: 'justify',
-                },
-                {
-                    text: '\nAssinatura do Responsável',
+                    text: '\n\n______________________________',
                     alignment: 'center',
                 },
                 {
-                    text: '\n______________________________',
+                    text: 'RESPONSÁVEL FINANCEIRO',
                     alignment: 'center',
                 },
                 {
-                    text: reenrollment.financial_name,
+                    text: reenrollment.financial_name.toUpperCase(),
+                    alignment: 'center',
+                },
+                {
+                    text: '\nBETIM, MG',
                     alignment: 'center',
                 },
                 {
@@ -320,24 +293,6 @@ class GenerateReenrollmentFormPdfService {
                     alignment: 'center',
                 },
             ],
-            styles: {
-                heading: {
-                    font: 'Arial',
-                    fontSize: 12,
-                    bold: true,
-                    alignment: 'center',
-                },
-                subheading: {
-                    font: 'Arial',
-                    fontSize: 11,
-                    bold: true,
-                },
-            },
-            defaultStyle: {
-                font: 'Arial',
-                fontSize: 11,
-                lineHeight: 1.33,
-            },
         } as TDocumentDefinitions;
 
         const generatePDF = new GeneratePDFService();

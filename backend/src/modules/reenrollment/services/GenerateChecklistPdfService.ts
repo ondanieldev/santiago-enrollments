@@ -1,4 +1,4 @@
-import { resolve } from 'path';
+import path from 'path';
 import { TDocumentDefinitions } from 'pdfmake/interfaces'; // eslint-disable-line
 import { format as formatDate } from 'date-fns';
 
@@ -17,50 +17,51 @@ class GenerateChecklistPdfService {
     public async execute(
         reenrollment: IPrettierEnrollmentDTO,
     ): Promise<string> {
+        const imageLogo = path.resolve(
+            __dirname,
+            '..',
+            '..',
+            '..',
+            'assets',
+            'images',
+            'logo.png',
+        );
+
         const docDefinition = {
             pageSize: 'A4',
             pageOrientation: 'portrait',
-            pageMargins: [25, 25, 25, 25],
+            pageMargins: [20, 20, 20, 20],
             info: {
                 title: 'Checklist',
                 author: 'Colégio Santiago',
                 subject: 'Checklist',
-                keywords: 'Ficha, Rematrícula',
+                keywords: 'Checklist, Documentos',
                 creator: 'Colégio Santiago',
                 producer: 'Colégio Santiago',
             },
             styles: {
                 heading: {
-                    font: 'Arial',
                     fontSize: 12,
                     bold: true,
                     alignment: 'center',
                 },
                 subheading: {
-                    font: 'Arial',
-                    fontSize: 11,
+                    fontSize: 10,
                     bold: true,
                 },
             },
             defaultStyle: {
                 font: 'Arial',
                 fontSize: 10,
-                lineHeight: 1.33,
+                lineHeight: 1.25,
+                alignment: 'justify',
             },
             content: [
                 {
                     columns: [
                         {
-                            image: resolve(
-                                __dirname,
-                                '..',
-                                '..',
-                                '..',
-                                'assets',
-                                'images',
-                                'logo.png',
-                            ),
-                            width: 90,
+                            image: imageLogo,
+                            width: 65,
                             alignment: 'center',
                         },
                         {
@@ -68,10 +69,9 @@ class GenerateChecklistPdfService {
                                 {
                                     text: 'Checklist',
                                     style: 'heading',
-                                    alignment: 'center',
                                 },
                                 {
-                                    text: `\nEmitido em ${formatDate(
+                                    text: `\nDocumento Emitido em ${formatDate(
                                         new Date(),
                                         'dd/MM/yyyy',
                                     )}`,
@@ -82,7 +82,7 @@ class GenerateChecklistPdfService {
                         },
                         {
                             text: '',
-                            width: 90,
+                            width: 65,
                         },
                     ],
                 },
@@ -94,38 +94,32 @@ class GenerateChecklistPdfService {
                 `Nome: ${reenrollment.student_name}`,
                 {
                     columns: [
+                        `Data de Nascimento: ${formatDate(
+                            reenrollment.student_birth_date,
+                            'dd/MM/yyyy',
+                        )}`,
                         {
-                            width: 'auto',
-                            text: `Data de Nascimento: ${formatDate(
-                                reenrollment.student_birth_date,
-                                'dd/MM/yyyy',
-                            )}`,
-                        },
-                        {
-                            width: '*',
                             text: `Naturalidade: ${reenrollment.student_birth_city}`,
                             alignment: 'center',
+                            width: '*',
                         },
                         {
-                            width: 'auto',
                             text: `UF: ${reenrollment.student_birth_state}`,
+                            alignment: 'right',
                         },
                     ],
                 },
                 {
                     columns: [
+                        `Nacionalidade: ${reenrollment.student_nacionality}`,
                         {
-                            width: 'auto',
-                            text: `Nacionalidade: ${reenrollment.student_nacionality}`,
-                        },
-                        {
-                            width: '*',
                             text: `Sexo: ${reenrollment.student_gender}`,
                             alignment: 'center',
+                            width: '*',
                         },
                         {
-                            width: 'auto',
                             text: `Cor/Raça: ${reenrollment.student_race}`,
+                            alignment: 'right',
                         },
                     ],
                 },
@@ -134,26 +128,14 @@ class GenerateChecklistPdfService {
                     text: '\nResponsável Financeiro',
                     style: 'subheading',
                 },
-                {
-                    text: `Nome: ${reenrollment.financial_name}`,
-                },
-                {
-                    text: `E-mail: ${reenrollment.financial_email}`,
-                },
-                {
-                    text: `CEP: ${reenrollment.financial_address_cep}`,
-                },
-                {
-                    text: `Endereço: Rua ${reenrollment.financial_address_street} - Número ${reenrollment.financial_address_number} ${reenrollment.financial_address_complement} - Bairro ${reenrollment.financial_address_neighborhood} - Cidade ${reenrollment.financial_address_city}`,
-                },
+                `Nome: ${reenrollment.financial_name}`,
+                `E-mail: ${reenrollment.financial_email}`,
+                `CEP: ${reenrollment.financial_address_cep}`,
+                `Endereço: Rua ${reenrollment.financial_address_street} - Número ${reenrollment.financial_address_number} ${reenrollment.financial_address_complement} - Bairro ${reenrollment.financial_address_neighborhood} - Cidade ${reenrollment.financial_address_city}`,
                 {
                     columns: [
+                        `RG: ${reenrollment.financial_rg}`,
                         {
-                            width: '*',
-                            text: `RG: ${reenrollment.financial_rg}`,
-                        },
-                        {
-                            width: 'auto',
                             text: `CPF: ${reenrollment.financial_cpf}`,
                             alignment: 'right',
                         },
@@ -161,15 +143,11 @@ class GenerateChecklistPdfService {
                 },
                 {
                     columns: [
+                        `Aniversário: ${formatDate(
+                            reenrollment.financial_birth_date,
+                            'MM/yyyy',
+                        )}`,
                         {
-                            width: '*',
-                            text: `Aniversário: ${formatDate(
-                                reenrollment.financial_birth_date,
-                                'MM/yyyy',
-                            )}`,
-                        },
-                        {
-                            width: 'auto',
                             text: `Grau de Instrução: ${reenrollment.financial_education_level}`,
                             alignment: 'right',
                         },
@@ -177,12 +155,8 @@ class GenerateChecklistPdfService {
                 },
                 {
                     columns: [
+                        `Profissão: ${reenrollment.financial_profission}`,
                         {
-                            width: '*',
-                            text: `Profissão: ${reenrollment.financial_profission}`,
-                        },
-                        {
-                            width: 'auto',
                             text: `Telefone Comercial: ${reenrollment.financial_commercial_phone}`,
                             alignment: 'right',
                         },
@@ -190,12 +164,8 @@ class GenerateChecklistPdfService {
                 },
                 {
                     columns: [
+                        `Telefone Fixo: ${reenrollment.financial_residencial_phone}`,
                         {
-                            width: '*',
-                            text: `Telefone Fixo: ${reenrollment.financial_residencial_phone}`,
-                        },
-                        {
-                            width: 'auto',
                             text: `Telefone Celular: ${reenrollment.financial_personal_phone}`,
                             alignment: 'right',
                         },
@@ -206,20 +176,12 @@ class GenerateChecklistPdfService {
                     text: '\nResponsável Solidário',
                     style: 'subheading',
                 },
-                {
-                    text: `Nome: ${reenrollment.supportive_name}`,
-                },
-                {
-                    text: `E-mail: ${reenrollment.supportive_email}`,
-                },
+                `Nome: ${reenrollment.supportive_name}`,
+                `E-mail: ${reenrollment.supportive_email}`,
                 {
                     columns: [
+                        `RG: ${reenrollment.supportive_rg}`,
                         {
-                            width: '*',
-                            text: `RG: ${reenrollment.supportive_rg}`,
-                        },
-                        {
-                            width: 'auto',
                             text: `CPF: ${reenrollment.supportive_cpf}`,
                             alignment: 'right',
                         },
@@ -227,35 +189,26 @@ class GenerateChecklistPdfService {
                 },
                 {
                     columns: [
+                        `Aniversário: ${formatDate(
+                            reenrollment.supportive_birth_date,
+                            'MM/yyyy',
+                        )}`,
                         {
-                            width: 'auto',
-                            text: `Aniversário: ${formatDate(
-                                reenrollment.supportive_birth_date,
-                                'MM/yyyy',
-                            )}`,
-                        },
-                        {
-                            width: '*',
                             text: `Grau de Instrução: ${reenrollment.supportive_education_level}`,
                             alignment: 'center',
+                            width: '*',
                         },
                         {
-                            width: 'auto',
                             text: `Profissão: ${reenrollment.supportive_profission}`,
+                            alignment: 'right',
                         },
                     ],
                 },
                 // Checklist
                 {
-                    text: '\nChecklist',
-                    style: 'subheading',
-                },
-                {
                     columns: [
                         {
-                            width: 'auto',
-                            text: `
-                            02 fotos 3x4\n
+                            text: `\n\n\n02 fotos 3x4\n
                             Certidão de nascimento do aluno\n
                             CPF\n
                             RG\n
@@ -263,13 +216,13 @@ class GenerateChecklistPdfService {
                             Carteira de plano de saúde\n
                             Declaração de transferência escolar\n
                             Histórico escolar\n
-                            Cartão de vacina\n
-                            `,
+                            Cartão de vacina\n\n\n`,
+                            width: 'auto',
                         },
                         {
                             width: '*',
                             alignment: 'right',
-                            text: `
+                            text: `\n\n\nAssinatura: _______________ Data: _____/_____/_____ Hora: _____/_____\n
                             Assinatura: _______________ Data: _____/_____/_____ Hora: _____/_____\n
                             Assinatura: _______________ Data: _____/_____/_____ Hora: _____/_____\n
                             Assinatura: _______________ Data: _____/_____/_____ Hora: _____/_____\n
@@ -277,16 +230,15 @@ class GenerateChecklistPdfService {
                             Assinatura: _______________ Data: _____/_____/_____ Hora: _____/_____\n
                             Assinatura: _______________ Data: _____/_____/_____ Hora: _____/_____\n
                             Assinatura: _______________ Data: _____/_____/_____ Hora: _____/_____\n
-                            Assinatura: _______________ Data: _____/_____/_____ Hora: _____/_____\n
-                            Assinatura: _______________ Data: _____/_____/_____ Hora: _____/_____`,
+                            Assinatura: _______________ Data: _____/_____/_____ Hora: _____/_____\n\n\n`,
                         },
                     ],
                 },
                 {
                     columns: [
-                        '____________________\nSECRETARIA',
-                        '____________________\nRESPONSÁVEL',
-                        '____________________\nDIREÇÃO',
+                        '______________________________\nSECRETARIA',
+                        '______________________________\nRESPONSÁVEL',
+                        '______________________________\nDIREÇÃO',
                     ],
                     alignment: 'center',
                 },

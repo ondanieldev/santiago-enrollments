@@ -1,4 +1,4 @@
-import { resolve } from 'path';
+import path from 'path';
 import { format as formatDate } from 'date-fns';
 import { TDocumentDefinitions } from 'pdfmake/interfaces'; // eslint-disable-line
 
@@ -17,10 +17,22 @@ class GenerateContractPdfService {
     public async execute(
         reenrollment: IPrettierEnrollmentDTO,
     ): Promise<string> {
+        const monthlyValue = reenrollment.monthly_value || 0;
+
+        const imageLogo = path.resolve(
+            __dirname,
+            '..',
+            '..',
+            '..',
+            'assets',
+            'images',
+            'logo.png',
+        );
+
         const docDefinition = {
             pageSize: 'A4',
             pageOrientation: 'portrait',
-            pageMargins: [25, 25, 25, 25],
+            pageMargins: [20, 20, 20, 20],
             info: {
                 title: 'Contrato de Prestação de Serviços Educacionais',
                 author: 'Colégio Santiago',
@@ -31,24 +43,19 @@ class GenerateContractPdfService {
             },
             styles: {
                 headerTitle: {
-                    font: 'Arial',
-                    fontSize: 16,
+                    fontSize: 12,
                     alignment: 'center',
                 },
-                headerSubtitle: {
-                    font: 'Arial',
-                    fontSize: 10,
+                phrase: {
                     alignment: 'center',
+                    fontSize: 9,
                 },
                 heading: {
-                    font: 'Arial',
-                    fontSize: 14,
+                    fontSize: 10,
                     bold: true,
                     alignment: 'center',
                 },
                 subheading: {
-                    font: 'Arial',
-                    fontSize: 12,
                     bold: true,
                     alignment: 'center',
                 },
@@ -60,7 +67,7 @@ class GenerateContractPdfService {
             defaultStyle: {
                 font: 'Arial',
                 fontSize: 8,
-                lineHeight: 1.33,
+                lineHeight: 1.25,
                 alignment: 'justify',
             },
             content: [
@@ -68,46 +75,45 @@ class GenerateContractPdfService {
                 {
                     columns: [
                         {
-                            image: resolve(
-                                __dirname,
-                                '..',
-                                '..',
-                                '..',
-                                'assets',
-                                'images',
-                                'logo.png',
-                            ),
-                            width: 90,
+                            image: imageLogo,
+                            width: 65,
                             alignment: 'center',
                         },
                         {
-                            text:
-                                'Inst. Educacional Doce Mel\nColégio Santiago Ltda',
-                            style: 'headerTitle',
+                            text: [
+                                {
+                                    text:
+                                        'Inst. Educacional Doce Mel — Colégio Santiago Ltda',
+                                    style: 'headerTitle',
+                                },
+                                {
+                                    text:
+                                        '\nDá instrução ao sábio e ele se fará mais sábio, ensina o justo e ele crescerá em entendimento. Prov.9.9',
+                                    style: 'phrase',
+                                },
+                            ],
                         },
                         {
                             text: '',
-                            width: 90,
+                            width: 65,
                         },
                     ],
                 },
                 {
-                    text:
-                        'Dá instrução ao sábio e ele se fará mais sábio, ensina o justo e ele crescerá em entendimento. Prov.9.9',
-                    style: 'headerSubtitle',
-                },
-                {
-                    text: `\nCONTRATO DE PRESTAÇÃO DE SERVIÇOS\nEDUCACIONAIS POR ADESÃO nº ${reenrollment.enrollment_number}/2021`,
+                    text: `CONTRATO DE PRESTAÇÃO DE SERVIÇOS\nEDUCACIONAIS POR ADESÃO nº ${reenrollment.enrollment_number}/2021`,
                     style: 'heading',
                 },
                 {
-                    text: `Emitido em ${formatDate(new Date(), 'dd/MM/yyyy')}`,
+                    text: `Documento Emitido em ${formatDate(
+                        new Date(),
+                        'dd/MM/yyyy',
+                    )}`,
                     style: 'subheading',
                 },
                 // DESCRIÇÃO
                 {
                     text: [
-                        '\nPor este instrumento particular e na melhor forma de Direito, o ',
+                        'Por este instrumento particular e na melhor forma de Direito, o ',
                         {
                             text:
                                 'INSTITUTO EDUCACIONAL DOCE MEL COLÉGIO SANTIAGO LTDA-ME',
@@ -134,7 +140,7 @@ class GenerateContractPdfService {
                 // RESPONSÁVEL FINANCEIRO
                 {
                     text:
-                        '\nCONTRATANTE RESPONSÁVEL PRINCIPAL – (MAIOR DE 18 ANOS)',
+                        'CONTRATANTE RESPONSÁVEL PRINCIPAL – (MAIOR DE 18 ANOS)',
                     bold: true,
                 },
                 {
@@ -209,7 +215,7 @@ class GenerateContractPdfService {
                 // RESPONSÁVEL SOLIDÁRIO
                 {
                     text:
-                        '\nCONTRATANTE RESPONSÁVEL SOLIDÁRIO – (MAIOR DE 18 ANOS)',
+                        'CONTRATANTE RESPONSÁVEL SOLIDÁRIO – (MAIOR DE 18 ANOS)',
                     bold: true,
                 },
                 {
@@ -283,7 +289,7 @@ class GenerateContractPdfService {
                 // ALUNO
                 {
                     text:
-                        '\nIDENTIFICAÇÃO DO BENEFICIÁRIO DOS SERVIÇOS DE EDUCAÇÃO ESCOLAR - ALUNO(A)',
+                        'IDENTIFICAÇÃO DO BENEFICIÁRIO DOS SERVIÇOS DE EDUCAÇÃO ESCOLAR - ALUNO(A)',
                     bold: true,
                 },
                 {
@@ -311,7 +317,7 @@ class GenerateContractPdfService {
                 // CLÁUSULAS
                 // 1ª
                 {
-                    text: '\nCLÁUSULA PRIMEIRA:  DO OBJETO',
+                    text: 'CLÁUSULA PRIMEIRA:  DO OBJETO',
                     style: 'clausule',
                 },
                 'O objeto do presente contrato é a prestação de serviços educacionais ao beneficiário indicado acima, conforme o calendário escolar, regimento interno e Projeto Político-Pedagógico da instituição de ensino e a apresentação dos demais documentos necessários a sua efetivação, em conformidade  com o previsto na legislação de ensino atualmente em vigor.',
@@ -333,7 +339,7 @@ class GenerateContractPdfService {
                 },
                 // 2ª
                 {
-                    text: '\nCLÁUSULA SEGUNDA: DO PREÇO E FORMA DE PAGAMENTO',
+                    text: 'CLÁUSULA SEGUNDA: DO PREÇO E FORMA DE PAGAMENTO',
                     style: 'clausule',
                 },
                 {
@@ -360,8 +366,8 @@ class GenerateContractPdfService {
                                 },
                             ],
                             [
-                                `R$ ${reenrollment.monthly_value},00`,
-                                `R$ ${reenrollment.monthly_value * 12},00`,
+                                `R$ ${monthlyValue},00`,
+                                `R$ ${monthlyValue * 12},00`,
                             ],
                         ],
                     },
@@ -414,7 +420,7 @@ class GenerateContractPdfService {
                 },
                 // 3ª
                 {
-                    text: '\nCLÁUSULA TERCEIRA:  DO ATRASO / INADIMPLÊNCIA',
+                    text: 'CLÁUSULA TERCEIRA:  DO ATRASO / INADIMPLÊNCIA',
                     style: 'clausule',
                 },
                 {
@@ -483,7 +489,7 @@ class GenerateContractPdfService {
                 },
                 // 4ª
                 {
-                    text: '\nCLÁUSULA QUARTA: DA TRANSFERÊNCIA/DESISTÊNCIA',
+                    text: 'CLÁUSULA QUARTA: DA TRANSFERÊNCIA/DESISTÊNCIA',
                     style: 'clausule',
                 },
                 {
@@ -517,7 +523,7 @@ class GenerateContractPdfService {
                 },
                 // 5ª
                 {
-                    text: '\nCLÁUSULA QUINTA: DA RECISÃO',
+                    text: 'CLÁUSULA QUINTA: DA RECISÃO',
                     style: 'clausule',
                 },
                 'O presente contrato poderá ser rescindido:',
@@ -551,7 +557,7 @@ class GenerateContractPdfService {
                 },
                 // 6ª
                 {
-                    text: '\nCLÁUSULA SEXTA: DAS DISPOSIÇÕES GERAIS',
+                    text: 'CLÁUSULA SEXTA: DAS DISPOSIÇÕES GERAIS',
                     style: 'clausule',
                 },
                 {
@@ -651,12 +657,12 @@ class GenerateContractPdfService {
                 },
                 // 7ª
                 {
-                    text: '\nCLÁUSULA SÉTIMA: DO FORO',
+                    text: 'CLÁUSULA SÉTIMA: DO FORO',
                     style: 'clausule',
                 },
                 'As partes elegem o foro da cidade de Betim para dirimir quaisquer duvidas provenientes deste contrato.',
                 'E assim, por estarem justos e contratados, assim o presente em duas vias, também assinadas por duas testemunhas.',
-                '\n\n\n',
+                '\n\n',
                 {
                     columns: [
                         '______________________________\nCOLÉGIO SANTIAGO',
@@ -665,15 +671,15 @@ class GenerateContractPdfService {
                     ],
                     alignment: 'center',
                 },
-                '\n\n\n',
+                '\n\n',
                 {
                     columns: [
-                        '________________________________________\nTESTEMUNHA: CIDINEIA FERREIRA DOS SANTOS ALVES\nCPF:102.005.516-20',
-                        '________________________________________\nTESTEMUNHA: ANA LUIZA GONÇALVES PENIDO\nCPF: 103.446.466-37',
+                        '______________________________\nTESTEMUNHA: CIDINEIA FERREIRA DOS SANTOS ALVES\nCPF:102.005.516-20',
+                        '______________________________\nTESTEMUNHA: ANA LUIZA GONÇALVES PENIDO\nCPF: 103.446.466-37',
                     ],
                     alignment: 'center',
                 },
-                '\n\n\n',
+                '\n\n',
                 {
                     text: `BETIM, MG\n${formatDate(
                         new Date(),

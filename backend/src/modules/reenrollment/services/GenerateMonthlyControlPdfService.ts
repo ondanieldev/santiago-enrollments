@@ -65,7 +65,7 @@ class GenerateMonthlyControlPdfService {
             defaultStyle: {
                 font: 'Arial',
                 fontSize: 9,
-                lineHeight: 1.2,
+                lineHeight: 1.25,
                 alignment: 'justify',
             },
             content: [
@@ -101,15 +101,22 @@ class GenerateMonthlyControlPdfService {
                     ],
                 },
                 {
+                    text: `${reenrollment.student_name} — ${reenrollment.grade_name}`,
+                    style: 'heading',
+                },
+                {
                     columns: [
                         {
                             text: [
-                                { text: 'Aluno(a): ', bold: true },
-                                reenrollment.student_name,
+                                { text: 'Pai: ', bold: true },
+                                reenrollment.student_father_name,
                             ],
                         },
                         {
-                            text: [{ text: 'Turma: ', bold: true }, '1º Ano'],
+                            text: [
+                                { text: 'Mãe: ', bold: true },
+                                reenrollment.student_mother_name,
+                            ],
                             alignment: 'right',
                         },
                     ],
@@ -201,40 +208,6 @@ class GenerateMonthlyControlPdfService {
                             ],
                             [
                                 {
-                                    text: '\nJaneiro',
-                                    style: 'tableHeader',
-                                },
-                                {
-                                    text: '\n_____/_____',
-                                    alignment: 'center',
-                                },
-                                {
-                                    columns: [
-                                        {
-                                            text: [
-                                                '(   ) Matrícula:',
-                                                '\n(   ) Material didático:',
-                                                '\n(   ) Outros:',
-                                                {
-                                                    text: '\nTotal:',
-                                                    bold: true,
-                                                },
-                                            ],
-                                        },
-                                        {
-                                            text:
-                                                'R$_______________\nR$_______________\nR$_______________\nR$_______________',
-                                            alignment: 'right',
-                                        },
-                                    ],
-                                },
-                                '(   ) Cartão\n(   ) Dinheiro\n(   ) Cheque\n(   ) Depósito',
-                                ' ',
-                                ' ',
-                                ' ',
-                            ],
-                            [
-                                {
                                     text: '\nFevereiro',
                                     style: 'tableHeader',
                                 },
@@ -246,7 +219,7 @@ class GenerateMonthlyControlPdfService {
                                     columns: [
                                         {
                                             text: [
-                                                '(   ) Matrícula:',
+                                                '(   ) Mensalidade:',
                                                 '\n(   ) Material didático:',
                                                 '\n(   ) Outros:',
                                                 {
@@ -280,7 +253,7 @@ class GenerateMonthlyControlPdfService {
                                     columns: [
                                         {
                                             text: [
-                                                '(   ) Matrícula:',
+                                                '(   ) Mensalidade:',
                                                 '\n(   ) Material didático:',
                                                 '\n(   ) Outros:',
                                                 {
@@ -314,7 +287,7 @@ class GenerateMonthlyControlPdfService {
                                     columns: [
                                         {
                                             text: [
-                                                '(   ) Matrícula:',
+                                                '(   ) Mensalidade:',
                                                 '\n(   ) Material didático:',
                                                 '\n(   ) Outros:',
                                                 {
@@ -348,7 +321,7 @@ class GenerateMonthlyControlPdfService {
                                     columns: [
                                         {
                                             text: [
-                                                '(   ) Matrícula:',
+                                                '(   ) Mensalidade:',
                                                 '\n(   ) Material didático:',
                                                 '\n(   ) Outros:',
                                                 {
@@ -382,7 +355,7 @@ class GenerateMonthlyControlPdfService {
                                     columns: [
                                         {
                                             text: [
-                                                '(   ) Matrícula:',
+                                                '(   ) Mensalidade:',
                                                 '\n(   ) Material didático:',
                                                 '\n(   ) Outros:',
                                                 {
@@ -416,7 +389,7 @@ class GenerateMonthlyControlPdfService {
                                     columns: [
                                         {
                                             text: [
-                                                '(   ) Matrícula:',
+                                                '(   ) Mensalidade:',
                                                 '\n(   ) Material didático:',
                                                 '\n(   ) Outros:',
                                                 {
@@ -450,7 +423,7 @@ class GenerateMonthlyControlPdfService {
                                     columns: [
                                         {
                                             text: [
-                                                '(   ) Matrícula:',
+                                                '(   ) Mensalidade:',
                                                 '\n(   ) Material didático:',
                                                 '\n(   ) Outros:',
                                                 {
@@ -484,7 +457,7 @@ class GenerateMonthlyControlPdfService {
                                     columns: [
                                         {
                                             text: [
-                                                '(   ) Matrícula:',
+                                                '(   ) Mensalidade:',
                                                 '\n(   ) Material didático:',
                                                 '\n(   ) Outros:',
                                                 {
@@ -518,7 +491,7 @@ class GenerateMonthlyControlPdfService {
                                     columns: [
                                         {
                                             text: [
-                                                '(   ) Matrícula:',
+                                                '(   ) Mensalidade:',
                                                 '\n(   ) Material didático:',
                                                 '\n(   ) Outros:',
                                                 {
@@ -552,7 +525,7 @@ class GenerateMonthlyControlPdfService {
                                     columns: [
                                         {
                                             text: [
-                                                '(   ) Matrícula:',
+                                                '(   ) Mensalidade:',
                                                 '\n(   ) Material didático:',
                                                 '\n(   ) Outros:',
                                                 {
@@ -586,7 +559,7 @@ class GenerateMonthlyControlPdfService {
                                     columns: [
                                         {
                                             text: [
-                                                '(   ) Matrícula:',
+                                                '(   ) Mensalidade:',
                                                 '\n(   ) Material didático:',
                                                 '\n(   ) Outros:',
                                                 {

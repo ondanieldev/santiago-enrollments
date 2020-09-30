@@ -7,6 +7,14 @@ class PrettierDataService {
 
         reenrollment.student_name = this.capitalize(reenrollment.student_name);
 
+        reenrollment.student_father_name = this.capitalize(
+            reenrollment.student_father_name,
+        );
+
+        reenrollment.student_mother_name = this.capitalize(
+            reenrollment.student_mother_name,
+        );
+
         reenrollment.student_gender = this.formatGender(
             reenrollment.student_gender,
         );

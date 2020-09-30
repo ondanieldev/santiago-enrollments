@@ -37,9 +37,13 @@
 [x] número de contrato
 [x] e-mail quando contrato for criado
 [x] atualizar cláusulas
-[] revisar textos
-[] gerar controle de mensalidade
-[] tsrynge (?)
+[x] revisar textos
+[x] gerar controle de mensalidade
+[x] tsrynge (?)
+[x] fazer contrato ocupar duas folhas
+[x] margem de segurança na ficha de matrícula
+[x] margem de segurança no cheklist
+[x] reformular cabeçalho controle de mensalidade e mantê-lo em uma folha
 ## Quando finalizado
 [] /mail -> enviar e-mail para o responsável
 [x] .env -> credenciais do e-mail do colégio
