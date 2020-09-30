@@ -20,6 +20,11 @@ export interface IUpdateReenrollmentForm {
     reenrollment_form: string;
 }
 
+export interface IUpdateMonthlyControl {
+    enrollment_number: number;
+    monthly_control: string;
+}
+
 export interface IUpdatePaidStatus {
     enrollment_number: number;
     paid: boolean;
@@ -29,6 +34,7 @@ export interface IReenrollmentsRepository {
     updateChecklist(data: IUpdateChecklist): Promise<void>;
     updateContract(data: IUpdateContract): Promise<void>;
     updateReenrollmentForm(data: IUpdateReenrollmentForm): Promise<void>;
+    updateMonthlyControl(data: IUpdateMonthlyControl): Promise<void>;
     updatePaidStatus(data: IUpdatePaidStatus): Promise<void>;
     getByEnrollmentNumber(
         enrollment_number: number,

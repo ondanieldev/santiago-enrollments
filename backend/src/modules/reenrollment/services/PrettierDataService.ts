@@ -123,6 +123,10 @@ class PrettierDataService {
             reenrollment.student_special_necessities,
         );
 
+        reenrollment.monthly_value = this.getMonthlyValue(
+            reenrollment.grade_name,
+        );
+
         reenrollment.grade_name = this.formatGrade(reenrollment.grade_name);
 
         return reenrollment;
@@ -214,6 +218,37 @@ class PrettierDataService {
                 return '9º Ano';
             default:
                 return '-';
+        }
+    }
+
+    private getMonthlyValue(grade_name: string): number {
+        switch (grade_name) {
+            case 'maternal':
+                return 584;
+            case 'first_period':
+                return 584;
+            case 'second_period':
+                return 584;
+            case 'first_year':
+                return 717;
+            case 'second_year':
+                return 717;
+            case 'third_year':
+                return 717;
+            case 'fourth_year':
+                return 717;
+            case 'fifth_year':
+                return 717;
+            case 'sixth_year':
+                return 766;
+            case 'seventh_year':
+                return 766;
+            case 'eighth_year':
+                return 766;
+            case 'nineth_year':
+                return 766;
+            default:
+                return 0;
         }
     }
 }

@@ -17,8 +17,6 @@ class GenerateContractPdfService {
     public async execute(
         reenrollment: IPrettierEnrollmentDTO,
     ): Promise<string> {
-        const monthlyValue = this.getMonthlyValue(reenrollment.grade_name);
-
         const docDefinition = {
             pageSize: 'A4',
             pageOrientation: 'portrait',
@@ -362,8 +360,8 @@ class GenerateContractPdfService {
                                 },
                             ],
                             [
-                                `R$ ${monthlyValue},00`,
-                                `R$ ${monthlyValue * 12},00`,
+                                `R$ ${reenrollment.monthly_value},00`,
+                                `R$ ${reenrollment.monthly_value * 12},00`,
                             ],
                         ],
                     },
@@ -701,37 +699,6 @@ class GenerateContractPdfService {
         });
 
         return fileName;
-    }
-
-    private getMonthlyValue(grade_name: string): number {
-        switch (grade_name) {
-            case 'Maternal':
-                return 584;
-            case 'Primeiro Preríodo':
-                return 584;
-            case 'Segundo Período':
-                return 584;
-            case '1º Ano':
-                return 717;
-            case '2º Ano':
-                return 717;
-            case '3º Ano':
-                return 717;
-            case '4º Ano':
-                return 717;
-            case '5º Ano':
-                return 717;
-            case '6º Ano':
-                return 766;
-            case '7º Ano':
-                return 766;
-            case '8º Ano':
-                return 766;
-            case '9º Ano':
-                return 766;
-            default:
-                return 0;
-        }
     }
 
     private formatMonth(month: string) {

@@ -8,6 +8,7 @@ import {
     IUpdateContract,
     IUpdatePaidStatus,
     IUpdateReenrollmentForm,
+    IUpdateMonthlyControl,
 } from '@modules/reenrollment/repositories/IReenrollmentsRepository';
 import {
     IReenrollment,
@@ -145,6 +146,23 @@ class ReenrollmentsRepository implements IReenrollmentsRepository {
             },
             {
                 reenrollment_form,
+            },
+            {
+                useFindAndModify: false,
+            },
+        );
+    }
+
+    public async updateMonthlyControl({
+        enrollment_number,
+        monthly_control,
+    }: IUpdateMonthlyControl): Promise<void> {
+        await this.Reenrollment.findOneAndUpdate(
+            {
+                enrollment_number,
+            },
+            {
+                monthly_control,
             },
             {
                 useFindAndModify: false,

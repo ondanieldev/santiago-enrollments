@@ -54,23 +54,6 @@ const Reenrollment: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [documents, setDocuments] = useState([] as IDocument[]);
 
-  useEffect(() => {
-    const { reenrollment_number } = params;
-
-    api
-      .get(`/reenrollments/${reenrollment_number}`)
-      .then(response => {
-        const { data } = response;
-
-        if (data) {
-          setReenrollment(data);
-        }
-      })
-      .finally(() => {
-        setLoadingData(false);
-      });
-  }, [params]);
-
   const handleCalcMonthlyValue = useCallback(
     (discountPercent: string): void => {
       let baseValue = 0;
@@ -86,31 +69,31 @@ const Reenrollment: React.FC = () => {
           baseValue = 584;
           break;
         case 'first_year':
-          baseValue = 767;
+          baseValue = 717;
           break;
         case 'second_year':
-          baseValue = 767;
+          baseValue = 717;
           break;
         case 'third_year':
-          baseValue = 767;
+          baseValue = 717;
           break;
         case 'fourth_year':
-          baseValue = 767;
+          baseValue = 717;
           break;
         case 'fifth_year':
-          baseValue = 767;
+          baseValue = 717;
           break;
         case 'sixth_year':
-          baseValue = 820;
+          baseValue = 766;
           break;
         case 'seventh_year':
-          baseValue = 820;
+          baseValue = 766;
           break;
         case 'eighth_year':
-          baseValue = 820;
+          baseValue = 766;
           break;
         case 'nineth_year':
-          baseValue = 820;
+          baseValue = 766;
           break;
         default:
           baseValue = 0;
@@ -204,6 +187,23 @@ const Reenrollment: React.FC = () => {
       setLoading(false);
     }
   }, [reenrollment, documents]);
+
+  useEffect(() => {
+    const { reenrollment_number } = params;
+
+    api
+      .get(`/reenrollments/${reenrollment_number}`)
+      .then(response => {
+        const { data } = response;
+
+        if (data) {
+          setReenrollment(data);
+        }
+      })
+      .finally(() => {
+        setLoadingData(false);
+      });
+  }, [params]);
 
   return (
     <Container>
@@ -509,7 +509,9 @@ const Reenrollment: React.FC = () => {
               onChange={e => handleCalcMonthlyValue(e.target.value)}
             />
 
-            <span>{`Valor da mensalidade com desconto: R$ ${monthlyValue}`}</span>
+            {monthlyValue !== 0 && (
+              <span>{`Valor da mensalidade com desconto: R$ ${monthlyValue}`}</span>
+            )}
 
             <Button loading={loading} type="submit">
               Gerar documentos

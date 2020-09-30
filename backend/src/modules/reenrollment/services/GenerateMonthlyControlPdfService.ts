@@ -3,8 +3,13 @@ import { TDocumentDefinitions } from 'pdfmake/interfaces'; // eslint-disable-lin
 
 import ReenrollmentsRepository from '@modules/reenrollment/infra/mongoose/repositories/ReenrollmentsRepository';
 import GeneratePDFService from '@modules/reenrollment/services/GeneratePDFService';
-// import IPrettierEnrollmentDTO from '@modules/reenrollment/dtos/IPrettierEnrollmentDTO';
+import IPrettierEnrollmentDTO from '@modules/reenrollment/dtos/IPrettierEnrollmentDTO';
 import { IReenrollmentsRepository } from '@modules/reenrollment/repositories/IReenrollmentsRepository';
+
+interface IRequest {
+    reenrollment: IPrettierEnrollmentDTO;
+    monthly_with_discount: number;
+}
 
 class GenerateMonthlyControlPdfService {
     private reenrollmentsRepository: IReenrollmentsRepository;
@@ -13,8 +18,10 @@ class GenerateMonthlyControlPdfService {
         this.reenrollmentsRepository = new ReenrollmentsRepository();
     }
 
-    // reenrollment: IPrettierEnrollmentDTO,
-    public async execute(): Promise<string> {
+    public async execute({
+        reenrollment,
+        monthly_with_discount,
+    }: IRequest): Promise<string> {
         const logoImage = path.resolve(
             __dirname,
             '..',
@@ -39,19 +46,14 @@ class GenerateMonthlyControlPdfService {
             },
             styles: {
                 heading: {
-                    font: 'Arial',
-                    fontSize: 12,
+                    fontSize: 10,
                     bold: true,
                     alignment: 'center',
                 },
                 phrase: {
-                    font: 'Arial',
-                    fontSize: 10,
                     alignment: 'center',
                 },
                 tableHeader: {
-                    font: 'Arial',
-                    fontSize: 9,
                     alignment: 'center',
                     bold: true,
                 },
@@ -59,7 +61,7 @@ class GenerateMonthlyControlPdfService {
             defaultStyle: {
                 font: 'Arial',
                 fontSize: 9,
-                lineHeight: 1.25,
+                lineHeight: 1.2,
                 alignment: 'justify',
             },
             content: [
@@ -67,7 +69,7 @@ class GenerateMonthlyControlPdfService {
                     columns: [
                         {
                             image: logoImage,
-                            width: 80,
+                            width: 65,
                             alignment: 'center',
                         },
                         {
@@ -78,7 +80,7 @@ class GenerateMonthlyControlPdfService {
                                 },
                                 {
                                     text:
-                                        '\n"Dá instrução ao sábio e ele se fará mais sábio,\nensina o justo e ele crescerá em entendimento" Prov. 9,9',
+                                        '\n"Dá instrução ao sábio e ele se fará mais sábio, ensina o justo e ele crescerá em entendimento" Prov. 9,9',
                                     style: 'phrase',
                                 },
                                 {
@@ -90,7 +92,7 @@ class GenerateMonthlyControlPdfService {
                         },
                         {
                             text: '',
-                            width: 80,
+                            width: 65,
                         },
                     ],
                 },
@@ -99,7 +101,7 @@ class GenerateMonthlyControlPdfService {
                         {
                             text: [
                                 { text: 'Aluno(a): ', bold: true },
-                                'Daniel Oliveira Nascimento',
+                                reenrollment.student_name,
                             ],
                         },
                         {
@@ -113,7 +115,7 @@ class GenerateMonthlyControlPdfService {
                         {
                             text: [
                                 { text: 'Mensalidade: ', bold: true },
-                                'R$ 500,00',
+                                `R$ ${reenrollment.monthly_value}`,
                             ],
                         },
                         {
@@ -126,7 +128,7 @@ class GenerateMonthlyControlPdfService {
                                     text: 'Mensalidade com desconto: ',
                                     bold: true,
                                 },
-                                'R$ 450,00',
+                                `R$ ${monthly_with_discount}`,
                             ],
                             alignment: 'right',
                         },
@@ -599,6 +601,7 @@ class GenerateMonthlyControlPdfService {
                                 ' ',
                             ],
                         ],
+                        widths: ['auto', 'auto', 'auto', 'auto', '*', '*', '*'],
                     },
                 },
             ],
@@ -608,13 +611,13 @@ class GenerateMonthlyControlPdfService {
 
         const fileName = await generatePDF.execute({
             docDefinition,
-            // deleteFileName: reenrollment.checklist,
+            deleteFileName: reenrollment.monthly_control,
         });
 
-        // await this.reenrollmentsRepository.updateChecklist({
-        //     enrollment_number: reenrollment.enrollment_number,
-        //     checklist: fileName,
-        // });
+        await this.reenrollmentsRepository.updateMonthlyControl({
+            enrollment_number: reenrollment.enrollment_number,
+            monthly_control: fileName,
+        });
 
         return fileName;
     }

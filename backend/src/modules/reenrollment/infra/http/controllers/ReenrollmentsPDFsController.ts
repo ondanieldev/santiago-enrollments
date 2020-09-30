@@ -15,9 +15,17 @@ class ReenrollmentsPDFsController {
     ): Promise<Response> {
         const { enrollment_number } = request.params;
 
-        // const { monthly_value, discount_percent } = request.body;
+        const { discount_percent } = request.body;
+
+        if (discount_percent < 0) {
+            throw new AppError('Desconto inválido!');
+        }
 
         const number = parseInt(enrollment_number, 10);
+
+        if (typeof number !== 'number') {
+            throw new AppError('Número de matrícula inválido!');
+        }
 
         const getReenrollmentData = new GetReenrollmentDataService();
 
@@ -53,7 +61,14 @@ class ReenrollmentsPDFsController {
 
         const generateMonthlyControlPdf = new GenerateMonthlyControlPdfService();
 
-        const monthlyControl = await generateMonthlyControlPdf.execute();
+        const monthlyWithDiscount =
+            prettierReenrollment.monthly_value -
+            (prettierReenrollment.monthly_value * discount_percent) / 100;
+
+        const monthlyControl = await generateMonthlyControlPdf.execute({
+            reenrollment: prettierReenrollment,
+            monthly_with_discount: monthlyWithDiscount,
+        });
 
         return response.json([
             {

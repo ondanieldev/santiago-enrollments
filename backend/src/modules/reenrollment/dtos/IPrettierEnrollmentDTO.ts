@@ -67,7 +67,10 @@ export default interface IPrettierEnrollment {
 
     grade_name: string;
 
+    monthly_value?: number;
+
     reenrollment_form: string;
     contract: string;
     checklist: string;
+    monthly_control: string;
 }
