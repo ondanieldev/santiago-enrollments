@@ -38,6 +38,8 @@
 [x] e-mail quando contrato for criado
 [x] atualizar cláusulas
 [] revisar textos
+[] gerar controle de mensalidade
+[] tsrynge (?)
 ## Quando finalizado
 [] /mail -> enviar e-mail para o responsável
 [x] .env -> credenciais do e-mail do colégio

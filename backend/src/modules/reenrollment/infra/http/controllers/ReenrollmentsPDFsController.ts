@@ -5,6 +5,7 @@ import PrettierDataService from '@modules/reenrollment/services/PrettierDataServ
 import GenerateReenrollmentFormPdfService from '@modules/reenrollment/services/GenerateReenrollmentFormPdfService';
 import GenerateContractPdfService from '@modules/reenrollment/services/GenerateContractPdfService';
 import GenerateChecklistPdfService from '@modules/reenrollment/services/GenerateChecklistPdfService';
+import GenerateMonthlyControlPdfService from '@modules/reenrollment/services/GenerateMonthlyControlPdfService';
 import AppError from '@shared/errors/AppError';
 
 class ReenrollmentsPDFsController {
@@ -50,6 +51,10 @@ class ReenrollmentsPDFsController {
             prettierReenrollment,
         );
 
+        const generateMonthlyControlPdf = new GenerateMonthlyControlPdfService();
+
+        const monthlyControl = await generateMonthlyControlPdf.execute();
+
         return response.json([
             {
                 name: 'Ficha de rematrícula',
@@ -62,6 +67,10 @@ class ReenrollmentsPDFsController {
             {
                 name: 'Checklist',
                 link: checklist,
+            },
+            {
+                name: 'Controle de mensalidade',
+                link: monthlyControl,
             },
         ]);
     }
