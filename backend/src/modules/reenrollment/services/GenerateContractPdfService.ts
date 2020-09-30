@@ -711,24 +711,24 @@ class GenerateContractPdfService {
                 return 584;
             case 'Segundo Período':
                 return 584;
-            case 'Primeiro Ano':
-                return 767;
-            case 'Segundo Ano':
-                return 767;
-            case 'Terceiro Ano':
-                return 767;
-            case 'Quarto Ano':
-                return 767;
-            case 'Quinto Ano':
-                return 767;
-            case 'Sexto Ano':
-                return 820;
-            case 'Sétimo Ano':
-                return 820;
-            case 'Oitavo Ano':
-                return 820;
-            case 'Nono Ano':
-                return 820;
+            case '1º Ano':
+                return 717;
+            case '2º Ano':
+                return 717;
+            case '3º Ano':
+                return 717;
+            case '4º Ano':
+                return 717;
+            case '5º Ano':
+                return 717;
+            case '6º Ano':
+                return 766;
+            case '7º Ano':
+                return 766;
+            case '8º Ano':
+                return 766;
+            case '9º Ano':
+                return 766;
             default:
                 return 0;
         }

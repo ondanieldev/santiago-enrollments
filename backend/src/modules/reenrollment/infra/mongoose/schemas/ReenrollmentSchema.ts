@@ -72,6 +72,7 @@ const ReenrollmentSchema = new Schema({
     reenrollment_form: String,
     contract: String,
     checklist: String,
+    monthlyControl: String,
 
     paid: { type: Boolean, default: false },
 });
@@ -172,6 +173,7 @@ interface IReenrollment extends Document {
     reenrollment_form: string;
     contract: string;
     checklist: string;
+    monthlyControl: string;
 
     paid: boolean;
 }

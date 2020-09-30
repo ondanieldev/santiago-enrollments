@@ -28,7 +28,7 @@ class GenerateMonthlyControlPdfService {
         const docDefinition = {
             pageSize: 'A4',
             pageOrientation: 'portrait',
-            pageMargins: [25, 25, 25, 25],
+            pageMargins: [20, 20, 20, 20],
             info: {
                 title: 'Controle de Mensalidade Escolar',
                 author: 'Colégio Santiago',
@@ -59,7 +59,7 @@ class GenerateMonthlyControlPdfService {
             defaultStyle: {
                 font: 'Arial',
                 fontSize: 9,
-                lineHeight: 1.33,
+                lineHeight: 1.25,
                 alignment: 'justify',
             },
             content: [
@@ -192,7 +192,7 @@ class GenerateMonthlyControlPdfService {
                             ],
                             [
                                 {
-                                    text: '\n\nJaneiro',
+                                    text: '\nJaneiro',
                                     style: 'tableHeader',
                                 },
                                 {
@@ -226,7 +226,7 @@ class GenerateMonthlyControlPdfService {
                             ],
                             [
                                 {
-                                    text: '\n\nFevereiro',
+                                    text: '\nFevereiro',
                                     style: 'tableHeader',
                                 },
                                 {
@@ -260,7 +260,7 @@ class GenerateMonthlyControlPdfService {
                             ],
                             [
                                 {
-                                    text: '\n\nMarço',
+                                    text: '\nMarço',
                                     style: 'tableHeader',
                                 },
                                 {
@@ -294,7 +294,7 @@ class GenerateMonthlyControlPdfService {
                             ],
                             [
                                 {
-                                    text: '\n\nAbril',
+                                    text: '\nAbril',
                                     style: 'tableHeader',
                                 },
                                 {
@@ -328,7 +328,7 @@ class GenerateMonthlyControlPdfService {
                             ],
                             [
                                 {
-                                    text: '\n\nMaio',
+                                    text: '\nMaio',
                                     style: 'tableHeader',
                                 },
                                 {
@@ -362,7 +362,7 @@ class GenerateMonthlyControlPdfService {
                             ],
                             [
                                 {
-                                    text: '\n\nJunho',
+                                    text: '\nJunho',
                                     style: 'tableHeader',
                                 },
                                 {
@@ -396,7 +396,7 @@ class GenerateMonthlyControlPdfService {
                             ],
                             [
                                 {
-                                    text: '\n\nJulho',
+                                    text: '\nJulho',
                                     style: 'tableHeader',
                                 },
                                 {
@@ -430,7 +430,7 @@ class GenerateMonthlyControlPdfService {
                             ],
                             [
                                 {
-                                    text: '\n\nAgosto',
+                                    text: '\nAgosto',
                                     style: 'tableHeader',
                                 },
                                 {
@@ -464,7 +464,7 @@ class GenerateMonthlyControlPdfService {
                             ],
                             [
                                 {
-                                    text: '\n\nSetembro',
+                                    text: '\nSetembro',
                                     style: 'tableHeader',
                                 },
                                 {
@@ -498,7 +498,7 @@ class GenerateMonthlyControlPdfService {
                             ],
                             [
                                 {
-                                    text: '\n\nOutubro',
+                                    text: '\nOutubro',
                                     style: 'tableHeader',
                                 },
                                 {
@@ -532,7 +532,7 @@ class GenerateMonthlyControlPdfService {
                             ],
                             [
                                 {
-                                    text: '\n\nNovembro',
+                                    text: '\nNovembro',
                                     style: 'tableHeader',
                                 },
                                 {
@@ -566,7 +566,7 @@ class GenerateMonthlyControlPdfService {
                             ],
                             [
                                 {
-                                    text: '\n\nDezembro',
+                                    text: '\nDezembro',
                                     style: 'tableHeader',
                                 },
                                 {
