@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
 
-export default nodemailer.createTransport({
+const transporter = nodemailer.createTransport({
     host: 'mail.colegiosantiago.com.br',
     port: 465,
     secure: true,
@@ -9,3 +9,5 @@ export default nodemailer.createTransport({
         pass: process.env.NODEMAILER_PASS,
     },
 });
+
+export default transporter;

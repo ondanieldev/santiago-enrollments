@@ -1,5 +1,17 @@
-import nodemailer from '@shared/infra/nodemailer';
 import { resolve } from 'path';
+import handlebars from 'handlebars';
+import fs from 'fs';
+
+import nodemailer from '@shared/infra/nodemailer';
+
+interface IVariables {
+    [key: string]: string;
+}
+
+interface IParseMail {
+    file: string;
+    variables: IVariables;
+}
 
 interface IRequest {
     studentGender: 'male' | 'female';
@@ -51,22 +63,34 @@ class SendEmailWithDocumentsService {
             checklist,
         );
 
+        const studentNameArticle = studentGender === 'male' ? 'do' : 'da';
+
+        const html = await this.parse({
+            file: resolve(
+                __dirname,
+                '..',
+                '..',
+                '..',
+                'shared',
+                'infra',
+                'nodemailer',
+                'views',
+                'send_documents.hbs',
+            ),
+            variables: {
+                studentName: `${studentNameArticle} ${this.capitalize(
+                    studentName,
+                )}`,
+                responsibleName: this.capitalize(responsibleName),
+            },
+        });
+
         nodemailer.sendMail({
             from: `"Colégio Santiago" <${process.env.NODEMAILER_USER}>`,
             // to: responsibleEmail,
             to: process.env.NODEMAILER_USER,
-            subject: 'Solicitação de Rematrícula',
-            text:
-                `Olá, ${this.capitalize(responsibleName)}!\n\n` +
-                `O processo de matricula para o ano de 2021 ${
-                    studentGender === 'male' ? 'do' : 'da'
-                } ${this.capitalize(studentName)} foi iniciado!` +
-                ' Segue em anexo o contrato de prestação de serviços educacionais,' +
-                ' a ficha de matricula e o checklist de documentos.' +
-                ' Para darmos continuidade ao processo de rematrícula,' +
-                ' pedimos que compareça na escola ou responda a esse e-mail com' +
-                ' os referidos documentos devidamente assinados.' +
-                '\n\nAtenciosamente,\nEquipe Santiago.',
+            subject: 'Documentos de Matrícula',
+            html,
             attachments: [
                 {
                     filename: reenrollmentForm,
@@ -96,6 +120,16 @@ class SendEmailWithDocumentsService {
                 );
         }
         return '';
+    }
+
+    private async parse({ file, variables }: IParseMail): Promise<string> {
+        const templateFileContent = await fs.promises.readFile(file, {
+            encoding: 'utf-8',
+        });
+
+        const parseTemplate = handlebars.compile(templateFileContent);
+
+        return parseTemplate(variables);
     }
 }
 

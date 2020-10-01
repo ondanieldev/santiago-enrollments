@@ -19,6 +19,9 @@ app.use(routes);
 app.use(
     '/public',
     express.static(path.resolve(__dirname, '..', '..', '..', '..', 'tmp')),
+    express.static(
+        path.resolve(__dirname, '..', '..', '..', 'assets', 'images'),
+    ),
 );
 
 app.use((err: Error, request: Request, response: Response, _: NextFunction) => {

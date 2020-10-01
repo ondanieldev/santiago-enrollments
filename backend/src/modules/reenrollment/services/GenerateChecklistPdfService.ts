@@ -32,9 +32,9 @@ class GenerateChecklistPdfService {
             pageOrientation: 'portrait',
             pageMargins: [20, 20, 20, 20],
             info: {
-                title: 'Checklist',
+                title: 'Checklist de Documentos',
                 author: 'Colégio Santiago',
-                subject: 'Checklist',
+                subject: 'Checklist de Documentos',
                 keywords: 'Checklist, Documentos',
                 creator: 'Colégio Santiago',
                 producer: 'Colégio Santiago',
@@ -67,7 +67,8 @@ class GenerateChecklistPdfService {
                         {
                             text: [
                                 {
-                                    text: 'Checklist',
+                                    text:
+                                        'Checklist de Documentos de Matrícula/Rematrícula',
                                     style: 'heading',
                                 },
                                 {
@@ -209,36 +210,42 @@ class GenerateChecklistPdfService {
                     columns: [
                         {
                             text: `\n\n\n02 fotos 3x4\n
-                            Certidão de nascimento do aluno\n
-                            CPF\n
-                            RG\n
-                            Comprovante de residência\n
-                            Carteira de plano de saúde\n
-                            Declaração de transferência escolar\n
+                            CPF pai (  ) mãe (  )\n
+                            RG  pai (  ) mãe (  )\n
                             Histórico escolar\n
-                            Cartão de vacina\n\n\n`,
+                            Cartão de vacina\n
+                            Carteira de plano de saúde\n
+                            Comprovante de residência\n
+                            Certidão de nascimento do aluno\n
+                            Declaração de transferência escolar\n
+                            Declaração de quitação de débito da escola de origem\n
+                            Laudo — Aluno com Deficiência/Necesidades Especiais\n
+                            Relatório — Aluno com Deficiência/Necesidades Especiais\n\n\n`,
                             width: 'auto',
                         },
                         {
                             width: '*',
                             alignment: 'right',
-                            text: `\n\n\nAssinatura: _______________ Data: _____/_____/_____ Hora: _____/_____\n
-                            Assinatura: _______________ Data: _____/_____/_____ Hora: _____/_____\n
-                            Assinatura: _______________ Data: _____/_____/_____ Hora: _____/_____\n
-                            Assinatura: _______________ Data: _____/_____/_____ Hora: _____/_____\n
-                            Assinatura: _______________ Data: _____/_____/_____ Hora: _____/_____\n
-                            Assinatura: _______________ Data: _____/_____/_____ Hora: _____/_____\n
-                            Assinatura: _______________ Data: _____/_____/_____ Hora: _____/_____\n
-                            Assinatura: _______________ Data: _____/_____/_____ Hora: _____/_____\n
-                            Assinatura: _______________ Data: _____/_____/_____ Hora: _____/_____\n\n\n`,
+                            text: `\n\n\nAssinatura: __________ Data: ____/____ Hora: ____:____\n
+                            Assinatura: __________ Data: ____/____ Hora: ____:____\n
+                            Assinatura: __________ Data: ____/____ Hora: ____:____\n
+                            Assinatura: __________ Data: ____/____ Hora: ____:____\n
+                            Assinatura: __________ Data: ____/____ Hora: ____:____\n
+                            Assinatura: __________ Data: ____/____ Hora: ____:____\n
+                            Assinatura: __________ Data: ____/____ Hora: ____:____\n
+                            Assinatura: __________ Data: ____/____ Hora: ____:____\n
+                            Assinatura: __________ Data: ____/____ Hora: ____:____\n
+                            Assinatura: __________ Data: ____/____ Hora: ____:____\n
+                            Assinatura: __________ Data: ____/____ Hora: ____:____\n
+                            Assinatura: __________ Data: ____/____ Hora: ____:____\n\n\n`,
                         },
                     ],
                 },
                 {
                     columns: [
                         '______________________________\nSECRETARIA',
-                        '______________________________\nRESPONSÁVEL',
                         '______________________________\nDIREÇÃO',
+                        '______________________________\nATENDENTE',
                     ],
                     alignment: 'center',
                 },
