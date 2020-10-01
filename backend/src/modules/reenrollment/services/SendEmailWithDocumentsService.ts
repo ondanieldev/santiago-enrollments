@@ -108,6 +108,8 @@ class SendEmailWithDocumentsService {
                 },
             ],
         });
+
+        console.log(info);
     }
 
     private capitalize(str: string): string {
