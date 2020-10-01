@@ -87,8 +87,7 @@ class SendEmailWithDocumentsService {
 
         nodemailer.sendMail({
             from: `"Colégio Santiago" <${process.env.NODEMAILER_USER}>`,
-            // to: responsibleEmail,
-            to: 'oficial.danieloliveira@gmail.com',
+            to: responsibleEmail,
             subject: 'Documentos de Matrícula',
             html,
             attachments: [
