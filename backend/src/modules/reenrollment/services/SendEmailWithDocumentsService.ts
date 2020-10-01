@@ -85,7 +85,7 @@ class SendEmailWithDocumentsService {
             },
         });
 
-        const info = await nodemailer.sendMail({
+        await nodemailer.sendMail({
             from: `"Colégio Santiago" <${process.env.NODEMAILER_USER}>`,
             to: responsibleEmail,
             subject: 'Documentos de Matrícula',
