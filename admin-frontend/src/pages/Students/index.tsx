@@ -88,7 +88,7 @@ const Students: React.FC = () => {
                 {`${student.student_name} ${student.paid ? '- Pago' : ''}`}
               </Link>
 
-              {!student.paid && (
+              {student.paid && (
                 <Button
                   type="button"
                   backgroundColor="#4caf50"
@@ -98,7 +98,7 @@ const Students: React.FC = () => {
                 </Button>
               )}
 
-              {student.paid && (
+              {!student.paid && (
                 <Button
                   type="button"
                   backgroundColor="#f44336"
