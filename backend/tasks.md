@@ -45,5 +45,5 @@
 [x] margem de segurança no cheklist
 [x] reformular cabeçalho controle de mensalidade e mantê-lo em uma folha
 ## Quando finalizado
-[] /mail -> enviar e-mail para o responsável
+[x] /mail -> enviar e-mail para o responsável
 [x] .env -> credenciais do e-mail do colégio
