@@ -220,7 +220,6 @@ class GenerateMonthlyControlPdfService {
                                         {
                                             text: [
                                                 '(   ) Mensalidade:',
-                                                '\n(   ) Material didático:',
                                                 '\n(   ) Outros:',
                                                 {
                                                     text: '\nTotal:',
@@ -230,7 +229,7 @@ class GenerateMonthlyControlPdfService {
                                         },
                                         {
                                             text:
-                                                'R$_______________\nR$_______________\nR$_______________\nR$_______________',
+                                                'R$_______________\nR$_______________\nR$_______________',
                                             alignment: 'right',
                                         },
                                     ],
@@ -254,7 +253,6 @@ class GenerateMonthlyControlPdfService {
                                         {
                                             text: [
                                                 '(   ) Mensalidade:',
-                                                '\n(   ) Material didático:',
                                                 '\n(   ) Outros:',
                                                 {
                                                     text: '\nTotal:',
@@ -264,7 +262,7 @@ class GenerateMonthlyControlPdfService {
                                         },
                                         {
                                             text:
-                                                'R$_______________\nR$_______________\nR$_______________\nR$_______________',
+                                                'R$_______________\nR$_______________\nR$_______________',
                                             alignment: 'right',
                                         },
                                     ],
@@ -288,7 +286,6 @@ class GenerateMonthlyControlPdfService {
                                         {
                                             text: [
                                                 '(   ) Mensalidade:',
-                                                '\n(   ) Material didático:',
                                                 '\n(   ) Outros:',
                                                 {
                                                     text: '\nTotal:',
@@ -298,7 +295,7 @@ class GenerateMonthlyControlPdfService {
                                         },
                                         {
                                             text:
-                                                'R$_______________\nR$_______________\nR$_______________\nR$_______________',
+                                                'R$_______________\nR$_______________\nR$_______________',
                                             alignment: 'right',
                                         },
                                     ],
@@ -322,7 +319,6 @@ class GenerateMonthlyControlPdfService {
                                         {
                                             text: [
                                                 '(   ) Mensalidade:',
-                                                '\n(   ) Material didático:',
                                                 '\n(   ) Outros:',
                                                 {
                                                     text: '\nTotal:',
@@ -332,7 +328,7 @@ class GenerateMonthlyControlPdfService {
                                         },
                                         {
                                             text:
-                                                'R$_______________\nR$_______________\nR$_______________\nR$_______________',
+                                                'R$_______________\nR$_______________\nR$_______________',
                                             alignment: 'right',
                                         },
                                     ],
@@ -356,7 +352,6 @@ class GenerateMonthlyControlPdfService {
                                         {
                                             text: [
                                                 '(   ) Mensalidade:',
-                                                '\n(   ) Material didático:',
                                                 '\n(   ) Outros:',
                                                 {
                                                     text: '\nTotal:',
@@ -366,7 +361,7 @@ class GenerateMonthlyControlPdfService {
                                         },
                                         {
                                             text:
-                                                'R$_______________\nR$_______________\nR$_______________\nR$_______________',
+                                                'R$_______________\nR$_______________\nR$_______________',
                                             alignment: 'right',
                                         },
                                     ],
@@ -390,7 +385,6 @@ class GenerateMonthlyControlPdfService {
                                         {
                                             text: [
                                                 '(   ) Mensalidade:',
-                                                '\n(   ) Material didático:',
                                                 '\n(   ) Outros:',
                                                 {
                                                     text: '\nTotal:',
@@ -400,7 +394,7 @@ class GenerateMonthlyControlPdfService {
                                         },
                                         {
                                             text:
-                                                'R$_______________\nR$_______________\nR$_______________\nR$_______________',
+                                                'R$_______________\nR$_______________\nR$_______________',
                                             alignment: 'right',
                                         },
                                     ],
@@ -424,7 +418,6 @@ class GenerateMonthlyControlPdfService {
                                         {
                                             text: [
                                                 '(   ) Mensalidade:',
-                                                '\n(   ) Material didático:',
                                                 '\n(   ) Outros:',
                                                 {
                                                     text: '\nTotal:',
@@ -434,7 +427,7 @@ class GenerateMonthlyControlPdfService {
                                         },
                                         {
                                             text:
-                                                'R$_______________\nR$_______________\nR$_______________\nR$_______________',
+                                                'R$_______________\nR$_______________\nR$_______________',
                                             alignment: 'right',
                                         },
                                     ],
@@ -458,7 +451,6 @@ class GenerateMonthlyControlPdfService {
                                         {
                                             text: [
                                                 '(   ) Mensalidade:',
-                                                '\n(   ) Material didático:',
                                                 '\n(   ) Outros:',
                                                 {
                                                     text: '\nTotal:',
@@ -468,7 +460,7 @@ class GenerateMonthlyControlPdfService {
                                         },
                                         {
                                             text:
-                                                'R$_______________\nR$_______________\nR$_______________\nR$_______________',
+                                                'R$_______________\nR$_______________\nR$_______________',
                                             alignment: 'right',
                                         },
                                     ],
@@ -492,7 +484,6 @@ class GenerateMonthlyControlPdfService {
                                         {
                                             text: [
                                                 '(   ) Mensalidade:',
-                                                '\n(   ) Material didático:',
                                                 '\n(   ) Outros:',
                                                 {
                                                     text: '\nTotal:',
@@ -502,7 +493,7 @@ class GenerateMonthlyControlPdfService {
                                         },
                                         {
                                             text:
-                                                'R$_______________\nR$_______________\nR$_______________\nR$_______________',
+                                                'R$_______________\nR$_______________\nR$_______________',
                                             alignment: 'right',
                                         },
                                     ],
@@ -526,7 +517,6 @@ class GenerateMonthlyControlPdfService {
                                         {
                                             text: [
                                                 '(   ) Mensalidade:',
-                                                '\n(   ) Material didático:',
                                                 '\n(   ) Outros:',
                                                 {
                                                     text: '\nTotal:',
@@ -536,7 +526,7 @@ class GenerateMonthlyControlPdfService {
                                         },
                                         {
                                             text:
-                                                'R$_______________\nR$_______________\nR$_______________\nR$_______________',
+                                                'R$_______________\nR$_______________\nR$_______________',
                                             alignment: 'right',
                                         },
                                     ],
@@ -560,7 +550,6 @@ class GenerateMonthlyControlPdfService {
                                         {
                                             text: [
                                                 '(   ) Mensalidade:',
-                                                '\n(   ) Material didático:',
                                                 '\n(   ) Outros:',
                                                 {
                                                     text: '\nTotal:',
@@ -570,7 +559,7 @@ class GenerateMonthlyControlPdfService {
                                         },
                                         {
                                             text:
-                                                'R$_______________\nR$_______________\nR$_______________\nR$_______________',
+                                                'R$_______________\nR$_______________\nR$_______________',
                                             alignment: 'right',
                                         },
                                     ],

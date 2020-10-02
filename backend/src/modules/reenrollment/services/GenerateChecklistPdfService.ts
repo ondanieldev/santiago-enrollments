@@ -92,7 +92,15 @@ class GenerateChecklistPdfService {
                     style: 'subheading',
                 },
                 // ALUNO
-                `Nome: ${reenrollment.student_name}`,
+                {
+                    columns: [
+                        `Nome: ${reenrollment.student_name}`,
+                        {
+                            text: `Turma: ${reenrollment.grade_name}`,
+                            alignment: 'right',
+                        },
+                    ],
+                },
                 {
                     columns: [
                         `Data de Nascimento: ${formatDate(
