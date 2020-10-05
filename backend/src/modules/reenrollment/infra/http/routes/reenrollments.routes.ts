@@ -39,6 +39,12 @@ reenrollmentsRoutes.patch(
 );
 
 reenrollmentsRoutes.post(
+    '/pdfs',
+    ensureAuthenticated,
+    reenrollmentsPDFsController.create,
+);
+
+reenrollmentsRoutes.post(
     '/mail',
     ensureAuthenticated,
     reenrollmentsMailsController.create,

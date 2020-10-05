@@ -65,6 +65,9 @@ class SendEmailWithDocumentsService {
 
         const studentNameArticle = studentGender === 'male' ? 'do' : 'da';
 
+        const studentNamePrefix =
+            studentGender === 'male' ? 'do aluno' : 'da aluna';
+
         const html = await this.parse({
             file: resolve(
                 __dirname,
@@ -78,6 +81,7 @@ class SendEmailWithDocumentsService {
                 'send_documents.hbs',
             ),
             variables: {
+                studentNamePrefix,
                 studentName: `${studentNameArticle} ${this.capitalize(
                     studentName,
                 )}`,

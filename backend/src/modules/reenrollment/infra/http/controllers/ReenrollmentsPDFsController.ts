@@ -6,9 +6,21 @@ import GenerateReenrollmentFormPdfService from '@modules/reenrollment/services/G
 import GenerateContractPdfService from '@modules/reenrollment/services/GenerateContractPdfService';
 import GenerateChecklistPdfService from '@modules/reenrollment/services/GenerateChecklistPdfService';
 import GenerateMonthlyControlPdfService from '@modules/reenrollment/services/GenerateMonthlyControlPdfService';
+import GeneratePDFModelService from '@modules/reenrollment/services/GeneratePDFModelService';
 import AppError from '@shared/errors/AppError';
 
 class ReenrollmentsPDFsController {
+    public async create(
+        request: Request,
+        response: Response,
+    ): Promise<Response> {
+        const generatePDFModel = new GeneratePDFModelService();
+
+        const filename = await generatePDFModel.execute();
+
+        return response.json(filename);
+    }
+
     public async update(
         request: Request,
         response: Response,
