@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <meta charset='utf-8'>
+        <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+        <meta name='viewport' content='width=device-width, initial-scale=1'>
+        <title>Colégio Santiago</title>
+
+        <style>
+            body {
+                display: flex;
+                justify-content: center;
+            }
+
+            .message-content {
+                font: Arial, Helvetica, sans-serif;
+                max-width: 600px;
+                font-size: 18px;
+                line-height: 21px;
+                text-align: justify;
+            }
+
+            .header {
+                background-color: #e0e0e0;
+                padding: 12px 24px;
+                display: flex;
+                justify-content: center;
+                border-radius: 8px 8px 0 0;
+            }
+
+            .header img {
+                height: 80px;
+            }
+
+            .regards {
+                padding: 24px 24px 12px 24px;
+                text-align: center;
+                background-color: #f5f5f5;
+                color: #212529;
+            }
+
+            .message {
+                padding: 24px;
+                background-color: #f5f5f5;
+                color: #212529;
+            }
+
+            .message li + li {
+                margin-top: 4px;
+            }
+
+            .footer {
+                padding: 24px;
+                background-color: #013C64;
+                border-radius: 0 0 8px 8px;
+                color: #fafafa;
+            }
+
+            .footer div {
+                display: block;
+            }
+
+            .footer div + div {
+                margin-top: 2px;
+            }
+
+            .footer img {
+                height: 28px;
+            }
+
+            .footer span {
+                font-size: 14px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="message-content">
+            <center>
+                <div class="header">
+                    <img src="http://162.241.93.179:3333/public/logo.png" alt="logo" />
+                </div>
+            </center>
+
+            <div class="regards">
+                <h1>
+                    Obrigado!
+                </h1>
+                <strong>
+                    Nós estamos felizes por contarem conosco nesse
+                    importante processo de aprendizagem!
+                </strong>
+            </div>
+
+            <div class="message">
+                <p>Olá, {{responsibleName}}!</p>
+                <p>
+                    O pedido de matrícula para o ano de 2021 {{studentName}} foi recebido com sucesso!
+                    Em breve retornaremos com as devidas instruções para darmos continuidade ao processo.
+                </p>
+                <p>
+                    Atenciosamente,
+                    <br />
+                    Equipe Santiago.
+                </p>
+            </div>
+
+            <div class="footer">
+                <center>
+                    <div>
+                        <img src="http://162.241.93.179:3333/public/placeholder.png" alt="svg" />
+                        <span>R. Rio Grande do Sul, 863 - Espírito Santo, Betim - MG, 32671-686</span>
+                    </div>
+
+                    <div>
+                        <img src="http://162.241.93.179:3333/public/phone.png" alt="svg" />
+                        <span>(31) 98821-9096</span>
+                    </div>
+                </center>
+            </div>
+        </div>
+    </body>
+</html>

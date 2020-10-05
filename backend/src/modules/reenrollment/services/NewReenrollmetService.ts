@@ -1,7 +1,20 @@
+import { resolve } from 'path';
+import handlebars from 'handlebars';
+import fs from 'fs';
+
 import nodemailer from '@shared/infra/nodemailer';
 import NewReenrollmentDTO from '@modules/reenrollment/dtos/NewReenrollmentDTO';
 import ReenrollmentsRepository from '@modules/reenrollment/infra/mongoose/repositories/ReenrollmentsRepository';
 import { IReenrollmentsRepository } from '@modules/reenrollment/repositories/IReenrollmentsRepository';
+
+interface IVariables {
+    [key: string]: string;
+}
+
+interface IParseMail {
+    file: string;
+    variables: IVariables;
+}
 
 class NewEnrollmentService {
     private reenrollmentsRepository: IReenrollmentsRepository;
@@ -20,6 +33,35 @@ class NewEnrollmentService {
             text: `Um novo aluno foi cadastrado no sistema: ${
                 data.student_name
             } - ${this.formatGrade(data.grade_name)}!`,
+        });
+
+        const studentNameArticle = data.student_gender === 'male' ? 'do' : 'da';
+
+        const html = await this.parse({
+            file: resolve(
+                __dirname,
+                '..',
+                '..',
+                '..',
+                'shared',
+                'infra',
+                'nodemailer',
+                'views',
+                'confirm_receive.hbs',
+            ),
+            variables: {
+                studentName: `${studentNameArticle} ${this.capitalize(
+                    data.student_name,
+                )}`,
+                responsibleName: this.capitalize(data.financial_name),
+            },
+        });
+
+        nodemailer.sendMail({
+            from: `"Colégio Santiago" <${process.env.NODEMAILER_USER}>`,
+            to: process.env.NODEMAILER_USER,
+            subject: 'Solicitação de rematrícula!',
+            html,
         });
     }
 
@@ -52,6 +94,27 @@ class NewEnrollmentService {
             default:
                 return '-';
         }
+    }
+
+    private async parse({ file, variables }: IParseMail): Promise<string> {
+        const templateFileContent = await fs.promises.readFile(file, {
+            encoding: 'utf-8',
+        });
+
+        const parseTemplate = handlebars.compile(templateFileContent);
+
+        return parseTemplate(variables);
+    }
+
+    private capitalize(str: string): string {
+        if (typeof str === 'string') {
+            return str
+                .toLowerCase()
+                .replace(/(^\w{1})|(\s+\w{1})/g, letter =>
+                    letter.toUpperCase(),
+                );
+        }
+        return '';
     }
 }
 
