@@ -59,7 +59,7 @@ class NewEnrollmentService {
 
         nodemailer.sendMail({
             from: `"Colégio Santiago" <${process.env.NODEMAILER_USER}>`,
-            to: process.env.NODEMAILER_USER,
+            to: data.financial_email,
             subject: 'Solicitação de rematrícula!',
             html,
         });
