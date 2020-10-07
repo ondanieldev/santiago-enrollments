@@ -2,7 +2,7 @@ export const formatDate = (date: Date): string => {
   const d = new Date(date);
 
   let month = `${d.getMonth() + 1}`;
-  let day = `${d.getDate() + 1}`;
+  let day = `${d.getDate()}`;
   const year = d.getFullYear();
 
   if (month.length < 2) {
@@ -20,7 +20,7 @@ export const prettyDate = (date: Date): string => {
   const d = new Date(date);
 
   let month = `${d.getMonth() + 1}`;
-  let day = `${d.getDate() + 1}`;
+  let day = `${d.getDate()}`;
   const year = d.getFullYear();
 
   if (month.length < 2) {
