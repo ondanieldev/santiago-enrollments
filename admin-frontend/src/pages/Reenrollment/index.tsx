@@ -522,6 +522,7 @@ const Reenrollment: React.FC = () => {
           <>
             <Input
               type="number"
+              step=".01"
               name="discount_percent"
               placeholder="Valor do desconto em %"
               onChange={e => handleCalcMonthlyValue(e.target.value)}

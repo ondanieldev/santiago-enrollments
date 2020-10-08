@@ -169,6 +169,22 @@ class ReenrollmentsRepository implements IReenrollmentsRepository {
             },
         );
     }
+
+    public async updateReceivedMailWithDocuments(
+        enrollment_number: number,
+    ): Promise<void> {
+        await this.Reenrollment.findOneAndUpdate(
+            {
+                enrollment_number,
+            },
+            {
+                received_mail_with_documents: true,
+            },
+            {
+                useFindAndModify: false,
+            },
+        );
+    }
 }
 
 export default ReenrollmentsRepository;

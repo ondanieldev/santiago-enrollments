@@ -30,6 +30,11 @@ export interface IUpdatePaidStatus {
     paid: boolean;
 }
 
+export interface IUpdateEmailNotify {
+    enrollment_number: number;
+    notified: boolean;
+}
+
 export interface IReenrollmentsRepository {
     updateChecklist(data: IUpdateChecklist): Promise<void>;
     updateContract(data: IUpdateContract): Promise<void>;
@@ -56,4 +61,5 @@ export interface IReenrollmentsRepository {
     ): Promise<IReenrollment[] | []>;
     create(data: NewReenrollmentDTO): Promise<IReenrollment>;
     update(data: IUpdate): Promise<IReenrollment | null>;
+    updateReceivedMailWithDocuments(enrollment_number: number): Promise<void>;
 }

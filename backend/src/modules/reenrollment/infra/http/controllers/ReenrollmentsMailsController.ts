@@ -15,6 +15,7 @@ class ReenrollmentsMailsController {
             responsibleName,
             studentGender,
             studentName,
+            enrollment_number,
         } = request.body;
 
         const sendEmailWithDocuments = new SendEmailWithDocumentsService();
@@ -27,6 +28,7 @@ class ReenrollmentsMailsController {
             responsibleName,
             studentGender,
             studentName,
+            enrollment_number,
         });
 
         return response.json({ ok: true });

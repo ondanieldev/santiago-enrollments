@@ -75,6 +75,8 @@ const ReenrollmentSchema = new Schema({
     monthly_control: String,
 
     paid: { type: Boolean, default: false },
+
+    received_mail_with_documents: { type: Boolean, default: false },
 });
 
 interface IReenrollment extends Document {
@@ -176,6 +178,7 @@ interface IReenrollment extends Document {
     monthly_control: string;
 
     paid: boolean;
+    received_mail_with_documents: boolean;
 }
 
 ReenrollmentSchema.pre('save', function (next) {

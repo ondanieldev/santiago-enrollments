@@ -43,40 +43,7 @@ class SendEmailWithDocumentsService {
         checklist,
         enrollment_number,
     }: IRequest): Promise<void> {
-        const reenrollmentFormPath = resolve(
-            __dirname,
-            '..',
-            '..',
-            '..',
-            '..',
-            'tmp',
-            reenrollmentForm,
-        );
-
-        const contractPath = resolve(
-            __dirname,
-            '..',
-            '..',
-            '..',
-            '..',
-            'tmp',
-            contract,
-        );
-
-        const checklistPath = resolve(
-            __dirname,
-            '..',
-            '..',
-            '..',
-            '..',
-            'tmp',
-            checklist,
-        );
-
         const studentNameArticle = studentGender === 'male' ? 'do' : 'da';
-
-        const studentNamePrefix =
-            studentGender === 'male' ? 'do aluno' : 'da aluna';
 
         const html = await this.parse({
             file: resolve(
@@ -88,10 +55,9 @@ class SendEmailWithDocumentsService {
                 'infra',
                 'nodemailer',
                 'views',
-                'send_documents.hbs',
+                'enrollment_finished.hbs',
             ),
             variables: {
-                studentNamePrefix,
                 studentName: `${studentNameArticle} ${this.capitalize(
                     studentName,
                 )}`,
@@ -99,32 +65,11 @@ class SendEmailWithDocumentsService {
             },
         });
 
-        const from = `"Colégio Santiago" <${process.env.NODEMAILER_USER}>`;
-        const subject = 'Documentos de Matrícula';
-        const attachments = [
-            {
-                filename: reenrollmentForm,
-                path: reenrollmentFormPath,
-                contentType: 'application/pdf',
-            },
-            {
-                filename: contract,
-                path: contractPath,
-                contentType: 'application/pdf',
-            },
-            {
-                filename: checklist,
-                path: checklistPath,
-                contentType: 'application/pdf',
-            },
-        ];
-
         await nodemailer.sendMail({
-            from,
+            from: `"Colégio Santiago" <${process.env.NODEMAILER_USER}>`,
             to: [responsibleEmail, process.env.NODEMAILER_USER || ''],
-            subject,
+            subject: 'Conclusão de Matrícula',
             html,
-            attachments,
         });
 
         await this.reenrollmentsRepository.updateReceivedMailWithDocuments(
