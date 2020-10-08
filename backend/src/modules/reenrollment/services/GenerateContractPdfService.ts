@@ -16,8 +16,16 @@ class GenerateContractPdfService {
 
     public async execute(
         reenrollment: IPrettierEnrollmentDTO,
+        contract_year: string,
+        monthly_value?: number,
+        total_value?: number,
     ): Promise<string> {
-        const monthlyValue = reenrollment.monthly_value || 0;
+        const monthlyValue =
+            contract_year === '2020'
+                ? monthly_value || 0
+                : reenrollment.monthly_value || 0;
+        const totalValue =
+            contract_year === '2020' ? total_value || 0 : monthlyValue * 12;
 
         const imageLogo = path.resolve(
             __dirname,
@@ -100,7 +108,7 @@ class GenerateContractPdfService {
                     ],
                 },
                 {
-                    text: `CONTRATO DE PRESTAÇÃO DE SERVIÇOS\nEDUCACIONAIS POR ADESÃO nº ${reenrollment.enrollment_number}/2021`,
+                    text: `CONTRATO DE PRESTAÇÃO DE SERVIÇOS\nEDUCACIONAIS POR ADESÃO nº ${reenrollment.enrollment_number}/${contract_year}`,
                     style: 'heading',
                 },
                 {
@@ -365,10 +373,7 @@ class GenerateContractPdfService {
                                     bold: true,
                                 },
                             ],
-                            [
-                                `R$ ${monthlyValue},00`,
-                                `R$ ${monthlyValue * 12},00`,
-                            ],
+                            [`R$ ${monthlyValue}`, `R$ ${totalValue}`],
                         ],
                     },
                 },

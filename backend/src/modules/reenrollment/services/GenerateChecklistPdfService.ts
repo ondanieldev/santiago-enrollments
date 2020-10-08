@@ -16,6 +16,7 @@ class GenerateChecklistPdfService {
 
     public async execute(
         reenrollment: IPrettierEnrollmentDTO,
+        contract_year: string,
     ): Promise<string> {
         const imageLogo = path.resolve(
             __dirname,
@@ -67,8 +68,7 @@ class GenerateChecklistPdfService {
                         {
                             text: [
                                 {
-                                    text:
-                                        'Checklist de Documentos de Matrícula/Rematrícula',
+                                    text: `Checklist de Documentos de Matrícula/Rematrícula - Ano ${contract_year}`,
                                     style: 'heading',
                                 },
                                 {

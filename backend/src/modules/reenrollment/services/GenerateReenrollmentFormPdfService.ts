@@ -16,6 +16,7 @@ class GenerateReenrollmentFormPdfService {
 
     public async execute(
         reenrollment: IPrettierEnrollmentDTO,
+        contract_year: string,
     ): Promise<string> {
         const imageLogo = path.resolve(
             __dirname,
@@ -67,7 +68,7 @@ class GenerateReenrollmentFormPdfService {
                         {
                             text: [
                                 {
-                                    text: 'Ficha de Matrícula - Ano 2021',
+                                    text: `Ficha de Matrícula - Ano ${contract_year}`,
                                     style: 'heading',
                                 },
                                 {

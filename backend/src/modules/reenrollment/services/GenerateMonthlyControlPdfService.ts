@@ -8,7 +8,9 @@ import { IReenrollmentsRepository } from '@modules/reenrollment/repositories/IRe
 
 interface IRequest {
     reenrollment: IPrettierEnrollmentDTO;
+    contract_year: string;
     discount_percent: number;
+    monthly_value?: number;
 }
 
 class GenerateMonthlyControlPdfService {
@@ -21,8 +23,13 @@ class GenerateMonthlyControlPdfService {
     public async execute({
         reenrollment,
         discount_percent,
+        contract_year,
+        monthly_value,
     }: IRequest): Promise<string> {
-        const monthlyValue = reenrollment.monthly_value || 0;
+        const monthlyValue =
+            contract_year === '2020'
+                ? monthly_value || 0
+                : reenrollment.monthly_value || 0;
         const monthlyWithDiscount =
             monthlyValue - (monthlyValue * discount_percent) / 100;
 
@@ -88,8 +95,7 @@ class GenerateMonthlyControlPdfService {
                                     style: 'phrase',
                                 },
                                 {
-                                    text:
-                                        '\nControle de Mensalidade Escolar — 2021',
+                                    text: `\nControle de Mensalidade Escolar — Ano ${contract_year}`,
                                     style: 'heading',
                                 },
                             ],

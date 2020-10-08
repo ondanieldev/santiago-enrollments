@@ -27,10 +27,23 @@ class ReenrollmentsPDFsController {
     ): Promise<Response> {
         const { enrollment_number } = request.params;
 
-        const { discount_percent } = request.body;
+        const {
+            discount_percent,
+            contract_year,
+            monthly_value,
+            total_value,
+        } = request.body;
 
-        if (discount_percent !== 0 && !discount_percent) {
+        if (
+            discount_percent < 0 ||
+            discount_percent > 100 ||
+            (discount_percent !== 0 && !discount_percent)
+        ) {
             throw new AppError('Desconto inválido!');
+        }
+
+        if (contract_year !== '2020' && contract_year !== '2021') {
+            throw new AppError('Ano de contrato inválido!');
         }
 
         const number = parseInt(enrollment_number, 10);
@@ -67,12 +80,22 @@ class ReenrollmentsPDFsController {
             checklist,
             monthlyControl,
         ] = await Promise.all([
-            generateReenrollmentFormPdf.execute(prettierReenrollment),
-            generateContractPdf.execute(prettierReenrollment),
-            generateChecklistPdf.execute(prettierReenrollment),
+            generateReenrollmentFormPdf.execute(
+                prettierReenrollment,
+                contract_year,
+            ),
+            generateContractPdf.execute(
+                prettierReenrollment,
+                contract_year,
+                monthly_value,
+                total_value,
+            ),
+            generateChecklistPdf.execute(prettierReenrollment, contract_year),
             generateMonthlyControlPdf.execute({
                 reenrollment: prettierReenrollment,
                 discount_percent,
+                contract_year,
+                monthly_value,
             }),
         ]);
 
