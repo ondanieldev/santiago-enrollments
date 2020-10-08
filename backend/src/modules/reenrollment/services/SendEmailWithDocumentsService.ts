@@ -89,28 +89,32 @@ class SendEmailWithDocumentsService {
             },
         });
 
+        const from = `"Colégio Santiago" <${process.env.NODEMAILER_USER}>`;
+        const subject = 'Documentos de Matrícula';
+        const attachments = [
+            {
+                filename: reenrollmentForm,
+                path: reenrollmentFormPath,
+                contentType: 'application/pdf',
+            },
+            {
+                filename: contract,
+                path: contractPath,
+                contentType: 'application/pdf',
+            },
+            {
+                filename: checklist,
+                path: checklistPath,
+                contentType: 'application/pdf',
+            },
+        ];
+
         await nodemailer.sendMail({
-            from: `"Colégio Santiago" <${process.env.NODEMAILER_USER}>`,
-            to: responsibleEmail,
-            subject: 'Documentos de Matrícula',
+            from,
+            to: [responsibleEmail, process.env.NODEMAILER_USER || ''],
+            subject,
             html,
-            attachments: [
-                {
-                    filename: reenrollmentForm,
-                    path: reenrollmentFormPath,
-                    contentType: 'application/pdf',
-                },
-                {
-                    filename: contract,
-                    path: contractPath,
-                    contentType: 'application/pdf',
-                },
-                {
-                    filename: checklist,
-                    path: checklistPath,
-                    contentType: 'application/pdf',
-                },
-            ],
+            attachments,
         });
     }
 
