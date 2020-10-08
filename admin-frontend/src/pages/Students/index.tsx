@@ -22,6 +22,7 @@ interface IStudent {
   student_name: string;
   enrollment_number: number;
   paid: boolean;
+  received_mail_with_documents: boolean;
 }
 
 const Students: React.FC = () => {
@@ -85,7 +86,9 @@ const Students: React.FC = () => {
           {students.map(student => (
             <Student paid={student.paid} key={student._id}>
               <Link to={`/reenrollment/${student.enrollment_number}`}>
-                {`${student.student_name} ${student.paid ? '- Pago' : ''}`}
+                {`${student.student_name} ${student.paid ? '- Pago' : ''} ${
+                  student.received_mail_with_documents ? '- E-mail enviado' : ''
+                }`}
               </Link>
 
               {student.paid && (
