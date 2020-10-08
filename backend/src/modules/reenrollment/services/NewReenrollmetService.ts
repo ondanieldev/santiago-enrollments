@@ -26,15 +26,6 @@ class NewEnrollmentService {
     public async execute(data: NewReenrollmentDTO): Promise<void> {
         await this.reenrollmentsRepository.create(data);
 
-        nodemailer.sendMail({
-            from: `"Colégio Santiago" <${process.env.NODEMAILER_USER}>`,
-            to: process.env.NODEMAILER_USER,
-            subject: 'Nova solicitação de rematrícula!',
-            text: `Um novo aluno foi cadastrado no sistema: ${
-                data.student_name
-            } - ${this.formatGrade(data.grade_name)}!`,
-        });
-
         const studentNameArticle = data.student_gender === 'male' ? 'do' : 'da';
 
         const html = await this.parse({
@@ -59,8 +50,8 @@ class NewEnrollmentService {
 
         nodemailer.sendMail({
             from: `"Colégio Santiago" <${process.env.NODEMAILER_USER}>`,
-            to: data.financial_email,
-            subject: 'Solicitação de rematrícula!',
+            to: [data.financial_email, process.env.NODEMAILER_USER || ''],
+            subject: 'Solicitação de Matrícula',
             html,
         });
     }

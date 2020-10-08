@@ -4,7 +4,6 @@ import autoIncrementModelID from '@modules/reenrollment/infra/mongoose/schemas/C
 
 const ReenrollmentSchema = new Schema({
     enrollment_number: Number,
-
     financial_name: String,
     financial_kinship: String,
     financial_birth_date: Date,

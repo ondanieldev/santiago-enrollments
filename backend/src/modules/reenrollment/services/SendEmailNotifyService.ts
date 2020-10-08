@@ -21,9 +21,6 @@ interface IRequest {
     studentName: string;
     responsibleName: string;
     responsibleEmail: string;
-    reenrollmentForm: string;
-    contract: string;
-    checklist: string;
 }
 
 class SendEmailWithDocumentsService {
@@ -38,9 +35,6 @@ class SendEmailWithDocumentsService {
         studentName,
         responsibleName,
         responsibleEmail,
-        reenrollmentForm,
-        contract,
-        checklist,
         enrollment_number,
     }: IRequest): Promise<void> {
         const studentNameArticle = studentGender === 'male' ? 'do' : 'da';

@@ -21,6 +21,7 @@
     "nodemailer": "^6.4.11",
     "pdfmake": "^0.1.68",
     "reflect-metadata": "^0.1.13",
+    "tsyringe": "^4.3.0",
     "typescript": "^3.9.7",
     "uuid": "^8.3.0"
   },

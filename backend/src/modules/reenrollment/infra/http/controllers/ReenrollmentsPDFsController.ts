@@ -32,6 +32,10 @@ class ReenrollmentsPDFsController {
             contract_year,
             monthly_value,
             total_value,
+            enrollment_payment_format,
+            enrollment_payment_times,
+            materials_payment_format,
+            materials_payment_times,
         } = request.body;
 
         if (
