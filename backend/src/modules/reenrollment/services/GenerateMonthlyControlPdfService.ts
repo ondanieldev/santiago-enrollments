@@ -180,7 +180,7 @@ class GenerateMonthlyControlPdfService {
                             ],
                             [
                                 {
-                                    text: 'Matrícula/\nRematrícula\n2021',
+                                    text: `Matrícula/\nRematrícula\n${contract_year}`,
                                     style: 'tableHeader',
                                 },
                                 {

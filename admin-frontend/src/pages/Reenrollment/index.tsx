@@ -23,6 +23,7 @@ import {
 } from '../../utils/formatFunctions';
 
 import 'react-toastify/dist/ReactToastify.css';
+import Select from '../../components/Select';
 
 interface IParams {
   reenrollment_number: string;
@@ -30,6 +31,8 @@ interface IParams {
 
 interface IFormData {
   discount_percent: number;
+  monthly_value?: number;
+  total_value?: number;
 }
 
 interface IDocument {
@@ -51,8 +54,15 @@ const Reenrollment: React.FC = () => {
   const [showFinancialData, setshowFinancialData] = useState(true);
   const [showSupportiveData, setshowSupportiveData] = useState(true);
   const [showStudentData, setshowStudentData] = useState(true);
+  const [showContractCustomFields, setShowContractCustomFields] = useState(
+    false,
+  );
   const [loading, setLoading] = useState(false);
   const [documents, setDocuments] = useState([] as IDocument[]);
+
+  const handleChangeContractFields = useCallback((contractYear: string) => {
+    setShowContractCustomFields(contractYear === '2020');
+  }, []);
 
   const handleCalcMonthlyValue = useCallback(
     (discountPercent: string): void => {
@@ -500,6 +510,14 @@ const Reenrollment: React.FC = () => {
       </DataGroup>
 
       <Form ref={formRef} onSubmit={handleSubmitForm}>
+        <Select
+          name="contract_year"
+          onChange={e => handleChangeContractFields(e.target.value)}
+        >
+          <option value="2021">2021</option>
+          <option value="2020">2020</option>
+        </Select>
+
         {documents.length <= 0 && (
           <>
             <Input
@@ -509,8 +527,24 @@ const Reenrollment: React.FC = () => {
               onChange={e => handleCalcMonthlyValue(e.target.value)}
             />
 
-            {monthlyValue !== 0 && (
+            {!showContractCustomFields && monthlyValue !== 0 && (
               <span>{`Valor da mensalidade com desconto: R$ ${monthlyValue}`}</span>
+            )}
+
+            {showContractCustomFields && (
+              <>
+                <Input
+                  type="number"
+                  name="monthly_value"
+                  placeholder="Valor da mensalidade"
+                />
+
+                <Input
+                  type="number"
+                  name="total_value"
+                  placeholder="Valor total da anuidade"
+                />
+              </>
             )}
 
             <Button loading={loading} type="submit">
