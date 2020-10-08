@@ -40,7 +40,7 @@ export interface IReenrollmentsRepository {
     updateContract(data: IUpdateContract): Promise<void>;
     updateReenrollmentForm(data: IUpdateReenrollmentForm): Promise<void>;
     updateMonthlyControl(data: IUpdateMonthlyControl): Promise<void>;
-    updatePaidStatus(data: IUpdatePaidStatus): Promise<void>;
+    updatePaidStatus(data: IUpdatePaidStatus): Promise<IReenrollment | null>;
     getByEnrollmentNumber(
         enrollment_number: number,
     ): Promise<IReenrollment | null>;

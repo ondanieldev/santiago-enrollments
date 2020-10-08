@@ -60,7 +60,7 @@ class ReenrollmentsRepository implements IReenrollmentsRepository {
     ): Promise<IReenrollment[] | []> {
         const reenrollments = await this.Reenrollment.find(
             { grade_name },
-            'enrollment_number student_name paid',
+            'enrollment_number student_name paid received_mail_with_documents',
         ).exec();
 
         return reenrollments;
@@ -122,8 +122,8 @@ class ReenrollmentsRepository implements IReenrollmentsRepository {
     public async updatePaidStatus({
         enrollment_number,
         paid,
-    }: IUpdatePaidStatus): Promise<void> {
-        await this.Reenrollment.findOneAndUpdate(
+    }: IUpdatePaidStatus): Promise<IReenrollment | null> {
+        const reenrollment = await this.Reenrollment.findOneAndUpdate(
             {
                 enrollment_number,
             },
@@ -134,6 +134,8 @@ class ReenrollmentsRepository implements IReenrollmentsRepository {
                 useFindAndModify: false,
             },
         );
+
+        return reenrollment;
     }
 
     public async updateReenrollmentForm({
