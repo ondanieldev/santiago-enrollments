@@ -12,24 +12,8 @@ export default class PDFMakePDFProvider implements IPDFProvider {
     ): Promise<string> {
         const fonts = {
             Arial: {
-                normal: path.resolve(
-                    __dirname,
-                    '..',
-                    '..',
-                    '..',
-                    'assets',
-                    'fonts',
-                    `arial.ttf`,
-                ),
-                bold: path.resolve(
-                    __dirname,
-                    '..',
-                    '..',
-                    '..',
-                    'assets',
-                    'fonts',
-                    `arialbd.ttf`,
-                ),
+                normal: path.resolve(__dirname, '..', 'fonts', 'arial.ttf'),
+                bold: path.resolve(__dirname, '..', 'fonts', 'arialbd.ttf'),
             },
         };
 
@@ -37,7 +21,7 @@ export default class PDFMakePDFProvider implements IPDFProvider {
 
         const fileHash = v4();
 
-        const fileName = `${fileHash}.pdf`;
+        const filename = `${fileHash}.pdf`;
 
         const filePath = path.resolve(
             __dirname,
@@ -45,8 +29,10 @@ export default class PDFMakePDFProvider implements IPDFProvider {
             '..',
             '..',
             '..',
+            '..',
+            '..',
             'tmp',
-            fileName,
+            filename,
         );
 
         const pdfDoc = printer.createPdfKitDocument(documentDefinition);
@@ -55,12 +41,14 @@ export default class PDFMakePDFProvider implements IPDFProvider {
 
         pdfDoc.end();
 
-        return fileName;
+        return filename;
     }
 
     public async delete(filename: string): Promise<void> {
-        const deletePath = path.resolve(
+        const filePath = path.resolve(
             __dirname,
+            '..',
+            '..',
             '..',
             '..',
             '..',
@@ -70,10 +58,10 @@ export default class PDFMakePDFProvider implements IPDFProvider {
         );
 
         try {
-            const fileAlreadyExists = await fs.promises.stat(deletePath);
+            const fileAlreadyExists = await fs.promises.stat(filePath);
 
             if (fileAlreadyExists) {
-                await fs.promises.unlink(deletePath);
+                await fs.promises.unlink(filePath);
             }
         } catch {}
     }

@@ -703,6 +703,10 @@ class GenerateContractPdfService {
 
         const fileName = await this.pdfProvider.generate(documentDefinition);
 
+        if (reenrollment.contract) {
+            await this.pdfProvider.delete(reenrollment.contract);
+        }
+
         await this.reenrollmentsRepository.updateContract(
             reenrollment.enrollment_number,
             fileName,

@@ -316,7 +316,11 @@ class GenerateReenrollmentFormPdfService {
 
         const fileName = await this.pdfProvider.generate(documentDefinition);
 
-        await this.reenrollmentsRepository.updateContract(
+        if (reenrollment.reenrollment_form) {
+            await this.pdfProvider.delete(reenrollment.reenrollment_form);
+        }
+
+        await this.reenrollmentsRepository.updateReenrollmentForm(
             reenrollment.enrollment_number,
             fileName,
         );

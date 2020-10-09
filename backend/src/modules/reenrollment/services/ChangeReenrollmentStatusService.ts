@@ -23,9 +23,8 @@ class ChangeReenrollmentStatusService {
         enrollment_number,
         status,
     }: IRequest): Promise<void> {
-        const enrollment = await this.reenrollmentsRepository.updatePaidStatus(
+        const enrollment = await this.reenrollmentsRepository.getByEnrollmentNumber(
             enrollment_number,
-            status,
         );
 
         if (!enrollment) {
@@ -33,6 +32,11 @@ class ChangeReenrollmentStatusService {
                 'Não é possível concluir uma matrícula que não existe!',
             );
         }
+
+        await this.reenrollmentsRepository.updatePaidStatus(
+            enrollment_number,
+            status,
+        );
 
         await this.mailProvider.sendMail({
             to: {

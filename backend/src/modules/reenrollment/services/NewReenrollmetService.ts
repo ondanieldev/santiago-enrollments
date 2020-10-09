@@ -22,7 +22,7 @@ class NewEnrollmentService {
 
         const studentNameArticle = data.student_gender === 'male' ? 'do' : 'da';
 
-        await this.mailProvider.sendMail({
+        this.mailProvider.sendMail({
             to: {
                 name: data.financial_name,
                 email: data.financial_email,

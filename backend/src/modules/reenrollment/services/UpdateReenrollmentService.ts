@@ -29,7 +29,7 @@ class UpdateEnrollmentService {
 
         const prettierDataService = new PrettierDataService();
 
-        Object.assign(reenrollment, { ...prettierDataService.execute(data) });
+        Object.assign(reenrollment, prettierDataService.execute(data));
 
         await this.reenrollmentsRepository.update(reenrollment);
     }

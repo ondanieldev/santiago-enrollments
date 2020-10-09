@@ -58,10 +58,10 @@ class ReenrollmentsRepository implements IReenrollmentsRepository {
         return reenrollments;
     }
 
-    public async update(data: IReenrollment): Promise<IReenrollment | null> {
-        const { enrollment_number, ...rest } = data;
+    public async update(data: IReenrollment): Promise<IReenrollment> {
+        const { enrollment_number } = data;
 
-        await this.Reenrollment.updateOne({ enrollment_number }, { ...rest });
+        await this.Reenrollment.updateOne({ enrollment_number }, data);
 
         return data;
     }

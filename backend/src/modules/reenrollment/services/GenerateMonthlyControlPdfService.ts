@@ -583,7 +583,11 @@ class GenerateMonthlyControlPdfService {
 
         const fileName = await this.pdfProvider.generate(documentDefinition);
 
-        await this.reenrollmentsRepository.updateContract(
+        if (reenrollment.monthly_control) {
+            await this.pdfProvider.delete(reenrollment.monthly_control);
+        }
+
+        await this.reenrollmentsRepository.updateMonthlyControl(
             reenrollment.enrollment_number,
             fileName,
         );

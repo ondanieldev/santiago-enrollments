@@ -1,15 +1,6 @@
 import { IReenrollment } from '@modules/reenrollment/infra/mongoose/schemas/ReenrollmentSchema';
 import NewReenrollmentDTO from '@modules/reenrollment/dtos/INewReenrollmentDTO';
 
-interface IUpdate extends NewReenrollmentDTO {
-    enrollment_number: number;
-}
-
-interface IUpdateEmailNotify {
-    enrollment_number: number;
-    notified: boolean;
-}
-
 export default interface IReenrollmentsRepository {
     updatePaidStatus(
         enrollment_number: number,
@@ -47,6 +38,6 @@ export default interface IReenrollmentsRepository {
             | 'nineth_year',
     ): Promise<IReenrollment[] | []>;
     create(data: NewReenrollmentDTO): Promise<IReenrollment>;
-    update(data: IUpdate): Promise<IReenrollment | null>;
+    update(data: IReenrollment): Promise<IReenrollment>;
     updateReceivedMailWithDocuments(enrollment_number: number): Promise<void>;
 }
