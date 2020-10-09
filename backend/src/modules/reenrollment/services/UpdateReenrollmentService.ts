@@ -1,8 +1,9 @@
 import { injectable, inject } from 'tsyringe';
 
-import NewReenrollmentDTO from '@modules/reenrollment/dtos/NewReenrollmentDTO';
+import NewReenrollmentDTO from '@modules/reenrollment/dtos/INewReenrollmentDTO';
 import IReenrollmentsRepository from '@modules/reenrollment/repositories/IReenrollmentsRepository';
 import AppError from '@shared/errors/AppError';
+import PrettierDataService from './PrettierDataService';
 
 interface IRequest extends NewReenrollmentDTO {
     enrollment_number: number;
@@ -26,7 +27,9 @@ class UpdateEnrollmentService {
             );
         }
 
-        Object.assign(reenrollment, { data });
+        const prettierDataService = new PrettierDataService();
+
+        Object.assign(reenrollment, { ...prettierDataService.execute(data) });
 
         await this.reenrollmentsRepository.update(reenrollment);
     }

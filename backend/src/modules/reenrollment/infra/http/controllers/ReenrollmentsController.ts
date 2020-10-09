@@ -1,7 +1,7 @@
+import { container } from 'tsyringe';
 import { Request, Response } from 'express';
-import { parseISO } from 'date-fns';
 
-import NewReenrollmentDTO from '@modules/reenrollment/dtos/NewReenrollmentDTO';
+import NewReenrollmentDTO from '@modules/reenrollment/dtos/INewReenrollmentDTO';
 import NewReenrollmetService from '@modules/reenrollment/services/NewReenrollmetService';
 import IndexEnrollmentsByGradeService from '@modules/reenrollment/services/IndexReenrollmentsByGradeService';
 import GetReenrollmentDataService from '@modules/reenrollment/services/GetReenrollmentDataService';
@@ -14,7 +14,9 @@ class ReenrollmentController {
     ): Promise<Response> {
         const { grade_name } = request.query;
 
-        const indexEnrollmentsByGrade = new IndexEnrollmentsByGradeService();
+        const indexEnrollmentsByGrade = container.resolve(
+            IndexEnrollmentsByGradeService,
+        );
 
         if (
             grade_name !== 'maternal' &&
@@ -34,9 +36,7 @@ class ReenrollmentController {
             return response.json([]);
         }
 
-        const reenrollments = await indexEnrollmentsByGrade.execute({
-            grade_name,
-        });
+        const reenrollments = await indexEnrollmentsByGrade.execute(grade_name);
 
         return response.json(reenrollments);
     }
@@ -44,13 +44,13 @@ class ReenrollmentController {
     public async get(request: Request, response: Response): Promise<Response> {
         const { enrollment_number } = request.params;
 
-        const getReenrollmentData = new GetReenrollmentDataService();
+        const getReenrollmentData = container.resolve(
+            GetReenrollmentDataService,
+        );
 
         const number = parseInt(enrollment_number, 10);
 
-        const reenrollment = await getReenrollmentData.execute({
-            enrollment_number: number,
-        });
+        const reenrollment = await getReenrollmentData.execute(number);
 
         return response.json(reenrollment);
     }
@@ -61,21 +61,11 @@ class ReenrollmentController {
     ): Promise<Response> {
         const data: NewReenrollmentDTO = request.body;
 
-        const newReenrollmet = new NewReenrollmetService();
-
-        data.financial_birth_date = parseISO(
-            data.financial_birth_date.toString(),
-        );
-
-        data.supportive_birth_date = parseISO(
-            data.supportive_birth_date.toString(),
-        );
-
-        data.student_birth_date = parseISO(data.student_birth_date.toString());
+        const newReenrollmet = container.resolve(NewReenrollmetService);
 
         await newReenrollmet.execute(data);
 
-        return response.json({ ok: true });
+        return response.status(204).json();
     }
 
     public async update(
@@ -88,17 +78,7 @@ class ReenrollmentController {
 
         const number = parseInt(enrollment_number, 10);
 
-        const updateReenrollment = new UpdateReenrollmentService();
-
-        data.financial_birth_date = parseISO(
-            data.financial_birth_date.toString(),
-        );
-
-        data.supportive_birth_date = parseISO(
-            data.supportive_birth_date.toString(),
-        );
-
-        data.student_birth_date = parseISO(data.student_birth_date.toString());
+        const updateReenrollment = container.resolve(UpdateReenrollmentService);
 
         await updateReenrollment.execute({
             enrollment_number: number,

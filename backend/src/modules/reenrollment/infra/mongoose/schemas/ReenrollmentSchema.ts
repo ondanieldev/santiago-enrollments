@@ -4,7 +4,8 @@ import autoIncrementModelID from '@modules/reenrollment/infra/mongoose/schemas/C
 
 const ReenrollmentSchema = new Schema({
     enrollment_number: Number,
-    enrollment_year: Number,
+
+    type: String,
 
     financial_name: String,
     financial_kinship: String,
@@ -78,6 +79,11 @@ const ReenrollmentSchema = new Schema({
     monthly_value: Number,
     discount_percent: Number,
     total_value: Number,
+    enrollment_year: Number,
+    enrollment_payment_format: String,
+    enrollment_payment_times: Number,
+    materials_payment_format: String,
+    materials_payment_times: Number,
 
     paid: { type: Boolean, default: false },
     received_mail_with_documents: { type: Boolean, default: false },
@@ -87,7 +93,8 @@ interface IReenrollment extends Document {
     _id: string;
 
     enrollment_number: number;
-    enrollment_year: '2020' | '2021';
+
+    type: 'enrollment' | 'reenrollment';
 
     financial_name: string;
     financial_kinship: string;
@@ -185,6 +192,11 @@ interface IReenrollment extends Document {
     monthly_value: number;
     discount_percent: number;
     total_value: number;
+    enrollment_year: '2020' | '2021';
+    enrollment_payment_format: 'in_cash' | 'financing';
+    enrollment_payment_times: number;
+    materials_payment_format: 'in_cash' | 'financing';
+    materials_payment_times: number;
 
     paid: boolean;
     received_mail_with_documents: boolean;

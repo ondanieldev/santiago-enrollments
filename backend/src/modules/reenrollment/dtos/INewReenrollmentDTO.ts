@@ -1,4 +1,6 @@
 export default interface NewReenrollmentDTO {
+    type: 'enrollment' | 'reenrollment';
+
     financial_name: string;
     financial_kinship: string;
     financial_birth_date: Date;

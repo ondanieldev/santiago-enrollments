@@ -1,5 +1,6 @@
 import handlebars from 'handlebars';
 import fs from 'fs';
+import path from 'path';
 
 import IMailTemplateProvider from '../models/IMailTemplateProvider';
 import IParseMailTemplateDTO from '../dtos/IParseMailTemplateDTO';
@@ -10,7 +11,9 @@ export default class FakeHandlebarsTemplateProvider
         file,
         variables,
     }: IParseMailTemplateDTO): Promise<string> {
-        const templateContent = await fs.promises.readFile(file, {
+        const filePath = path.resolve(__dirname, '..', 'views', file);
+
+        const templateContent = await fs.promises.readFile(filePath, {
             encoding: 'utf-8',
         });
 

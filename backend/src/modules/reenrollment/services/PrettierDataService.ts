@@ -1,11 +1,19 @@
-import NewReenrollmentDTO from '@modules/reenrollment/dtos/NewReenrollmentDTO';
+import INewReenrollmentDTO from '@modules/reenrollment/dtos/INewReenrollmentDTO';
+import { IReenrollment } from '@modules/reenrollment/infra/mongoose/schemas/ReenrollmentSchema';
+import { parseISO } from 'date-fns';
 
 class PrettierDataService {
-    public execute(data: NewReenrollmentDTO): NewReenrollmentDTO {
+    public execute(
+        data: INewReenrollmentDTO | IReenrollment,
+    ): INewReenrollmentDTO | IReenrollment {
         const reenrollment = data;
 
         reenrollment.financial_name = this.capitalize(
             reenrollment.financial_name,
+        );
+
+        reenrollment.financial_birth_date = parseISO(
+            reenrollment.financial_birth_date.toString(),
         );
 
         reenrollment.financial_kinship = this.capitalize(
@@ -49,6 +57,10 @@ class PrettierDataService {
             reenrollment.supportive_name,
         );
 
+        reenrollment.supportive_birth_date = parseISO(
+            reenrollment.supportive_birth_date.toString(),
+        );
+
         reenrollment.supportive_kinship = this.capitalize(
             reenrollment.supportive_kinship,
         );
@@ -87,6 +99,10 @@ class PrettierDataService {
         reenrollment.supportive_email = reenrollment.supportive_email.toLowerCase();
 
         reenrollment.student_name = this.capitalize(reenrollment.student_name);
+
+        reenrollment.student_birth_date = parseISO(
+            reenrollment.student_birth_date.toString(),
+        );
 
         reenrollment.student_father_name = this.capitalize(
             reenrollment.student_father_name,

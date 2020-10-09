@@ -1,15 +1,15 @@
 import { Router } from 'express';
 
 import ReenrollmentsController from '@modules/reenrollment/infra/http/controllers/ReenrollmentsController';
-import ReenrollmentsPDFsController from '@modules/reenrollment/infra/http/controllers/ReenrollmentsPDFsController';
-import ReenrollmentsMailsController from '@modules/reenrollment/infra/http/controllers/ReenrollmentsMailsController';
+import ReenrollmentsDocumentsController from '@modules/reenrollment/infra/http/controllers/ReenrollmentsDocumentsController';
+import ReenrollmentsDocumentsMailsController from '@modules/reenrollment/infra/http/controllers/ReenrollmentsDocumentsMailsController';
 import ReenrollmentsPaymentController from '@modules/reenrollment/infra/http/controllers/ReenrollmentsPaymentController';
 import ensureAuthenticated from '@shared/infra/http/middlewares/ensureAuthenticated';
 
 const reenrollmentsRoutes = Router();
 const reenrollmentsController = new ReenrollmentsController();
-const reenrollmentsPDFsController = new ReenrollmentsPDFsController();
-const reenrollmentsMailsController = new ReenrollmentsMailsController();
+const reenrollmentsDocumentsController = new ReenrollmentsDocumentsController();
+const reenrollmentsDocumentsMailsController = new ReenrollmentsDocumentsMailsController();
 const reenrollmentsPaymentController = new ReenrollmentsPaymentController();
 
 reenrollmentsRoutes.post('/', reenrollmentsController.create);
@@ -35,19 +35,13 @@ reenrollmentsRoutes.put(
 reenrollmentsRoutes.patch(
     '/pdfs/:enrollment_number',
     ensureAuthenticated,
-    reenrollmentsPDFsController.update,
+    reenrollmentsDocumentsController.update,
 );
 
 reenrollmentsRoutes.post(
-    '/pdfs',
+    '/mail/:enrollment_number',
     ensureAuthenticated,
-    reenrollmentsPDFsController.create,
-);
-
-reenrollmentsRoutes.post(
-    '/mail',
-    ensureAuthenticated,
-    reenrollmentsMailsController.create,
+    reenrollmentsDocumentsMailsController.create,
 );
 
 reenrollmentsRoutes.patch(

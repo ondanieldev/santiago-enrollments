@@ -4,10 +4,6 @@ import AppError from '@shared/errors/AppError';
 import { IReenrollment } from '@modules/reenrollment/infra/mongoose/schemas/ReenrollmentSchema';
 import IReenrollmentsRepository from '@modules/reenrollment/repositories/IReenrollmentsRepository';
 
-interface IRequest {
-    enrollment_number: number;
-}
-
 @injectable()
 class IndexEnrollmentsStudentService {
     constructor(
@@ -15,9 +11,7 @@ class IndexEnrollmentsStudentService {
         private reenrollmentsRepository: IReenrollmentsRepository,
     ) {}
 
-    public async execute(data: IRequest): Promise<IReenrollment> {
-        const { enrollment_number } = data;
-
+    public async execute(enrollment_number: number): Promise<IReenrollment> {
         const reenrollment = await this.reenrollmentsRepository.getByEnrollmentNumber(
             enrollment_number,
         );

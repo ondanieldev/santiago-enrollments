@@ -1,5 +1,5 @@
 import { IReenrollment } from '@modules/reenrollment/infra/mongoose/schemas/ReenrollmentSchema';
-import NewReenrollmentDTO from '@modules/reenrollment/dtos/NewReenrollmentDTO';
+import NewReenrollmentDTO from '@modules/reenrollment/dtos/INewReenrollmentDTO';
 
 interface IUpdate extends NewReenrollmentDTO {
     enrollment_number: number;

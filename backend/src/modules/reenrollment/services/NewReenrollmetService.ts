@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe';
 
-import NewReenrollmentDTO from '@modules/reenrollment/dtos/NewReenrollmentDTO';
+import NewReenrollmentDTO from '@modules/reenrollment/dtos/INewReenrollmentDTO';
 import IReenrollmentsRepository from '@modules/reenrollment/repositories/IReenrollmentsRepository';
 import IMailProvider from '@shared/containers/providers/MailProvider/models/IMailProvider';
 import PrettierDataService from './PrettierDataService';

@@ -23,10 +23,10 @@ class ChangeReenrollmentStatusService {
         enrollment_number,
         status,
     }: IRequest): Promise<void> {
-        const enrollment = await this.reenrollmentsRepository.updatePaidStatus({
+        const enrollment = await this.reenrollmentsRepository.updatePaidStatus(
             enrollment_number,
-            paid: status,
-        });
+            status,
+        );
 
         if (!enrollment) {
             throw new AppError(

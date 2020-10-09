@@ -1,6 +1,6 @@
 import mongoose, { Model } from 'mongoose';
 
-import NewReenrollmentDTO from '@modules/reenrollment/dtos/NewReenrollmentDTO';
+import NewReenrollmentDTO from '@modules/reenrollment/dtos/INewReenrollmentDTO';
 import IReenrollmentsRepository from '@modules/reenrollment/repositories/IReenrollmentsRepository';
 import {
     IReenrollment,
