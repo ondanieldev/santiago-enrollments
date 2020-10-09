@@ -1,7 +1,7 @@
 import { container } from 'tsyringe';
 import { Request, Response } from 'express';
 
-import PayReenrollmentService from '@modules/reenrollment/services/ChangeReenrollmentStatusService';
+import PayReenrollmentService from '@modules/reenrollment/services/UpdateReenrollmentStatusService';
 
 class ReenrollmentsPaymentController {
     public async update(

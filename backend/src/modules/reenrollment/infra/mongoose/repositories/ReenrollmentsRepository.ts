@@ -7,6 +7,18 @@ import {
     ReenrollmentSchema,
 } from '@modules/reenrollment/infra/mongoose/schemas/ReenrollmentSchema';
 
+interface IUpdatePaymentValues {
+    enrollment_number: number;
+    enrollment_year: '2020' | '2021';
+    discount_percent: number;
+    monthly_value: number;
+    total_value: number;
+    enrollment_payment_format: 'in_cash' | 'financing';
+    enrollment_payment_times: number;
+    materials_payment_format: 'in_cash' | 'financing';
+    materials_payment_times: number;
+}
+
 class ReenrollmentsRepository implements IReenrollmentsRepository {
     private Reenrollment: Model<IReenrollment>;
 
@@ -119,6 +131,13 @@ class ReenrollmentsRepository implements IReenrollmentsRepository {
             { enrollment_number },
             { received_mail_with_documents: true },
         );
+    }
+
+    public async updatePaymentValues({
+        enrollment_number,
+        ...rest
+    }: IUpdatePaymentValues): Promise<void> {
+        await this.Reenrollment.updateOne({ enrollment_number }, rest);
     }
 }
 

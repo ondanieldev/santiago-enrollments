@@ -6,6 +6,12 @@ import { format as formatDate } from 'date-fns';
 import AppError from '@shared/errors/AppError';
 import IReenrollmentsRepository from '@modules/reenrollment/repositories/IReenrollmentsRepository';
 import IPDFProvider from '@shared/containers/providers/PDFProvider/models/IPDFProvider';
+import {
+    formatEducationLevel,
+    formatGender,
+    formatGrade,
+    formatRace,
+} from '@shared/utils/formatFunctions';
 
 @injectable()
 class GenerateChecklistPdfService {
@@ -27,6 +33,16 @@ class GenerateChecklistPdfService {
                 'Não é possível gerar o checklist de uma matrícula que não existe!',
             );
         }
+
+        const gradeName = formatGrade(reenrollment.grade_name);
+        const studentGender = formatGender(reenrollment.student_gender);
+        const studentRace = formatRace(reenrollment.student_race);
+        const financialEducationLevel = formatEducationLevel(
+            reenrollment.financial_education_level,
+        );
+        const supportiveEducationLevel = formatEducationLevel(
+            reenrollment.supportive_education_level,
+        );
 
         const imageLogo = path.resolve(
             __dirname,
@@ -106,7 +122,7 @@ class GenerateChecklistPdfService {
                     columns: [
                         `Nome: ${reenrollment.student_name}`,
                         {
-                            text: `Turma: ${reenrollment.grade_name}`,
+                            text: `Turma: ${gradeName}`,
                             alignment: 'right',
                         },
                     ],
@@ -132,12 +148,12 @@ class GenerateChecklistPdfService {
                     columns: [
                         `Nacionalidade: ${reenrollment.student_nacionality}`,
                         {
-                            text: `Sexo: ${reenrollment.student_gender}`,
+                            text: `Sexo: ${studentGender}`,
                             alignment: 'center',
                             width: '*',
                         },
                         {
-                            text: `Cor/Raça: ${reenrollment.student_race}`,
+                            text: `Cor/Raça: ${studentRace}`,
                             alignment: 'right',
                         },
                     ],
@@ -167,7 +183,7 @@ class GenerateChecklistPdfService {
                             'MM/yyyy',
                         )}`,
                         {
-                            text: `Grau de Instrução: ${reenrollment.financial_education_level}`,
+                            text: `Grau de Instrução: ${financialEducationLevel}`,
                             alignment: 'right',
                         },
                     ],
@@ -213,7 +229,7 @@ class GenerateChecklistPdfService {
                             'MM/yyyy',
                         )}`,
                         {
-                            text: `Grau de Instrução: ${reenrollment.supportive_education_level}`,
+                            text: `Grau de Instrução: ${supportiveEducationLevel}`,
                             alignment: 'center',
                             width: '*',
                         },

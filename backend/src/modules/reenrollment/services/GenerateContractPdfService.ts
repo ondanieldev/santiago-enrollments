@@ -6,6 +6,7 @@ import { TDocumentDefinitions } from 'pdfmake/interfaces'; // eslint-disable-lin
 import AppError from '@shared/errors/AppError';
 import IReenrollmentsRepository from '@modules/reenrollment/repositories/IReenrollmentsRepository';
 import IPDFProvider from '@shared/containers/providers/PDFProvider/models/IPDFProvider';
+import { formatGrade } from '@shared/utils/formatFunctions';
 
 @injectable()
 class GenerateContractPdfService {
@@ -27,6 +28,8 @@ class GenerateContractPdfService {
                 'Não é possível gerar o contrato de uma matrícula que não existe!',
             );
         }
+
+        const gradeName = formatGrade(reenrollment.grade_name);
 
         const imageLogo = path.resolve(
             __dirname,
@@ -322,7 +325,7 @@ class GenerateContractPdfService {
                         },
                     ],
                 },
-                `Série/Ano/Período que Cursará: ${reenrollment.grade_name}`,
+                `Série/Ano/Período que Cursará: ${gradeName}`,
                 // CLÁUSULAS
                 // 1ª
                 {
@@ -366,7 +369,7 @@ class GenerateContractPdfService {
                         body: [
                             [
                                 {
-                                    text: 'ANUIDADE - 12 PARCELAS DE:',
+                                    text: 'MENSALIDADE',
                                     bold: true,
                                 },
                                 {

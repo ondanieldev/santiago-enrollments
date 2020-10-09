@@ -5,6 +5,7 @@ import { TDocumentDefinitions } from 'pdfmake/interfaces'; // eslint-disable-lin
 import AppError from '@shared/errors/AppError';
 import IReenrollmentsRepository from '@modules/reenrollment/repositories/IReenrollmentsRepository';
 import IPDFProvider from '@shared/containers/providers/PDFProvider/models/IPDFProvider';
+import { formatGrade } from '@shared/utils/formatFunctions';
 
 @injectable()
 class GenerateMonthlyControlPdfService {
@@ -26,6 +27,8 @@ class GenerateMonthlyControlPdfService {
                 'Não é possível gerar o controle de uma matrícula que não existe!',
             );
         }
+
+        const gradeName = formatGrade(reenrollment.grade_name);
 
         const logoImage = path.resolve(
             __dirname,
@@ -101,7 +104,7 @@ class GenerateMonthlyControlPdfService {
                     ],
                 },
                 {
-                    text: `${reenrollment.student_name} — ${reenrollment.grade_name}`,
+                    text: `${reenrollment.student_name} — ${gradeName}`,
                     style: 'heading',
                 },
                 {

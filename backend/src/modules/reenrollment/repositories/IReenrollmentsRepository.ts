@@ -1,6 +1,18 @@
 import { IReenrollment } from '@modules/reenrollment/infra/mongoose/schemas/ReenrollmentSchema';
 import NewReenrollmentDTO from '@modules/reenrollment/dtos/INewReenrollmentDTO';
 
+interface IUpdatePaymentValues {
+    enrollment_number: number;
+    enrollment_year: '2020' | '2021';
+    discount_percent: number;
+    monthly_value: number;
+    total_value: number;
+    enrollment_payment_format: 'in_cash' | 'financing';
+    enrollment_payment_times: number;
+    materials_payment_format: 'in_cash' | 'financing';
+    materials_payment_times: number;
+}
+
 export default interface IReenrollmentsRepository {
     updatePaidStatus(
         enrollment_number: number,
@@ -40,4 +52,5 @@ export default interface IReenrollmentsRepository {
     create(data: NewReenrollmentDTO): Promise<IReenrollment>;
     update(data: IReenrollment): Promise<IReenrollment>;
     updateReceivedMailWithDocuments(enrollment_number: number): Promise<void>;
+    updatePaymentValues(data: IUpdatePaymentValues): Promise<void>;
 }
