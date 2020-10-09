@@ -369,7 +369,11 @@ class GenerateContractPdfService {
                         body: [
                             [
                                 {
-                                    text: 'MENSALIDADE',
+                                    text: `${
+                                        reenrollment.enrollment_year === '2020'
+                                            ? 'PARCELA:'
+                                            : 'ANUIDADE - 12 PARCELAS DE:'
+                                    }`,
                                     bold: true,
                                 },
                                 {
