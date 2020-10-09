@@ -59,6 +59,7 @@ class SendEmailWithDocumentsService {
                     studentNameArticle,
                     studentName: reenrollment.student_name,
                     responsibleName: reenrollment.financial_name,
+                    enrollmentYear: reenrollment.enrollment_year,
                 },
             },
             attachments: [

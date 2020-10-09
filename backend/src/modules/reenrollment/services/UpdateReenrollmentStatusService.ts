@@ -38,22 +38,25 @@ class ChangeReenrollmentStatusService {
             status,
         );
 
-        await this.mailProvider.sendMail({
-            to: {
-                email: enrollment.financial_email,
-                name: enrollment.financial_name,
-            },
-            subject: '[Santiago] Matrícula Finalizada',
-            body: {
-                file: 'enrollment_finished.hbs',
-                variables: {
-                    responsibleName: enrollment.financial_name,
-                    studentName: enrollment.student_name,
-                    studentArticle:
-                        enrollment.student_gender === 'male' ? 'do' : 'da',
+        if (status) {
+            await this.mailProvider.sendMail({
+                to: {
+                    email: enrollment.financial_email,
+                    name: enrollment.financial_name,
                 },
-            },
-        });
+                subject: '[Santiago] Matrícula Finalizada',
+                body: {
+                    file: 'enrollment_finished.hbs',
+                    variables: {
+                        responsibleName: enrollment.financial_name,
+                        studentName: enrollment.student_name,
+                        studentArticle:
+                            enrollment.student_gender === 'male' ? 'do' : 'da',
+                        enrollmentYear: enrollment.enrollment_year,
+                    },
+                },
+            });
+        }
     }
 }
 
