@@ -30,9 +30,14 @@ interface IParams {
 }
 
 interface IFormData {
+  enrollment_year: string;
   discount_percent: number;
   monthly_value?: number;
   total_value?: number;
+  enrollment_payment_format: string;
+  enrollment_payment_times: string;
+  materials_payment_format: string;
+  materials_payment_times: string;
 }
 
 interface IDocument {
@@ -511,7 +516,7 @@ const Reenrollment: React.FC = () => {
 
       <Form ref={formRef} onSubmit={handleSubmitForm}>
         <Select
-          name="contract_year"
+          name="enrollment_year"
           onChange={e => handleChangeContractFields(e.target.value)}
         >
           <option value="2021">2021</option>

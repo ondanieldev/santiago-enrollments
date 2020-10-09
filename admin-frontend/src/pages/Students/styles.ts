@@ -4,6 +4,10 @@ interface IStudentProps {
   paid: boolean;
 }
 
+interface IInfoLabelProps {
+  backgroundColor: string;
+}
+
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -32,6 +36,9 @@ export const Student = styled.div<IStudentProps>`
     flex: 1;
     padding: 12px 24px;
     transition: background-color 0.15s;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
     ${props =>
       props.paid &&
@@ -54,4 +61,26 @@ export const Student = styled.div<IStudentProps>`
     padding: 0;
     margin: 0 12px;
   }
+`;
+
+export const InfoLabelContainer = styled.div`
+  display: flex;
+
+  div {
+    & + div {
+      margin-left: 6px;
+    }
+  }
+`;
+
+export const InfoLabel = styled.div<IInfoLabelProps>`
+  padding: 6px;
+  font-size: 14px;
+  border-radius: 6px;
+  color: #f7f6fc;
+
+  ${props =>
+    css`
+      background-color: ${props.backgroundColor};
+    `}
 `;

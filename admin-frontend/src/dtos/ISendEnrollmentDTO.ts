@@ -86,4 +86,6 @@ export default interface ISendEnrollmentDTO {
     | 'seventh_year'
     | 'eighth_year'
     | 'nineth_year';
+
+  type?: 'enrollment' | 'reenrollment';
 }

@@ -3,7 +3,13 @@ import { Link, useParams } from 'react-router-dom';
 import { FiCheck, FiX } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 
-import { Container, StudentsList, Student } from './styles';
+import {
+  Container,
+  StudentsList,
+  Student,
+  InfoLabelContainer,
+  InfoLabel,
+} from './styles';
 import Loading from '../../components/Loading';
 import IconBar from '../../components/IconBar';
 import Button from '../../components/Button';
@@ -86,9 +92,19 @@ const Students: React.FC = () => {
           {students.map(student => (
             <Student paid={student.paid} key={student._id}>
               <Link to={`/reenrollment/${student.enrollment_number}`}>
-                {`${student.student_name} ${student.paid ? '- Pago' : ''} ${
-                  student.received_mail_with_documents ? '- E-mail enviado' : ''
-                }`}
+                <>
+                  {student.student_name}
+                  <InfoLabelContainer>
+                    {student.paid && (
+                      <InfoLabel backgroundColor="#013C64">pago</InfoLabel>
+                    )}
+                    {student.received_mail_with_documents && (
+                      <InfoLabel backgroundColor="#212529">
+                        e-mail enviado
+                      </InfoLabel>
+                    )}
+                  </InfoLabelContainer>
+                </>
               </Link>
 
               {student.paid && (

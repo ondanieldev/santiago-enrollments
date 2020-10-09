@@ -123,6 +123,8 @@ const FormPage: React.FC = () => {
           abortEarly: false,
         });
 
+        enrollment.type = showOriginSchool ? 'enrollment' : 'reenrollment';
+
         enrollment.student_origin_school = showOriginSchool
           ? enrollment.student_origin_school
           : '';
