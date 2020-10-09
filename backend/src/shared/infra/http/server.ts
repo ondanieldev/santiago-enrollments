@@ -2,15 +2,16 @@ import 'reflect-metadata';
 import 'dotenv/config';
 
 import express, { Request, Response, NextFunction } from 'express';
-import cors from 'cors';
-import path from 'path';
 import 'express-async-errors';
 
-import '@shared/infra/mongoose';
+import cors from 'cors';
+import path from 'path';
 
 import AppError from '@shared/errors/AppError';
 import routes from '@shared/infra/http/routes';
-import nodemailer from '@shared/infra/nodemailer';
+
+import '@shared/infra/mongoose';
+import '@shared/containers';
 
 const app = express();
 app.use(cors());
@@ -31,17 +32,6 @@ app.use((err: Error, request: Request, response: Response, _: NextFunction) => {
             message: err.message,
         });
     }
-
-    try {
-        nodemailer.sendMail({
-            from: `"Colégio Santiago" <${process.env.NODEMAILER_USER}>`,
-            to: process.env.NODEMAILER_USER,
-            subject: 'ERRO NO SERVIDOR',
-            text: `O servidor obteve o seguinte erro durante a execução: ${err}`,
-        });
-    } catch {}
-
-    console.log(err);
 
     return response.status(500).json({
         statusCode: 500,

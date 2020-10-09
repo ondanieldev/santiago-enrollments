@@ -1,37 +1,31 @@
+import { injectable, inject } from 'tsyringe';
 import path from 'path';
 import { TDocumentDefinitions } from 'pdfmake/interfaces'; // eslint-disable-line
 
-import ReenrollmentsRepository from '@modules/reenrollment/infra/mongoose/repositories/ReenrollmentsRepository';
-import GeneratePDFService from '@modules/reenrollment/services/GeneratePDFService';
-import IPrettierEnrollmentDTO from '@modules/reenrollment/dtos/IPrettierEnrollmentDTO';
-import { IReenrollmentsRepository } from '@modules/reenrollment/repositories/IReenrollmentsRepository';
+import AppError from '@shared/errors/AppError';
+import IReenrollmentsRepository from '@modules/reenrollment/repositories/IReenrollmentsRepository';
+import IPDFProvider from '@shared/containers/providers/PDFProvider/models/IPDFProvider';
 
-interface IRequest {
-    reenrollment: IPrettierEnrollmentDTO;
-    contract_year: string;
-    discount_percent: number;
-    monthly_value?: number;
-}
-
+@injectable()
 class GenerateMonthlyControlPdfService {
-    private reenrollmentsRepository: IReenrollmentsRepository;
+    constructor(
+        @inject('ReenrollmentsRepository')
+        private reenrollmentsRepository: IReenrollmentsRepository,
 
-    constructor() {
-        this.reenrollmentsRepository = new ReenrollmentsRepository();
-    }
+        @inject('PDFProvider')
+        private pdfProvider: IPDFProvider,
+    ) {}
 
-    public async execute({
-        reenrollment,
-        discount_percent,
-        contract_year,
-        monthly_value,
-    }: IRequest): Promise<string> {
-        const monthlyValue =
-            contract_year === '2020'
-                ? monthly_value || 0
-                : reenrollment.monthly_value || 0;
-        const monthlyWithDiscount =
-            monthlyValue - (monthlyValue * discount_percent) / 100;
+    public async execute(enrollment_number: number): Promise<string> {
+        const reenrollment = await this.reenrollmentsRepository.getByEnrollmentNumber(
+            enrollment_number,
+        );
+
+        if (!reenrollment) {
+            throw new AppError(
+                'Não é possível gerar o controle de uma matrícula que não existe!',
+            );
+        }
 
         const logoImage = path.resolve(
             __dirname,
@@ -43,7 +37,7 @@ class GenerateMonthlyControlPdfService {
             'logo.png',
         );
 
-        const docDefinition = {
+        const documentDefinition = {
             pageSize: 'A4',
             pageOrientation: 'portrait',
             pageMargins: [20, 20, 20, 20],
@@ -95,7 +89,7 @@ class GenerateMonthlyControlPdfService {
                                     style: 'phrase',
                                 },
                                 {
-                                    text: `\nControle de Mensalidade Escolar — Ano ${contract_year}`,
+                                    text: `\nControle de Mensalidade Escolar — Ano ${reenrollment.enrollment_year}`,
                                     style: 'heading',
                                 },
                             ],
@@ -132,13 +126,13 @@ class GenerateMonthlyControlPdfService {
                         {
                             text: [
                                 { text: 'Mensalidade: ', bold: true },
-                                `R$ ${monthlyValue}`,
+                                `R$ ${reenrollment.monthly_value}`,
                             ],
                         },
                         {
                             text: [
                                 { text: 'Desconto: ', bold: true },
-                                `${discount_percent}%`,
+                                `${reenrollment.discount_percent}%`,
                             ],
                             alignment: 'center',
                         },
@@ -148,7 +142,12 @@ class GenerateMonthlyControlPdfService {
                                     text: 'Mensalidade com desconto: ',
                                     bold: true,
                                 },
-                                `R$ ${monthlyWithDiscount}`,
+                                `R$ ${
+                                    reenrollment.monthly_value -
+                                    (reenrollment.monthly_value *
+                                        reenrollment.discount_percent) /
+                                        100
+                                }`,
                             ],
                             alignment: 'right',
                         },
@@ -180,7 +179,7 @@ class GenerateMonthlyControlPdfService {
                             ],
                             [
                                 {
-                                    text: `Matrícula/\nRematrícula\n${contract_year}`,
+                                    text: `Matrícula/\nRematrícula\n${reenrollment.enrollment_year}`,
                                     style: 'tableHeader',
                                 },
                                 {
@@ -582,17 +581,12 @@ class GenerateMonthlyControlPdfService {
             ],
         } as TDocumentDefinitions;
 
-        const generatePDF = new GeneratePDFService();
+        const fileName = await this.pdfProvider.generate(documentDefinition);
 
-        const fileName = await generatePDF.execute({
-            docDefinition,
-            deleteFileName: reenrollment.monthly_control,
-        });
-
-        await this.reenrollmentsRepository.updateMonthlyControl({
-            enrollment_number: reenrollment.enrollment_number,
-            monthly_control: fileName,
-        });
+        await this.reenrollmentsRepository.updateContract(
+            reenrollment.enrollment_number,
+            fileName,
+        );
 
         return fileName;
     }

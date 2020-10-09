@@ -1,15 +1,7 @@
 import mongoose, { Model } from 'mongoose';
 
 import NewReenrollmentDTO from '@modules/reenrollment/dtos/NewReenrollmentDTO';
-import {
-    IReenrollmentsRepository,
-    IUpdate,
-    IUpdateChecklist,
-    IUpdateContract,
-    IUpdatePaidStatus,
-    IUpdateReenrollmentForm,
-    IUpdateMonthlyControl,
-} from '@modules/reenrollment/repositories/IReenrollmentsRepository';
+import IReenrollmentsRepository from '@modules/reenrollment/repositories/IReenrollmentsRepository';
 import {
     IReenrollment,
     ReenrollmentSchema,
@@ -66,125 +58,66 @@ class ReenrollmentsRepository implements IReenrollmentsRepository {
         return reenrollments;
     }
 
-    public async update({
-        enrollment_number,
-        ...rest
-    }: IUpdate): Promise<IReenrollment | null> {
-        const reenrollment = await this.Reenrollment.findOneAndUpdate(
-            {
-                enrollment_number,
-            },
-            {
-                ...rest,
-            },
-            {
-                useFindAndModify: false,
-            },
+    public async update(data: IReenrollment): Promise<IReenrollment | null> {
+        const { enrollment_number, ...rest } = data;
+
+        await this.Reenrollment.updateOne({ enrollment_number }, { ...rest });
+
+        return data;
+    }
+
+    public async updateChecklist(
+        enrollment_number: number,
+        checklist: string,
+    ): Promise<void> {
+        await this.Reenrollment.updateOne({ enrollment_number }, { checklist });
+    }
+
+    public async updateContract(
+        enrollment_number: number,
+        contract: string,
+    ): Promise<void> {
+        await this.Reenrollment.updateOne({ enrollment_number }, { contract });
+    }
+
+    public async updatePaidStatus(
+        enrollment_number: number,
+        paid: boolean,
+    ): Promise<IReenrollment | null> {
+        const reenrollment = await this.Reenrollment.updateOne(
+            { enrollment_number },
+            { paid },
         );
 
         return reenrollment;
     }
 
-    public async updateChecklist({
-        enrollment_number,
-        checklist,
-    }: IUpdateChecklist): Promise<void> {
-        await this.Reenrollment.findOneAndUpdate(
-            {
-                enrollment_number,
-            },
-            {
-                checklist,
-            },
-            {
-                useFindAndModify: false,
-            },
+    public async updateReenrollmentForm(
+        enrollment_number: number,
+        reenrollment_form: string,
+    ): Promise<void> {
+        await this.Reenrollment.updateOne(
+            { enrollment_number },
+            { reenrollment_form },
         );
     }
 
-    public async updateContract({
-        enrollment_number,
-        contract,
-    }: IUpdateContract): Promise<void> {
-        await this.Reenrollment.findOneAndUpdate(
-            {
-                enrollment_number,
-            },
-            {
-                contract,
-            },
-            {
-                useFindAndModify: false,
-            },
-        );
-    }
-
-    public async updatePaidStatus({
-        enrollment_number,
-        paid,
-    }: IUpdatePaidStatus): Promise<IReenrollment | null> {
-        const reenrollment = await this.Reenrollment.findOneAndUpdate(
-            {
-                enrollment_number,
-            },
-            {
-                paid,
-            },
-            {
-                useFindAndModify: false,
-            },
-        );
-
-        return reenrollment;
-    }
-
-    public async updateReenrollmentForm({
-        enrollment_number,
-        reenrollment_form,
-    }: IUpdateReenrollmentForm): Promise<void> {
-        await this.Reenrollment.findOneAndUpdate(
-            {
-                enrollment_number,
-            },
-            {
-                reenrollment_form,
-            },
-            {
-                useFindAndModify: false,
-            },
-        );
-    }
-
-    public async updateMonthlyControl({
-        enrollment_number,
-        monthly_control,
-    }: IUpdateMonthlyControl): Promise<void> {
-        await this.Reenrollment.findOneAndUpdate(
-            {
-                enrollment_number,
-            },
-            {
-                monthly_control,
-            },
-            {
-                useFindAndModify: false,
-            },
+    public async updateMonthlyControl(
+        enrollment_number: number,
+        monthly_control: string,
+    ): Promise<void> {
+        await this.Reenrollment.updateOne(
+            { enrollment_number },
+            { monthly_control },
         );
     }
 
     public async updateReceivedMailWithDocuments(
         enrollment_number: number,
     ): Promise<void> {
-        await this.Reenrollment.findOneAndUpdate(
-            {
-                enrollment_number,
-            },
-            {
-                received_mail_with_documents: true,
-            },
-            {
-                useFindAndModify: false,
-            },
+        await this.Reenrollment.updateOne(
+            { enrollment_number },
+            { received_mail_with_documents: true },
         );
     }
 }

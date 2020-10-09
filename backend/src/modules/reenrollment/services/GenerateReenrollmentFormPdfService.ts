@@ -1,23 +1,33 @@
+import { injectable, inject } from 'tsyringe';
 import path from 'path';
 import { TDocumentDefinitions } from 'pdfmake/interfaces'; // eslint-disable-line
 import { format as formatDate } from 'date-fns';
 
-import ReenrollmentsRepository from '@modules/reenrollment/infra/mongoose/repositories/ReenrollmentsRepository';
-import GeneratePDFService from '@modules/reenrollment/services/GeneratePDFService';
-import IPrettierEnrollmentDTO from '@modules/reenrollment/dtos/IPrettierEnrollmentDTO';
-import { IReenrollmentsRepository } from '@modules/reenrollment/repositories/IReenrollmentsRepository';
+import AppError from '@shared/errors/AppError';
+import IReenrollmentsRepository from '@modules/reenrollment/repositories/IReenrollmentsRepository';
+import IPDFProvider from '@shared/containers/providers/PDFProvider/models/IPDFProvider';
 
+@injectable()
 class GenerateReenrollmentFormPdfService {
-    private reenrollmentsRepository: IReenrollmentsRepository;
+    constructor(
+        @inject('ReenrollmentsRepository')
+        private reenrollmentsRepository: IReenrollmentsRepository,
 
-    constructor() {
-        this.reenrollmentsRepository = new ReenrollmentsRepository();
-    }
+        @inject('PDFProvider')
+        private pdfProvider: IPDFProvider,
+    ) {}
 
-    public async execute(
-        reenrollment: IPrettierEnrollmentDTO,
-        contract_year: string,
-    ): Promise<string> {
+    public async execute(enrollment_number: number): Promise<string> {
+        const reenrollment = await this.reenrollmentsRepository.getByEnrollmentNumber(
+            enrollment_number,
+        );
+
+        if (!reenrollment) {
+            throw new AppError(
+                'Não é possível gerar o controle de uma matrícula que não existe!',
+            );
+        }
+
         const imageLogo = path.resolve(
             __dirname,
             '..',
@@ -28,7 +38,7 @@ class GenerateReenrollmentFormPdfService {
             'logo.png',
         );
 
-        const docDefinition = {
+        const documentDefinition = {
             pageSize: 'A4',
             pageOrientation: 'portrait',
             pageMargins: [20, 20, 20, 20],
@@ -68,7 +78,7 @@ class GenerateReenrollmentFormPdfService {
                         {
                             text: [
                                 {
-                                    text: `Ficha de Matrícula - Ano ${contract_year}`,
+                                    text: `Ficha de Matrícula - Ano ${reenrollment.enrollment_year}`,
                                     style: 'heading',
                                 },
                                 {
@@ -304,17 +314,12 @@ class GenerateReenrollmentFormPdfService {
             ],
         } as TDocumentDefinitions;
 
-        const generatePDF = new GeneratePDFService();
+        const fileName = await this.pdfProvider.generate(documentDefinition);
 
-        const fileName = await generatePDF.execute({
-            docDefinition,
-            deleteFileName: reenrollment.reenrollment_form,
-        });
-
-        await this.reenrollmentsRepository.updateReenrollmentForm({
-            enrollment_number: reenrollment.enrollment_number,
-            reenrollment_form: fileName,
-        });
+        await this.reenrollmentsRepository.updateContract(
+            reenrollment.enrollment_number,
+            fileName,
+        );
 
         return fileName;
     }

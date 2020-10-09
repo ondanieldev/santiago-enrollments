@@ -1,31 +1,32 @@
+import { injectable, inject } from 'tsyringe';
 import path from 'path';
 import { format as formatDate } from 'date-fns';
 import { TDocumentDefinitions } from 'pdfmake/interfaces'; // eslint-disable-line
 
-import ReenrollmentsRepository from '@modules/reenrollment/infra/mongoose/repositories/ReenrollmentsRepository';
-import GeneratePDFService from '@modules/reenrollment/services/GeneratePDFService';
-import IPrettierEnrollmentDTO from '@modules/reenrollment/dtos/IPrettierEnrollmentDTO';
-import { IReenrollmentsRepository } from '@modules/reenrollment/repositories/IReenrollmentsRepository';
+import AppError from '@shared/errors/AppError';
+import IReenrollmentsRepository from '@modules/reenrollment/repositories/IReenrollmentsRepository';
+import IPDFProvider from '@shared/containers/providers/PDFProvider/models/IPDFProvider';
 
+@injectable()
 class GenerateContractPdfService {
-    private reenrollmentsRepository: IReenrollmentsRepository;
+    constructor(
+        @inject('ReenrollmentsRepository')
+        private reenrollmentsRepository: IReenrollmentsRepository,
 
-    constructor() {
-        this.reenrollmentsRepository = new ReenrollmentsRepository();
-    }
+        @inject('PDFProvider')
+        private pdfProvider: IPDFProvider,
+    ) {}
 
-    public async execute(
-        reenrollment: IPrettierEnrollmentDTO,
-        contract_year: string,
-        monthly_value?: number,
-        total_value?: number,
-    ): Promise<string> {
-        const monthlyValue =
-            contract_year === '2020'
-                ? monthly_value || 0
-                : reenrollment.monthly_value || 0;
-        const totalValue =
-            contract_year === '2020' ? total_value || 0 : monthlyValue * 12;
+    public async execute(enrollment_number: number): Promise<string> {
+        const reenrollment = await this.reenrollmentsRepository.getByEnrollmentNumber(
+            enrollment_number,
+        );
+
+        if (!reenrollment) {
+            throw new AppError(
+                'Não é possível gerar o contrato de uma matrícula que não existe!',
+            );
+        }
 
         const imageLogo = path.resolve(
             __dirname,
@@ -37,7 +38,7 @@ class GenerateContractPdfService {
             'logo.png',
         );
 
-        const docDefinition = {
+        const documentDefinition = {
             pageSize: 'A4',
             pageOrientation: 'portrait',
             pageMargins: [20, 20, 20, 20],
@@ -108,7 +109,7 @@ class GenerateContractPdfService {
                     ],
                 },
                 {
-                    text: `CONTRATO DE PRESTAÇÃO DE SERVIÇOS\nEDUCACIONAIS POR ADESÃO nº ${reenrollment.enrollment_number}/${contract_year}`,
+                    text: `CONTRATO DE PRESTAÇÃO DE SERVIÇOS\nEDUCACIONAIS POR ADESÃO nº ${reenrollment.enrollment_number}/${reenrollment.enrollment_year}`,
                     style: 'heading',
                 },
                 {
@@ -373,7 +374,10 @@ class GenerateContractPdfService {
                                     bold: true,
                                 },
                             ],
-                            [`R$ ${monthlyValue}`, `R$ ${totalValue}`],
+                            [
+                                `R$ ${reenrollment.monthly_value}`,
+                                `R$ ${reenrollment.total_value}`,
+                            ],
                         ],
                     },
                 },
@@ -697,17 +701,12 @@ class GenerateContractPdfService {
             ],
         } as TDocumentDefinitions;
 
-        const generatePDF = new GeneratePDFService();
+        const fileName = await this.pdfProvider.generate(documentDefinition);
 
-        const fileName = await generatePDF.execute({
-            docDefinition,
-            deleteFileName: reenrollment.contract,
-        });
-
-        await this.reenrollmentsRepository.updateContract({
-            enrollment_number: reenrollment.enrollment_number,
-            contract: fileName,
-        });
+        await this.reenrollmentsRepository.updateContract(
+            reenrollment.enrollment_number,
+            fileName,
+        );
 
         return fileName;
     }

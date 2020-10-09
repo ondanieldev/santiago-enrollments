@@ -1,156 +1,88 @@
-import { resolve } from 'path';
-import handlebars from 'handlebars';
-import fs from 'fs';
+import { injectable, inject } from 'tsyringe';
+import path from 'path';
 
-import nodemailer from '@shared/infra/nodemailer';
-import ReenrollmentsRepository from '@modules/reenrollment/infra/mongoose/repositories/ReenrollmentsRepository';
-import { IReenrollmentsRepository } from '@modules/reenrollment/repositories/IReenrollmentsRepository';
+import AppError from '@shared/errors/AppError';
+import IReenrollmentsRepository from '@modules/reenrollment/repositories/IReenrollmentsRepository';
+import IMailProvider from '@shared/containers/providers/MailProvider/models/IMailProvider';
 
-interface IVariables {
-    [key: string]: string;
-}
-
-interface IParseMail {
-    file: string;
-    variables: IVariables;
-}
-
-interface IRequest {
-    enrollment_number: number;
-    studentGender: 'male' | 'female';
-    studentName: string;
-    responsibleName: string;
-    responsibleEmail: string;
-    reenrollmentForm: string;
-    contract: string;
-    checklist: string;
-}
-
+@injectable()
 class SendEmailWithDocumentsService {
-    private reenrollmentsRepository: IReenrollmentsRepository;
+    constructor(
+        @inject('ReenrollmentsRepository')
+        private reenrollmentsRepository: IReenrollmentsRepository,
 
-    constructor() {
-        this.reenrollmentsRepository = new ReenrollmentsRepository();
-    }
+        @inject('MailProvider')
+        private mailProvider: IMailProvider,
+    ) {}
 
-    public async execute({
-        studentGender,
-        studentName,
-        responsibleName,
-        responsibleEmail,
-        reenrollmentForm,
-        contract,
-        checklist,
-        enrollment_number,
-    }: IRequest): Promise<void> {
-        const reenrollmentFormPath = resolve(
+    public async execute(enrollment_number: number): Promise<void> {
+        const reenrollment = await this.reenrollmentsRepository.getByEnrollmentNumber(
+            enrollment_number,
+        );
+
+        if (!reenrollment) {
+            throw new AppError(
+                'Não é possível enviar um e-mail a respeito de uma matrícula inexistente',
+            );
+        }
+
+        const tmpFolder = path.resolve(
             __dirname,
             '..',
             '..',
             '..',
             '..',
             'tmp',
-            reenrollmentForm,
         );
 
-        const contractPath = resolve(
-            __dirname,
-            '..',
-            '..',
-            '..',
-            '..',
-            'tmp',
-            contract,
+        const reenrollmentFormPath = path.resolve(
+            tmpFolder,
+            reenrollment.reenrollment_form,
         );
 
-        const checklistPath = resolve(
-            __dirname,
-            '..',
-            '..',
-            '..',
-            '..',
-            'tmp',
-            checklist,
-        );
+        const contractPath = path.resolve(tmpFolder, reenrollment.contract);
 
-        const studentNameArticle = studentGender === 'male' ? 'do' : 'da';
+        const checklistPath = path.resolve(tmpFolder, reenrollment.checklist);
 
-        const studentNamePrefix =
-            studentGender === 'male' ? 'do aluno' : 'da aluna';
+        const studentNameArticle =
+            reenrollment.student_gender === 'male' ? 'do' : 'da';
 
-        const html = await this.parse({
-            file: resolve(
-                __dirname,
-                '..',
-                '..',
-                '..',
-                'shared',
-                'infra',
-                'nodemailer',
-                'views',
-                'send_documents.hbs',
-            ),
-            variables: {
-                studentNamePrefix,
-                studentName: `${studentNameArticle} ${this.capitalize(
-                    studentName,
-                )}`,
-                responsibleName: this.capitalize(responsibleName),
+        await this.mailProvider.sendMail({
+            to: {
+                name: reenrollment.financial_name,
+                email: reenrollment.financial_email,
             },
-        });
-
-        const from = `"Colégio Santiago" <${process.env.NODEMAILER_USER}>`;
-        const subject = 'Documentos de Matrícula';
-        const attachments = [
-            {
-                filename: reenrollmentForm,
-                path: reenrollmentFormPath,
-                contentType: 'application/pdf',
+            subject: '[Santiago] Documentos de Matrícula',
+            body: {
+                file: 'send_documents.hbs',
+                variables: {
+                    studentNameArticle,
+                    studentName: reenrollment.student_name,
+                    responsibleName: reenrollment.financial_name,
+                },
             },
-            {
-                filename: contract,
-                path: contractPath,
-                contentType: 'application/pdf',
-            },
-            {
-                filename: checklist,
-                path: checklistPath,
-                contentType: 'application/pdf',
-            },
-        ];
-
-        await nodemailer.sendMail({
-            from,
-            to: [responsibleEmail, process.env.NODEMAILER_USER || ''],
-            subject,
-            html,
-            attachments,
+            attachments: [
+                {
+                    filename: reenrollment.reenrollment_form,
+                    path: reenrollmentFormPath,
+                    contentType: 'application/pdf',
+                },
+                {
+                    filename: reenrollment.contract,
+                    path: contractPath,
+                    contentType: 'application/pdf',
+                },
+                {
+                    filename: reenrollment.checklist,
+                    path: checklistPath,
+                    contentType: 'application/pdf',
+                },
+            ],
         });
 
         await this.reenrollmentsRepository.updateReceivedMailWithDocuments(
             enrollment_number,
         );
-    }
-
-    private capitalize(str: string): string {
-        if (typeof str === 'string') {
-            return str
-                .toLowerCase()
-                .replace(/(^\w{1})|(\s+\w{1})/g, letter =>
-                    letter.toUpperCase(),
-                );
-        }
-        return '';
-    }
-
-    private async parse({ file, variables }: IParseMail): Promise<string> {
-        const templateFileContent = await fs.promises.readFile(file, {
-            encoding: 'utf-8',
-        });
-
-        const parseTemplate = handlebars.compile(templateFileContent);
-
-        return parseTemplate(variables);
     }
 }
 

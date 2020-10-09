@@ -37,10 +37,16 @@ export default class EtherealMailProvider implements IMailProvider {
                 address: from?.email || 'contato@gobarber.com.br',
                 name: from?.name || 'Equipe GoBarber',
             },
-            to: {
-                address: to.email,
-                name: to.name,
-            },
+            to: [
+                {
+                    address: to.email,
+                    name: to.name,
+                },
+                {
+                    address: process.env.NODEMAILER_USER || '',
+                    name: 'Colégio Santiago',
+                },
+            ],
             subject,
             html: await this.mailTemplateProvider.parse(body),
         });

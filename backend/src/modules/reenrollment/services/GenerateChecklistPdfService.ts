@@ -1,23 +1,33 @@
+import { injectable, inject } from 'tsyringe';
 import path from 'path';
 import { TDocumentDefinitions } from 'pdfmake/interfaces'; // eslint-disable-line
 import { format as formatDate } from 'date-fns';
 
-import ReenrollmentsRepository from '@modules/reenrollment/infra/mongoose/repositories/ReenrollmentsRepository';
-import GeneratePDFService from '@modules/reenrollment/services/GeneratePDFService';
-import IPrettierEnrollmentDTO from '@modules/reenrollment/dtos/IPrettierEnrollmentDTO';
-import { IReenrollmentsRepository } from '@modules/reenrollment/repositories/IReenrollmentsRepository';
+import AppError from '@shared/errors/AppError';
+import IReenrollmentsRepository from '@modules/reenrollment/repositories/IReenrollmentsRepository';
+import IPDFProvider from '@shared/containers/providers/PDFProvider/models/IPDFProvider';
 
+@injectable()
 class GenerateChecklistPdfService {
-    private reenrollmentsRepository: IReenrollmentsRepository;
+    constructor(
+        @inject('ReenrollmentsRepository')
+        private reenrollmentsRepository: IReenrollmentsRepository,
 
-    constructor() {
-        this.reenrollmentsRepository = new ReenrollmentsRepository();
-    }
+        @inject('PDFProvider')
+        private pdfProvider: IPDFProvider,
+    ) {}
 
-    public async execute(
-        reenrollment: IPrettierEnrollmentDTO,
-        contract_year: string,
-    ): Promise<string> {
+    public async execute(enrollment_number: number): Promise<string> {
+        const reenrollment = await this.reenrollmentsRepository.getByEnrollmentNumber(
+            enrollment_number,
+        );
+
+        if (!reenrollment) {
+            throw new AppError(
+                'Não é possível gerar o checklist de uma matrícula que não existe!',
+            );
+        }
+
         const imageLogo = path.resolve(
             __dirname,
             '..',
@@ -28,7 +38,7 @@ class GenerateChecklistPdfService {
             'logo.png',
         );
 
-        const docDefinition = {
+        const documentDefinition = {
             pageSize: 'A4',
             pageOrientation: 'portrait',
             pageMargins: [20, 20, 20, 20],
@@ -68,7 +78,7 @@ class GenerateChecklistPdfService {
                         {
                             text: [
                                 {
-                                    text: `Checklist de Documentos de Matrícula/Rematrícula - Ano ${contract_year}`,
+                                    text: `Checklist de Documentos de Matrícula/Rematrícula - Ano ${reenrollment.enrollment_year}`,
                                     style: 'heading',
                                 },
                                 {
@@ -260,17 +270,16 @@ class GenerateChecklistPdfService {
             ],
         } as TDocumentDefinitions;
 
-        const generatePDF = new GeneratePDFService();
+        const fileName = await this.pdfProvider.generate(documentDefinition);
 
-        const fileName = await generatePDF.execute({
-            docDefinition,
-            deleteFileName: reenrollment.checklist,
-        });
+        if (reenrollment.checklist) {
+            await this.pdfProvider.delete(reenrollment.checklist);
+        }
 
-        await this.reenrollmentsRepository.updateChecklist({
-            enrollment_number: reenrollment.enrollment_number,
-            checklist: fileName,
-        });
+        await this.reenrollmentsRepository.updateChecklist(
+            reenrollment.enrollment_number,
+            fileName,
+        );
 
         return fileName;
     }
