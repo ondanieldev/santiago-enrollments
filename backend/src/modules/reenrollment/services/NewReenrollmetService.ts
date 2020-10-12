@@ -16,24 +16,33 @@ class NewEnrollmentService {
     ) {}
 
     public async execute(data: NewReenrollmentDTO): Promise<void> {
+        const enrollment = data;
+
+        if (enrollment.grade_name === 'maternal') {
+            enrollment.type = 'enrollment';
+        }
+
         const prettierData = new PrettierDataService();
 
-        await this.reenrollmentsRepository.create(prettierData.execute(data));
+        await this.reenrollmentsRepository.create(
+            prettierData.execute(enrollment),
+        );
 
-        const studentNameArticle = data.student_gender === 'male' ? 'do' : 'da';
+        const studentNameArticle =
+            enrollment.student_gender === 'male' ? 'do' : 'da';
 
         this.mailProvider.sendMail({
             to: {
-                name: data.financial_name,
-                email: data.financial_email,
+                name: enrollment.financial_name,
+                email: enrollment.financial_email,
             },
             subject: '[Santiago] Solicitação de Matrícula Recebida',
             body: {
                 file: 'confirm_receive.hbs',
                 variables: {
                     studentNameArticle,
-                    studentName: data.student_name,
-                    responsibleName: data.financial_name,
+                    studentName: enrollment.student_name,
+                    responsibleName: enrollment.financial_name,
                 },
             },
         });
