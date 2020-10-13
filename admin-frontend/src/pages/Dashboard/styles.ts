@@ -16,35 +16,38 @@ export const CircleContainer = styled.div`
   }
 `;
 
-export const Circle = styled.div`
+interface ICircleProps {
+  themeColor: string;
+}
+
+export const Circle = styled.div<ICircleProps>`
   display: flex;
   flex-direction: column;
   align-items: center;
 
   h2 {
-    color: #3f51b5;
+    ${props =>
+      css`
+        color: ${props.themeColor};
+      `}
   }
 
   div {
     font-size: 30px;
-    border: 2px solid #3f51b5;
     width: 100px;
     height: 100px;
     line-height: 95px;
     border-radius: 50%;
     text-align: center;
+
+    ${props =>
+      css`
+        border: 2px solid ${props.themeColor};
+      `}
   }
 
   & + div {
     margin-left: 48px;
-
-    h2 {
-      color: #009688;
-    }
-
-    div {
-      border: 2px solid #009688;
-    }
   }
 `;
 

@@ -106,14 +106,23 @@ const Dashboard: React.FC = () => {
       <h1>Dashboard</h1>
 
       <CircleContainer>
-        <Circle>
+        <Circle themeColor="#3f51b5">
           <h2>Matrículas pagas</h2>
           <div>
             {`${enrollmentsStudentsPaidNumber}/${enrollmentsStudents.length}`}
           </div>
         </Circle>
 
-        <Circle>
+        <Circle themeColor="#013C64">
+          <h2>Total</h2>
+          <div>
+            {`${
+              enrollmentsStudentsPaidNumber + reenrollmentsStudentsPaidNumber
+            }/${enrollmentsStudents.length + reenrollmentsStudents.length}`}
+          </div>
+        </Circle>
+
+        <Circle themeColor="#009688">
           <h2>Rematrículas pagas</h2>
           <div>
             {`${reenrollmentsStudentsPaidNumber}/${reenrollmentsStudents.length}`}
