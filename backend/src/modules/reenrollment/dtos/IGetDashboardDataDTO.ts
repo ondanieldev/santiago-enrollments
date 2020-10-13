@@ -2,6 +2,7 @@ interface IStudent {
     student_name: string;
     grade_name: string;
     type: string;
+    paid: boolean;
 }
 
 interface IGrade {

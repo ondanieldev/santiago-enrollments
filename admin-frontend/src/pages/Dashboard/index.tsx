@@ -24,6 +24,7 @@ interface IStudent {
   student_name: string;
   grade_name: string;
   type: string;
+  paid: boolean;
 }
 
 interface IGrade {
@@ -42,9 +43,17 @@ const Dashboard: React.FC = () => {
   const [enrollmentsStudents, setEnrollmentsStudents] = useState(
     [] as IStudent[],
   );
+  const [
+    enrollmentsStudentsPaidNumber,
+    setEnrollmentsStudentsPaidNumber,
+  ] = useState(0);
   const [reenrollmentsStudents, setReenrollmentsStudents] = useState(
     [] as IStudent[],
   );
+  const [
+    reenrollmentsStudentsPaidNumber,
+    setReenrollmentsStudentsPaidNumber,
+  ] = useState(0);
   const [studentsPerGrade, setStudentsPerGrade] = useState([] as IGrade[]);
 
   useEffect(() => {
@@ -57,9 +66,31 @@ const Dashboard: React.FC = () => {
           students_per_grade,
         } = response.data as IGetDashboardDataDTO;
 
+        const enrollmentStudentsPaid = enrollment_students.reduce(
+          (sum, student) => {
+            if (student.paid) {
+              return sum + 1;
+            }
+            return sum;
+          },
+          0,
+        );
+
+        const reenrollmentStudentsPaid = reenrollment_students.reduce(
+          (sum, student) => {
+            if (student.paid) {
+              return sum + 1;
+            }
+            return sum;
+          },
+          0,
+        );
+
         setEnrollmentsStudents(enrollment_students);
         setReenrollmentsStudents(reenrollment_students);
         setStudentsPerGrade(students_per_grade);
+        setEnrollmentsStudentsPaidNumber(enrollmentStudentsPaid);
+        setReenrollmentsStudentsPaidNumber(reenrollmentStudentsPaid);
       })
       .finally(() => {
         setLoadingData(false);
@@ -75,19 +106,23 @@ const Dashboard: React.FC = () => {
 
       <CircleContainer>
         <Circle>
-          <h2>Matrículas</h2>
-          <div>{enrollmentsStudents.length}</div>
+          <h2>Matrículas pagas</h2>
+          <div>
+            {`${enrollmentsStudentsPaidNumber}/${enrollmentsStudents.length}`}
+          </div>
         </Circle>
 
         <Circle>
-          <h2>Rematrículas</h2>
-          <div>{reenrollmentsStudents.length}</div>
+          <h2>Rematrículas pagas</h2>
+          <div>
+            {`${reenrollmentsStudentsPaidNumber}/${reenrollmentsStudents.length}`}
+          </div>
         </Circle>
       </CircleContainer>
 
       <StudentListContainer>
         <StudentList>
-          <h2>Alunos matriculados</h2>
+          <h2>Alunos matriculados (novos)</h2>
 
           {enrollmentsStudents.map(student => (
             <li>{student.student_name}</li>
@@ -96,7 +131,7 @@ const Dashboard: React.FC = () => {
         </StudentList>
 
         <StudentList>
-          <h2>Alunos rematriculados</h2>
+          <h2>Alunos rematriculados (antigos)</h2>
 
           {reenrollmentsStudents.map(student => (
             <li>{student.student_name}</li>

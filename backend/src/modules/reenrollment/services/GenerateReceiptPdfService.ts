@@ -88,7 +88,7 @@ class GenerateReceiptPdfService {
                     columns: [
                         {
                             image: imageLogo,
-                            width: 65,
+                            width: 90,
                             alignment: 'left',
                         },
                         {
@@ -107,6 +107,7 @@ class GenerateReceiptPdfService {
                             )}`,
                             style: 'subheading',
                             alignment: 'right',
+                            width: 90,
                         },
                     ],
                 },
@@ -117,7 +118,12 @@ class GenerateReceiptPdfService {
                             alignment: 'left',
                         },
                         {
-                            text: `Valor da mensalidade R$ ${reenrollment.monthly_value}`,
+                            text: `Valor da mensalidade R$ ${
+                                reenrollment.monthly_value -
+                                (reenrollment.monthly_value *
+                                    reenrollment.discount_percent) /
+                                    100
+                            }`,
                             alignment: 'center',
                         },
                         {
@@ -132,14 +138,78 @@ class GenerateReceiptPdfService {
                 {
                     text:
                         'Obs: Conforme o contrato de prestação de serviço, cláusula 1ª - 5ª, a matrícula do aluno só será concretizada após a regularização do pagamento. Na cláusula 3ª - 4ª, a matrícula só será efetivada para o próximo ano letivo com a regularização dos pagamentos das mensaildades de fevereiro a dezembro conforme o ano de estudo e a entrega de todos os documentos solicitados no ato da matrícula. (Histórico, contrato, declaração de inexistência de débito na escola de origem, certidão de nascimento, foto e CPF e RG dos responsáveis.)',
-                    fontSize: 8,
+                    fontSize: 9,
                 },
                 '\nCiente dos registros acima: ________________________________________',
                 '\nSecreatria: ________________________________________',
                 {
                     text:
                         '\nRua Rio Grande do Sul, nº 863 — Bairro Espírito Santo — Betim — MG. Telefone (31) 3595-2156. Site www.colegiosantiago.com.br\nEste documento não é valido para declaração de I.R.',
-                    fontSize: 8,
+                    fontSize: 9,
+                },
+                // CÓPIA
+                {
+                    columns: [
+                        {
+                            image: imageLogo,
+                            width: 90,
+                            alignment: 'left',
+                        },
+                        {
+                            text: [
+                                {
+                                    text: `RECIBO`,
+                                    style: 'heading',
+                                    width: '*',
+                                },
+                            ],
+                        },
+                        {
+                            text: `Betim, ${formatDate(
+                                new Date(),
+                                'dd/MM/yyyy',
+                            )}`,
+                            style: 'subheading',
+                            alignment: 'right',
+                            width: 90,
+                        },
+                    ],
+                },
+                {
+                    columns: [
+                        {
+                            text: `Recebi ${studentArticle} ${reenrollment.student_name}`,
+                            alignment: 'left',
+                        },
+                        {
+                            ext: `Valor da mensalidade R$ ${
+                                reenrollment.monthly_value -
+                                (reenrollment.monthly_value *
+                                    reenrollment.discount_percent) /
+                                    100
+                            }`,
+                            alignment: 'center',
+                        },
+                        {
+                            text: `Turma ${gradeName}`,
+                            alignment: 'right',
+                        },
+                    ],
+                },
+                'A importância abaixo referente ao pagamento de:',
+                enrollmentValue,
+                materialsValue,
+                {
+                    text:
+                        'Obs: Conforme o contrato de prestação de serviço, cláusula 1ª - 5ª, a matrícula do aluno só será concretizada após a regularização do pagamento. Na cláusula 3ª - 4ª, a matrícula só será efetivada para o próximo ano letivo com a regularização dos pagamentos das mensaildades de fevereiro a dezembro conforme o ano de estudo e a entrega de todos os documentos solicitados no ato da matrícula. (Histórico, contrato, declaração de inexistência de débito na escola de origem, certidão de nascimento, foto e CPF e RG dos responsáveis.)',
+                    fontSize: 9,
+                },
+                '\nCiente dos registros acima: ________________________________________',
+                '\nSecreatria: ________________________________________',
+                {
+                    text:
+                        '\nRua Rio Grande do Sul, nº 863 — Bairro Espírito Santo — Betim — MG. Telefone (31) 3595-2156. Site www.colegiosantiago.com.br\nEste documento não é valido para declaração de I.R.',
+                    fontSize: 9,
                 },
             ],
         } as TDocumentDefinitions;

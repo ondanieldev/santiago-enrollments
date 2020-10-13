@@ -152,7 +152,7 @@ class ReenrollmentsRepository implements IReenrollmentsRepository {
     public async getDashboardData(): Promise<IGetDashboardDataDTO> {
         const students = await this.Reenrollment.find(
             {},
-            'student_name grade_name type',
+            'student_name grade_name type paid',
         );
 
         const enrollment_students = students.filter(
