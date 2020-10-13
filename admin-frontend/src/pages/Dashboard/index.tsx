@@ -17,6 +17,7 @@ import {
   StudentListContainer,
   StudentList,
 } from './styles';
+import Loading from '../../components/Loading';
 import api from '../../services/api';
 
 interface IStudent {
@@ -37,6 +38,7 @@ interface IGetDashboardDataDTO {
 }
 
 const Dashboard: React.FC = () => {
+  const [loadingData, setLoadingData] = useState(true);
   const [enrollmentsStudents, setEnrollmentsStudents] = useState(
     [] as IStudent[],
   );
@@ -46,21 +48,28 @@ const Dashboard: React.FC = () => {
   const [studentsPerGrade, setStudentsPerGrade] = useState([] as IGrade[]);
 
   useEffect(() => {
-    api.get('/reenrollments/dashboard').then(response => {
-      const {
-        enrollment_students,
-        reenrollment_students,
-        students_per_grade,
-      } = response.data as IGetDashboardDataDTO;
+    api
+      .get('/reenrollments/dashboard')
+      .then(response => {
+        const {
+          enrollment_students,
+          reenrollment_students,
+          students_per_grade,
+        } = response.data as IGetDashboardDataDTO;
 
-      setEnrollmentsStudents(enrollment_students);
-      setReenrollmentsStudents(reenrollment_students);
-      setStudentsPerGrade(students_per_grade);
-    });
+        setEnrollmentsStudents(enrollment_students);
+        setReenrollmentsStudents(reenrollment_students);
+        setStudentsPerGrade(students_per_grade);
+      })
+      .finally(() => {
+        setLoadingData(false);
+      });
   }, []);
 
   return (
     <Container>
+      <Loading show={loadingData} />
+
       <IconBar hideDashboard />
       <h1>Dashboard</h1>
 
