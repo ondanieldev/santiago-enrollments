@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 export const Container = styled.div`
   padding: 24px 48px;
@@ -71,6 +71,11 @@ export const StudentList = styled.ul`
   li {
     padding: 12px 24px;
     transition: background-color 0.15s;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 55px;
 
     &:hover {
       background-color: #3f51b5;
@@ -88,4 +93,20 @@ export const StudentList = styled.ul`
       }
     }
   }
+`;
+
+interface IInfoLabelProps {
+  backgroundColor: string;
+}
+
+export const InfoLabel = styled.div<IInfoLabelProps>`
+  padding: 6px;
+  font-size: 14px;
+  border-radius: 6px;
+  color: #f7f6fc;
+
+  ${props =>
+    css`
+      background-color: ${props.backgroundColor};
+    `}
 `;

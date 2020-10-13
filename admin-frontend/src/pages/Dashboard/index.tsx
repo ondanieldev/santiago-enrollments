@@ -16,6 +16,7 @@ import {
   Circle,
   StudentListContainer,
   StudentList,
+  InfoLabel,
 } from './styles';
 import Loading from '../../components/Loading';
 import api from '../../services/api';
@@ -125,7 +126,12 @@ const Dashboard: React.FC = () => {
           <h2>Alunos matriculados (novos)</h2>
 
           {enrollmentsStudents.map(student => (
-            <li>{student.student_name}</li>
+            <li>
+              {student.student_name}
+              {student.paid && (
+                <InfoLabel backgroundColor="#4caf50">pago</InfoLabel>
+              )}
+            </li>
           ))}
           <StudentList />
         </StudentList>
@@ -134,7 +140,12 @@ const Dashboard: React.FC = () => {
           <h2>Alunos rematriculados (antigos)</h2>
 
           {reenrollmentsStudents.map(student => (
-            <li>{student.student_name}</li>
+            <li>
+              {student.student_name}
+              {student.paid && (
+                <InfoLabel backgroundColor="#4caf50">pago</InfoLabel>
+              )}
+            </li>
           ))}
         </StudentList>
       </StudentListContainer>
