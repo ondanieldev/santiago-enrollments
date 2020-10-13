@@ -1,6 +1,7 @@
 import mongoose, { Model } from 'mongoose';
 
 import NewReenrollmentDTO from '@modules/reenrollment/dtos/INewReenrollmentDTO';
+import IGetDashboardDataDTO from '@modules/reenrollment/dtos/IGetDashboardDataDTO';
 import IReenrollmentsRepository from '@modules/reenrollment/repositories/IReenrollmentsRepository';
 import {
     IReenrollment,
@@ -146,6 +147,92 @@ class ReenrollmentsRepository implements IReenrollmentsRepository {
         ...rest
     }: IUpdatePaymentValues): Promise<void> {
         await this.Reenrollment.updateOne({ enrollment_number }, rest);
+    }
+
+    public async getDashboardData(): Promise<IGetDashboardDataDTO> {
+        const students = await this.Reenrollment.find(
+            {},
+            'student_name grade_name type',
+        );
+
+        const enrollment_students = students.filter(
+            student => student.type === 'enrollment',
+        );
+
+        const reenrollment_students = students.filter(
+            student => student.type === 'reenrollment',
+        );
+
+        const maternal = students.filter(
+            student => student.grade_name === 'maternal',
+        ).length;
+
+        const first_period = students.filter(
+            student => student.grade_name === 'first_period',
+        ).length;
+
+        const second_period = students.filter(
+            student => student.grade_name === 'second_period',
+        ).length;
+
+        const first_year = students.filter(
+            student => student.grade_name === 'first_year',
+        ).length;
+
+        const second_year = students.filter(
+            student => student.grade_name === 'second_year',
+        ).length;
+
+        const third_year = students.filter(
+            student => student.grade_name === 'third_year',
+        ).length;
+
+        const fourth_year = students.filter(
+            student => student.grade_name === 'fourth_year',
+        ).length;
+
+        const fifth_year = students.filter(
+            student => student.grade_name === 'fifth_year',
+        ).length;
+
+        const sixth_year = students.filter(
+            student => student.grade_name === 'sixth_year',
+        ).length;
+
+        const seventh_year = students.filter(
+            student => student.grade_name === 'seventh_year',
+        ).length;
+
+        const eighth_year = students.filter(
+            student => student.grade_name === 'eighth_year',
+        ).length;
+
+        const nineth_year = students.filter(
+            student => student.grade_name === 'nineth_year',
+        ).length;
+
+        const dashboardData = {} as IGetDashboardDataDTO;
+
+        Object.assign(dashboardData, {
+            enrollment_students,
+            reenrollment_students,
+            students_per_grade: [
+                { grade_name: 'Maternal', value: maternal },
+                { grade_name: '1º período', value: first_period },
+                { grade_name: '2º período', value: second_period },
+                { grade_name: '1º ano', value: first_year },
+                { grade_name: '2º ano', value: second_year },
+                { grade_name: '3º ano', value: third_year },
+                { grade_name: '4º ano', value: fourth_year },
+                { grade_name: '5º ano', value: fifth_year },
+                { grade_name: '6º ano', value: sixth_year },
+                { grade_name: '7º ano', value: seventh_year },
+                { grade_name: '8º ano', value: eighth_year },
+                { grade_name: '9º ano', value: nineth_year },
+            ],
+        });
+
+        return dashboardData;
     }
 }
 

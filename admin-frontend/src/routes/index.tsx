@@ -7,12 +7,13 @@ import Grades from '../pages/Grades';
 import Students from '../pages/Students';
 import Reenrollment from '../pages/Reenrollment';
 import EditReenrollment from '../pages/EditReenrollment';
+import Dashboard from '../pages/Dashboard';
 
 const Routes: React.FC = () => (
   <Switch>
     <Route exact path="/" component={Login} />
 
-    <Route exact path="/dashboard" component={Grades} isPrivate />
+    <Route exact path="/grades" component={Grades} isPrivate />
 
     <Route path="/students/:grade_name" component={Students} isPrivate />
 
@@ -27,6 +28,8 @@ const Routes: React.FC = () => (
       component={EditReenrollment}
       isPrivate
     />
+
+    <Route path="/dashboard" component={Dashboard} isPrivate />
 
     <Redirect from="*" to="/" />
   </Switch>

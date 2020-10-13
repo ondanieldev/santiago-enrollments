@@ -4,6 +4,7 @@ import ReenrollmentsController from '@modules/reenrollment/infra/http/controller
 import ReenrollmentsDocumentsController from '@modules/reenrollment/infra/http/controllers/ReenrollmentsDocumentsController';
 import ReenrollmentsDocumentsMailsController from '@modules/reenrollment/infra/http/controllers/ReenrollmentsDocumentsMailsController';
 import ReenrollmentsPaymentController from '@modules/reenrollment/infra/http/controllers/ReenrollmentsPaymentController';
+import ReenrollmentsDashboardController from '@modules/reenrollment/infra/http/controllers/ReenrollmentsDashboardController';
 import ensureAuthenticated from '@shared/infra/http/middlewares/ensureAuthenticated';
 
 const reenrollmentsRoutes = Router();
@@ -11,6 +12,7 @@ const reenrollmentsController = new ReenrollmentsController();
 const reenrollmentsDocumentsController = new ReenrollmentsDocumentsController();
 const reenrollmentsDocumentsMailsController = new ReenrollmentsDocumentsMailsController();
 const reenrollmentsPaymentController = new ReenrollmentsPaymentController();
+const reenrollmentsDashboardController = new ReenrollmentsDashboardController();
 
 reenrollmentsRoutes.post('/', reenrollmentsController.create);
 
@@ -18,6 +20,12 @@ reenrollmentsRoutes.get(
     '/',
     ensureAuthenticated,
     reenrollmentsController.index,
+);
+
+reenrollmentsRoutes.get(
+    '/dashboard',
+    ensureAuthenticated,
+    reenrollmentsDashboardController.index,
 );
 
 reenrollmentsRoutes.get(

@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { FiDollarSign, FiStopCircle } from 'react-icons/fi';
+import { FiDollarSign, FiLoader } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 
 import {
@@ -128,7 +128,7 @@ const Students: React.FC = () => {
                   onClick={() => handleChangeStatus(student)}
                   disabled={loadingPayment}
                 >
-                  {loadingPayment && <FiStopCircle size={24} />}
+                  {loadingPayment && <FiLoader size={24} />}
                   {!loadingPayment && <FiDollarSign size={24} />}
                 </Button>
               )}
@@ -140,7 +140,7 @@ const Students: React.FC = () => {
                   onClick={() => handleChangeStatus(student)}
                   disabled={loadingPayment}
                 >
-                  {loadingPayment && <FiStopCircle size={24} />}
+                  {loadingPayment && <FiLoader size={24} />}
                   {!loadingPayment && <FiDollarSign size={24} />}
                 </Button>
               )}

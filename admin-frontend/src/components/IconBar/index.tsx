@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
-import { FiArrowLeft, FiHome, FiLogOut } from 'react-icons/fi';
+import { FiArrowLeft, FiHome, FiLogOut, FiBarChart2 } from 'react-icons/fi';
 
 import { Container } from './styles';
 import { useAuth } from '../../hooks/auth';
@@ -9,9 +9,15 @@ interface IProps {
   hideGoBack?: boolean;
   hideGoHome?: boolean;
   hideSignOut?: boolean;
+  hideDashboard?: boolean;
 }
 
-const IconBar: React.FC<IProps> = ({ hideGoBack, hideGoHome, hideSignOut }) => {
+const IconBar: React.FC<IProps> = ({
+  hideGoBack,
+  hideGoHome,
+  hideSignOut,
+  hideDashboard,
+}) => {
   const history = useHistory();
   const { signOut } = useAuth();
 
@@ -20,6 +26,10 @@ const IconBar: React.FC<IProps> = ({ hideGoBack, hideGoHome, hideSignOut }) => {
   }, [history]);
 
   const handleGoHome = useCallback(() => {
+    history.push('/grades');
+  }, [history]);
+
+  const handleGoDashboard = useCallback(() => {
     history.push('/dashboard');
   }, [history]);
 
@@ -38,6 +48,12 @@ const IconBar: React.FC<IProps> = ({ hideGoBack, hideGoHome, hideSignOut }) => {
       {!hideGoHome && (
         <button type="button" onClick={handleGoHome}>
           <FiHome size={25} color="#013C64" />
+        </button>
+      )}
+
+      {!hideDashboard && (
+        <button type="button" onClick={handleGoDashboard}>
+          <FiBarChart2 size={25} color="#FFCF00" />
         </button>
       )}
 

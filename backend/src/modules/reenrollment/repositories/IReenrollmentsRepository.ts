@@ -1,5 +1,6 @@
 import { IReenrollment } from '@modules/reenrollment/infra/mongoose/schemas/ReenrollmentSchema';
 import NewReenrollmentDTO from '@modules/reenrollment/dtos/INewReenrollmentDTO';
+import IGetDashboardDataDTO from '@modules/reenrollment/dtos/IGetDashboardDataDTO';
 
 interface IUpdatePaymentValues {
     enrollment_number: number;
@@ -55,4 +56,5 @@ export default interface IReenrollmentsRepository {
     update(data: IReenrollment): Promise<IReenrollment>;
     updateReceivedMailWithDocuments(enrollment_number: number): Promise<void>;
     updatePaymentValues(data: IUpdatePaymentValues): Promise<void>;
+    getDashboardData(): Promise<IGetDashboardDataDTO>;
 }
