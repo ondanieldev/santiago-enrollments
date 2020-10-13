@@ -67,6 +67,11 @@ class ChangeReenrollmentStatusService {
             totalValue = monthlyValue * 12;
         }
 
+        const materialsPaymentValue = this.getMaterialsPaymentValue(
+            materials_payment_format,
+            enrollment.grade_name,
+        );
+
         await this.reenrollmentsRepository.updatePaymentValues({
             enrollment_number,
             enrollment_year,
@@ -77,7 +82,53 @@ class ChangeReenrollmentStatusService {
             enrollment_payment_times,
             materials_payment_format,
             materials_payment_times,
+            materials_payment_value: materialsPaymentValue,
         });
+    }
+
+    private getMaterialsPaymentValue(
+        materials_payment_format: 'in_cash' | 'financing',
+        grade_name:
+            | 'maternal'
+            | 'first_period'
+            | 'second_period'
+            | 'first_year'
+            | 'second_year'
+            | 'third_year'
+            | 'fourth_year'
+            | 'fifth_year'
+            | 'sixth_year'
+            | 'seventh_year'
+            | 'eighth_year'
+            | 'nineth_year',
+    ): number {
+        if (
+            grade_name === 'maternal' ||
+            grade_name === 'first_period' ||
+            grade_name === 'second_period'
+        ) {
+            return materials_payment_format === 'in_cash' ? 650 : 695;
+        }
+
+        if (
+            grade_name === 'first_year' ||
+            grade_name === 'second_year' ||
+            grade_name === 'third_year' ||
+            grade_name === 'fourth_year' ||
+            grade_name === 'fifth_year'
+        ) {
+            return materials_payment_format === 'in_cash' ? 1170 : 1280;
+        }
+
+        if (grade_name === 'sixth_year' || grade_name === 'seventh_year') {
+            return materials_payment_format === 'in_cash' ? 1250 : 1310;
+        }
+
+        if (grade_name === 'eighth_year' || grade_name === 'nineth_year') {
+            return materials_payment_format === 'in_cash' ? 1470 : 1573;
+        }
+
+        return 0;
     }
 
     private getMonthlyValue(

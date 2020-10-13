@@ -75,6 +75,7 @@ const ReenrollmentSchema = new Schema({
     contract: String,
     checklist: String,
     monthly_control: String,
+    receipt: String,
 
     monthly_value: Number,
     discount_percent: Number,
@@ -84,6 +85,7 @@ const ReenrollmentSchema = new Schema({
     enrollment_payment_times: Number,
     materials_payment_format: String,
     materials_payment_times: Number,
+    materials_payment_value: Number,
 
     paid: { type: Boolean, default: false },
     received_mail_with_documents: { type: Boolean, default: false },
@@ -188,6 +190,7 @@ interface IReenrollment extends Document {
     contract: string;
     checklist: string;
     monthly_control: string;
+    receipt: string;
 
     monthly_value: number;
     discount_percent: number;
@@ -197,6 +200,7 @@ interface IReenrollment extends Document {
     enrollment_payment_times: number;
     materials_payment_format: 'in_cash' | 'financing';
     materials_payment_times: number;
+    materials_payment_value: number;
 
     paid: boolean;
     received_mail_with_documents: boolean;

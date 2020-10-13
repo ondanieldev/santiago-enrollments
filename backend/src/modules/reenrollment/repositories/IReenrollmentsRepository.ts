@@ -11,6 +11,7 @@ interface IUpdatePaymentValues {
     enrollment_payment_times: number;
     materials_payment_format: 'in_cash' | 'financing';
     materials_payment_times: number;
+    materials_payment_value: number;
 }
 
 export default interface IReenrollmentsRepository {
@@ -31,6 +32,7 @@ export default interface IReenrollmentsRepository {
         enrollment_number: number,
         monthly_control: string,
     ): Promise<void>;
+    updateReceipt(enrollment_number: number, receipt: string): Promise<void>;
     getByEnrollmentNumber(
         enrollment_number: number,
     ): Promise<IReenrollment | null>;

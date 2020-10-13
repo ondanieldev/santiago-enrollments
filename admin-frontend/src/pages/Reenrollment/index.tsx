@@ -3,7 +3,6 @@ import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 import { useParams, useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import * as Yup from 'yup';
 
 import { Container, DataGroup, Table, DocumentGroup, Top } from './styles';
 import IReenrollmentDTO from '../../dtos/IReenrollmentDTO';
@@ -14,7 +13,6 @@ import Document from '../../components/Document';
 import IconBar from '../../components/IconBar';
 import Loading from '../../components/Loading';
 import api from '../../services/api';
-import getValidationErrors from '../../utils/getValidationErrors';
 import {
   prettyDate,
   formatEducationLevel,
@@ -64,6 +62,12 @@ const Reenrollment: React.FC = () => {
   );
   const [loading, setLoading] = useState(false);
   const [documents, setDocuments] = useState([] as IDocument[]);
+  const [showEnrollmentPaymentTimes, setShowEnrollmentPaymentTimes] = useState(
+    false,
+  );
+  const [showMaterialsPaymentTimes, setShowMaterialsPaymentTimes] = useState(
+    false,
+  );
 
   const handleChangeContractFields = useCallback((contractYear: string) => {
     setShowContractCustomFields(contractYear === '2020');
@@ -129,18 +133,6 @@ const Reenrollment: React.FC = () => {
       try {
         setLoading(true);
 
-        formRef.current?.setErrors({});
-
-        const schema = Yup.object().shape({
-          discount_percent: Yup.number()
-            .typeError('Desconto inválida!')
-            .required('Desconto obrigatório!'),
-        });
-
-        await schema.validate(data, {
-          abortEarly: false,
-        });
-
         const response = await api.patch(
           `/reenrollments/pdfs/${reenrollment.enrollment_number}`,
           data,
@@ -150,16 +142,6 @@ const Reenrollment: React.FC = () => {
 
         toast.success('Documentos gerados com sucesso!');
       } catch (err) {
-        if (err instanceof Yup.ValidationError) {
-          const errors = getValidationErrors(err);
-
-          formRef.current?.setErrors(errors);
-
-          toast.error('Preencha os campos corretamente!');
-
-          return;
-        }
-
         toast.error('Erro interno do servidor!');
       } finally {
         setLoading(false);
@@ -496,16 +478,52 @@ const Reenrollment: React.FC = () => {
       </DataGroup>
 
       <Form ref={formRef} onSubmit={handleSubmitForm}>
-        <Select
-          name="enrollment_year"
-          onChange={e => handleChangeContractFields(e.target.value)}
-        >
-          <option value="2021">2021</option>
-          <option value="2020">2020</option>
-        </Select>
-
         {documents.length <= 0 && (
           <>
+            <Select
+              name="enrollment_year"
+              onChange={e => handleChangeContractFields(e.target.value)}
+            >
+              <option value="2021">Ano 2021</option>
+              <option value="2020">Ano 2020</option>
+            </Select>
+
+            <Select
+              name="enrollment_payment_format"
+              onChange={e =>
+                setShowEnrollmentPaymentTimes(e.target.value === 'financing')
+              }
+            >
+              <option value="in_cash">Matrícula à vista</option>
+              <option value="financing">Matrícula a prazo</option>
+            </Select>
+
+            {showEnrollmentPaymentTimes && (
+              <Input
+                type="number"
+                name="enrollment_payment_times"
+                placeholder="Número de parcelas da matrícula"
+              />
+            )}
+
+            <Select
+              name="materials_payment_format"
+              onChange={e =>
+                setShowMaterialsPaymentTimes(e.target.value === 'financing')
+              }
+            >
+              <option value="in_cash">Materiais didáticos à vista</option>
+              <option value="financing">Materiais didáticos a prazo</option>
+            </Select>
+
+            {showMaterialsPaymentTimes && (
+              <Input
+                type="number"
+                name="materials_payment_times"
+                placeholder="Número de parcelas dos materiais"
+              />
+            )}
+
             <Input
               type="number"
               step=".01"

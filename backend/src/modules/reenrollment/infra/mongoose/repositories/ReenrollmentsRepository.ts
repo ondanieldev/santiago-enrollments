@@ -17,6 +17,7 @@ interface IUpdatePaymentValues {
     enrollment_payment_times: number;
     materials_payment_format: 'in_cash' | 'financing';
     materials_payment_times: number;
+    materials_payment_value: number;
 }
 
 class ReenrollmentsRepository implements IReenrollmentsRepository {
@@ -122,6 +123,13 @@ class ReenrollmentsRepository implements IReenrollmentsRepository {
             { enrollment_number },
             { monthly_control },
         );
+    }
+
+    public async updateReceipt(
+        enrollment_number: number,
+        receipt: string,
+    ): Promise<void> {
+        await this.Reenrollment.updateOne({ enrollment_number }, { receipt });
     }
 
     public async updateReceivedMailWithDocuments(

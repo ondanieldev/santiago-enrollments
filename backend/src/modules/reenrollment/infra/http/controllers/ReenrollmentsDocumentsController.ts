@@ -7,6 +7,7 @@ import GenerateReenrollmentFormPdfService from '@modules/reenrollment/services/G
 import GenerateContractPdfService from '@modules/reenrollment/services/GenerateContractPdfService';
 import GenerateChecklistPdfService from '@modules/reenrollment/services/GenerateChecklistPdfService';
 import GenerateMonthlyControlPdfService from '@modules/reenrollment/services/GenerateMonthlyControlPdfService';
+import GenerateReceiptPdfService from '@modules/reenrollment/services/GenerateReceiptPdfService';
 
 class ReenrollmentsPDFsController {
     public async update(
@@ -52,6 +53,8 @@ class ReenrollmentsPDFsController {
             GenerateMonthlyControlPdfService,
         );
 
+        const generateReceiptPdf = container.resolve(GenerateReceiptPdfService);
+
         await updateReenrollmentPaymentValues.execute({
             enrollment_number: parsedEnrollmentNumber,
             enrollment_year,
@@ -69,11 +72,13 @@ class ReenrollmentsPDFsController {
             contract,
             checklist,
             monthlyControl,
+            receipt,
         ] = await Promise.all([
             generateReenrollmentFormPdf.execute(parsedEnrollmentNumber),
             generateContractPdf.execute(parsedEnrollmentNumber),
             generateChecklistPdf.execute(parsedEnrollmentNumber),
             generateMonthlyControlPdf.execute(parsedEnrollmentNumber),
+            generateReceiptPdf.execute(parsedEnrollmentNumber),
         ]);
 
         return response.json([
@@ -92,6 +97,10 @@ class ReenrollmentsPDFsController {
             {
                 name: 'Controle de mensalidade',
                 link: monthlyControl,
+            },
+            {
+                name: 'Recibo',
+                link: receipt,
             },
         ]);
     }
