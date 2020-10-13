@@ -64,7 +64,7 @@ class ReenrollmentsRepository implements IReenrollmentsRepository {
     ): Promise<IReenrollment[] | []> {
         const reenrollments = await this.Reenrollment.find(
             { grade_name },
-            'enrollment_number student_name paid received_mail_with_documents',
+            'enrollment_number student_name paid received_mail_with_documents type',
         ).exec();
 
         return reenrollments;

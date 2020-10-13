@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { FiCheck, FiX } from 'react-icons/fi';
+import { FiDollarSign, FiStopCircle } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 
 import {
@@ -29,6 +29,7 @@ interface IStudent {
   enrollment_number: number;
   paid: boolean;
   received_mail_with_documents: boolean;
+  type: 'enrollment' | 'reenrollment';
 }
 
 const Students: React.FC = () => {
@@ -36,6 +37,7 @@ const Students: React.FC = () => {
 
   const [loading, setLoading] = useState(true);
   const [students, setStudents] = useState([] as IStudent[]);
+  const [loadingPayment, setLoadingPayment] = useState(false);
 
   useEffect(() => {
     const { grade_name } = params;
@@ -53,6 +55,8 @@ const Students: React.FC = () => {
   const handleChangeStatus = useCallback(
     async (data: IStudent) => {
       try {
+        setLoadingPayment(true);
+
         const student = data;
 
         await api.patch(`/reenrollments/payment/${student.enrollment_number}`, {
@@ -72,6 +76,8 @@ const Students: React.FC = () => {
           : toast.success('Matrícula marcada como não concluída!');
       } catch {
         toast.error('Erro interno do servidor!');
+      } finally {
+        setLoadingPayment(false);
       }
     },
     [students],
@@ -96,7 +102,15 @@ const Students: React.FC = () => {
                   {student.student_name}
                   <InfoLabelContainer>
                     {student.paid && (
-                      <InfoLabel backgroundColor="#013C64">pago</InfoLabel>
+                      <InfoLabel backgroundColor="#4caf50">pago</InfoLabel>
+                    )}
+                    {student.type === 'enrollment' && (
+                      <InfoLabel backgroundColor="#013C64">matrícula</InfoLabel>
+                    )}
+                    {student.type === 'reenrollment' && (
+                      <InfoLabel backgroundColor="#013C64">
+                        rematrícula
+                      </InfoLabel>
                     )}
                     {student.received_mail_with_documents && (
                       <InfoLabel backgroundColor="#212529">
@@ -112,8 +126,10 @@ const Students: React.FC = () => {
                   type="button"
                   backgroundColor="#4caf50"
                   onClick={() => handleChangeStatus(student)}
+                  disabled={loadingPayment}
                 >
-                  <FiCheck size={24} />
+                  {loadingPayment && <FiStopCircle size={24} />}
+                  {!loadingPayment && <FiDollarSign size={24} />}
                 </Button>
               )}
 
@@ -122,8 +138,10 @@ const Students: React.FC = () => {
                   type="button"
                   backgroundColor="#f44336"
                   onClick={() => handleChangeStatus(student)}
+                  disabled={loadingPayment}
                 >
-                  <FiX size={24} />
+                  {loadingPayment && <FiStopCircle size={24} />}
+                  {!loadingPayment && <FiDollarSign size={24} />}
                 </Button>
               )}
             </Student>

@@ -178,22 +178,9 @@ const Reenrollment: React.FC = () => {
     try {
       setLoading(true);
 
-      const {
-        financial_name,
-        student_gender,
-        student_name,
-        financial_email,
-      } = reenrollment;
+      const { enrollment_number } = reenrollment;
 
-      await api.post('/reenrollments/mail', {
-        reenrollmentForm: documents[0].link,
-        contract: documents[1].link,
-        checklist: documents[2].link,
-        responsibleEmail: financial_email,
-        responsibleName: financial_name,
-        studentGender: student_gender,
-        studentName: student_name,
-      });
+      await api.post(`/reenrollments/mail/${enrollment_number}`);
 
       toast.success('E-mail enviado com sucesso!');
     } catch (err) {
@@ -201,7 +188,7 @@ const Reenrollment: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [reenrollment, documents]);
+  }, [reenrollment]);
 
   useEffect(() => {
     const { reenrollment_number } = params;
@@ -429,13 +416,7 @@ const Reenrollment: React.FC = () => {
             <tbody>
               <tr>
                 <td>Nome</td>
-                <td>
-                  {`${reenrollment.student_name} - ${
-                    reenrollment.student_origin_school
-                      ? 'MATRÍCULA'
-                      : 'REMATRÍCULA'
-                  }`}
-                </td>
+                <td>{reenrollment.student_name}</td>
               </tr>
               <tr>
                 <td>Nome do pai</td>

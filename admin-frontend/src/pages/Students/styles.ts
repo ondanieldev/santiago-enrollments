@@ -39,6 +39,7 @@ export const Student = styled.div<IStudentProps>`
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border-right: 1px solid #212529;
 
     ${props =>
       props.paid &&
@@ -56,9 +57,9 @@ export const Student = styled.div<IStudentProps>`
   }
 
   button {
-    max-width: 25px;
-    max-height: 25px;
-    padding: 0;
+    width: 30px;
+    height: 30px;
+    padding: 4px;
     margin: 0 12px;
   }
 `;
