@@ -182,7 +182,7 @@ class GenerateReceiptPdfService {
                             alignment: 'left',
                         },
                         {
-                            ext: `Valor da mensalidade R$ ${
+                            text: `Valor da mensalidade R$ ${
                                 reenrollment.monthly_value -
                                 (reenrollment.monthly_value *
                                     reenrollment.discount_percent) /
