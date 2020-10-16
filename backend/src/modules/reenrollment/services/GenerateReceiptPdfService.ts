@@ -148,6 +148,14 @@ class GenerateReceiptPdfService {
                     fontSize: 9,
                 },
                 // CÓPIA
+                '\n\n',
+                {
+                    svg: `<svg width="2000" height="10">
+                            <line x1="-1000" y1="0" x2="1000" y2="0" style="stroke:rgb(0,0,0);stroke-width:2" />
+                        </svg>`,
+                    margin: [-50, 0, 0, 0],
+                },
+                '\n',
                 {
                     columns: [
                         {
