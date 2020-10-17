@@ -3,6 +3,8 @@ export default interface IReenrollmentDTO {
 
   enrollment_number: number;
 
+  type: 'enrollment' | 'reenrollment';
+
   financial_name: string;
   financial_kinship: string;
   financial_birth_date: Date;

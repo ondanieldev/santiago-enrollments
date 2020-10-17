@@ -87,6 +87,15 @@ const FormPage: React.FC = () => {
           formatDate(response.data.student_birth_date),
         );
 
+        if (response.data.type === 'enrollment') {
+          setShowOriginSchool(true);
+          formRef.current?.setFieldValue('has_origin_school', true);
+          formRef.current?.setFieldValue(
+            'student_origin_school',
+            response.data.student_origin_school,
+          );
+        }
+
         if (response.data.student_health_plan) {
           setShowHealthPlan(true);
           formRef.current?.setFieldValue('has_health_plan', true);
