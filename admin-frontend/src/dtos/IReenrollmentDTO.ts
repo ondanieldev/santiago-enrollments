@@ -92,4 +92,6 @@ export default interface IReenrollmentDTO {
     | 'seventh_year'
     | 'eighth_year'
     | 'nineth_year';
+
+  formated_grade?: string;
 }

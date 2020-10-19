@@ -8,6 +8,7 @@ import Students from '../pages/Students';
 import Reenrollment from '../pages/Reenrollment';
 import EditReenrollment from '../pages/EditReenrollment';
 import Dashboard from '../pages/Dashboard';
+import EnrollmentsTable from '../pages/EnrollmentsTable';
 
 const Routes: React.FC = () => (
   <Switch>
@@ -30,6 +31,8 @@ const Routes: React.FC = () => (
     />
 
     <Route path="/dashboard" component={Dashboard} isPrivate />
+
+    <Route path="/table" component={EnrollmentsTable} isPrivate />
 
     <Redirect from="*" to="/" />
   </Switch>

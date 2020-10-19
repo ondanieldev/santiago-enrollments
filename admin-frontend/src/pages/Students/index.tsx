@@ -43,7 +43,7 @@ const Students: React.FC = () => {
     const { grade_name } = params;
 
     api
-      .get(`/reenrollments`, { params: { grade_name } })
+      .get(`/reenrollments/grade/${grade_name}`)
       .then(response => {
         setStudents(response.data);
       })

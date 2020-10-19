@@ -57,4 +57,5 @@ export default interface IReenrollmentsRepository {
     updateReceivedMailWithDocuments(enrollment_number: number): Promise<void>;
     updatePaymentValues(data: IUpdatePaymentValues): Promise<void>;
     getDashboardData(): Promise<IGetDashboardDataDTO>;
+    index(): Promise<IReenrollment[]>;
 }

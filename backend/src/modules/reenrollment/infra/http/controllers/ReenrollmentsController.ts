@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 
 import NewReenrollmentDTO from '@modules/reenrollment/dtos/INewReenrollmentDTO';
 import NewReenrollmetService from '@modules/reenrollment/services/NewReenrollmetService';
-import IndexEnrollmentsByGradeService from '@modules/reenrollment/services/IndexReenrollmentsByGradeService';
+import IndexReenrollmentsService from '@modules/reenrollment/services/IndexReenrollmentsService';
 import GetReenrollmentDataService from '@modules/reenrollment/services/GetReenrollmentDataService';
 import UpdateReenrollmentService from '@modules/reenrollment/services/UpdateReenrollmentService';
 
@@ -12,31 +12,9 @@ class ReenrollmentController {
         request: Request,
         response: Response,
     ): Promise<Response> {
-        const { grade_name } = request.query;
+        const indexEnrollments = container.resolve(IndexReenrollmentsService);
 
-        const indexEnrollmentsByGrade = container.resolve(
-            IndexEnrollmentsByGradeService,
-        );
-
-        if (
-            grade_name !== 'maternal' &&
-            grade_name !== 'first_period' &&
-            grade_name !== 'second_period' &&
-            grade_name !== 'first_year' &&
-            grade_name !== 'second_year' &&
-            grade_name !== 'third_year' &&
-            grade_name !== 'fourth_year' &&
-            grade_name !== 'fifth_year' &&
-            grade_name !== 'fifth_year' &&
-            grade_name !== 'sixth_year' &&
-            grade_name !== 'seventh_year' &&
-            grade_name !== 'eighth_year' &&
-            grade_name !== 'nineth_year'
-        ) {
-            return response.json([]);
-        }
-
-        const reenrollments = await indexEnrollmentsByGrade.execute(grade_name);
+        const reenrollments = await indexEnrollments.execute();
 
         return response.json(reenrollments);
     }

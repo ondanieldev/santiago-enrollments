@@ -234,6 +234,12 @@ class ReenrollmentsRepository implements IReenrollmentsRepository {
 
         return dashboardData;
     }
+
+    public async index(): Promise<IReenrollment[]> {
+        const reenrollments = this.Reenrollment.find().sort('grade_name');
+
+        return reenrollments;
+    }
 }
 
 export default ReenrollmentsRepository;
