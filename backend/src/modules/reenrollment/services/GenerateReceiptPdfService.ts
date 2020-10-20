@@ -34,15 +34,39 @@ class GenerateReceiptPdfService {
         const studentArticle =
             reenrollment.student_gender === 'male' ? 'do aluno' : 'da aluna';
 
-        const enrollmentValue =
-            reenrollment.enrollment_payment_format === 'financing'
-                ? `Matrícula a prazo: R$ ${reenrollment.monthly_value} (${reenrollment.enrollment_payment_times}x)`
-                : `Matrícula à vista: R$ ${reenrollment.monthly_value}`;
+        let enrollmentValue = '';
 
-        const materialsValue =
-            reenrollment.materials_payment_format === 'financing'
-                ? `Materiais didáticos a prazo: R$ ${reenrollment.materials_payment_value} (${reenrollment.materials_payment_times}x)`
-                : `Materiais didáticos à vista: R$ ${reenrollment.materials_payment_value}`;
+        switch (reenrollment.enrollment_payment_format) {
+            case 'financing':
+                enrollmentValue = `Matrícula a prazo: R$ ${reenrollment.monthly_value} (${reenrollment.enrollment_payment_times}x)`;
+                break;
+            case 'in_cash':
+                enrollmentValue = `Matrícula à vista: R$ ${reenrollment.monthly_value}`;
+                break;
+            case 'dont_show':
+                enrollmentValue = '';
+                break;
+            default:
+                enrollmentValue = '';
+                break;
+        }
+
+        let materialsValue = '';
+
+        switch (reenrollment.materials_payment_format) {
+            case 'financing':
+                materialsValue = `Materiais didáticos a prazo: R$ ${reenrollment.materials_payment_value} (${reenrollment.materials_payment_times}x)`;
+                break;
+            case 'in_cash':
+                materialsValue = `Materiais didáticos à vista: R$ ${reenrollment.materials_payment_value}`;
+                break;
+            case 'dont_show':
+                materialsValue = '';
+                break;
+            default:
+                materialsValue = '';
+                break;
+        }
 
         const imageLogo = path.resolve(
             __dirname,

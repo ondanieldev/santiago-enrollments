@@ -9,9 +9,9 @@ interface IRequest {
     discount_percent: number;
     monthly_value: number;
     total_value: number;
-    enrollment_payment_format: 'in_cash' | 'financing';
+    enrollment_payment_format: 'in_cash' | 'financing' | 'dont_show';
     enrollment_payment_times: number;
-    materials_payment_format: 'in_cash' | 'financing';
+    materials_payment_format: 'in_cash' | 'financing' | 'dont_show';
     materials_payment_times: number;
 }
 
@@ -87,7 +87,7 @@ class ChangeReenrollmentStatusService {
     }
 
     private getMaterialsPaymentValue(
-        materials_payment_format: 'in_cash' | 'financing',
+        materials_payment_format: 'in_cash' | 'financing' | 'dont_show',
         grade_name:
             | 'maternal'
             | 'first_period'
@@ -102,6 +102,10 @@ class ChangeReenrollmentStatusService {
             | 'eighth_year'
             | 'nineth_year',
     ): number {
+        if (materials_payment_format === 'dont_show') {
+            return 0;
+        }
+
         if (
             grade_name === 'maternal' ||
             grade_name === 'first_period' ||

@@ -496,6 +496,7 @@ const Reenrollment: React.FC = () => {
             >
               <option value="in_cash">Matrícula à vista</option>
               <option value="financing">Matrícula a prazo</option>
+              <option value="dont_show">Não constar matrícula</option>
             </Select>
 
             {showEnrollmentPaymentTimes && (
@@ -514,6 +515,7 @@ const Reenrollment: React.FC = () => {
             >
               <option value="in_cash">Materiais didáticos à vista</option>
               <option value="financing">Materiais didáticos a prazo</option>
+              <option value="dont_show">Não constar materiais</option>
             </Select>
 
             {showMaterialsPaymentTimes && (

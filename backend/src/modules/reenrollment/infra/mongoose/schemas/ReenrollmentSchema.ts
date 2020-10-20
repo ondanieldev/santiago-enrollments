@@ -196,9 +196,9 @@ interface IReenrollment extends Document {
     discount_percent: number;
     total_value: number;
     enrollment_year: '2020' | '2021';
-    enrollment_payment_format: 'in_cash' | 'financing';
+    enrollment_payment_format: 'in_cash' | 'financing' | 'dont_show';
     enrollment_payment_times: number;
-    materials_payment_format: 'in_cash' | 'financing';
+    materials_payment_format: 'in_cash' | 'financing' | 'dont_show';
     materials_payment_times: number;
     materials_payment_value: number;
 

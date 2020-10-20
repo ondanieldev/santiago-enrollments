@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
   BarChart,
   Bar,
@@ -17,6 +18,7 @@ import {
   StudentListContainer,
   StudentList,
   InfoLabel,
+  InfoLabelContainer,
 } from './styles';
 import Loading from '../../components/Loading';
 import api from '../../services/api';
@@ -26,6 +28,8 @@ interface IStudent {
   grade_name: string;
   type: string;
   paid: boolean;
+  received_mail_with_documents: boolean;
+  enrollment_number: number;
 }
 
 interface IGrade {
@@ -135,12 +139,20 @@ const Dashboard: React.FC = () => {
           <h2>Alunos matriculados (novos)</h2>
 
           {enrollmentsStudents.map(student => (
-            <li>
+            <Link to={`/reenrollment/${student.enrollment_number}`}>
               {student.student_name}
-              {student.paid && (
-                <InfoLabel backgroundColor="#4caf50">pago</InfoLabel>
-              )}
-            </li>
+
+              <InfoLabelContainer>
+                {student.paid && (
+                  <InfoLabel backgroundColor="#4caf50">pago</InfoLabel>
+                )}
+                {student.received_mail_with_documents && (
+                  <InfoLabel backgroundColor="#212529">
+                    e-mail enviado
+                  </InfoLabel>
+                )}
+              </InfoLabelContainer>
+            </Link>
           ))}
           <StudentList />
         </StudentList>
@@ -149,12 +161,20 @@ const Dashboard: React.FC = () => {
           <h2>Alunos rematriculados (antigos)</h2>
 
           {reenrollmentsStudents.map(student => (
-            <li>
+            <Link to={`/reenrollment/${student.enrollment_number}`}>
               {student.student_name}
-              {student.paid && (
-                <InfoLabel backgroundColor="#4caf50">pago</InfoLabel>
-              )}
-            </li>
+
+              <InfoLabelContainer>
+                {student.paid && (
+                  <InfoLabel backgroundColor="#4caf50">pago</InfoLabel>
+                )}
+                {student.received_mail_with_documents && (
+                  <InfoLabel backgroundColor="#212529">
+                    e-mail enviado
+                  </InfoLabel>
+                )}
+              </InfoLabelContainer>
+            </Link>
           ))}
         </StudentList>
       </StudentListContainer>

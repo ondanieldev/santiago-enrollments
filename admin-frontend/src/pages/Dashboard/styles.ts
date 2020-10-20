@@ -59,7 +59,7 @@ export const StudentListContainer = styled.div`
   width: 100%;
 `;
 
-export const StudentList = styled.ul`
+export const StudentList = styled.div`
   list-style: none;
   width: 100%;
   max-width: 800px;
@@ -71,7 +71,7 @@ export const StudentList = styled.ul`
     color: #3f51b5;
   }
 
-  li {
+  a {
     padding: 12px 24px;
     transition: background-color 0.15s;
     display: flex;
@@ -85,15 +85,25 @@ export const StudentList = styled.ul`
     }
   }
 
-  & + ul {
+  & + div {
     h2 {
       color: #009688;
     }
 
-    li {
+    a {
       &:hover {
         background-color: #009688;
       }
+    }
+  }
+`;
+
+export const InfoLabelContainer = styled.div`
+  display: flex;
+
+  div {
+    & + div {
+      margin-left: 6px;
     }
   }
 `;
