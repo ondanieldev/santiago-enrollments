@@ -288,7 +288,7 @@ class GenerateReenrollmentFormPdfService {
                 {
                     text: `${
                         reenrollment.student_medication_alergy
-                            ? `Plano de Saúde: ${reenrollment.student_medication_alergy}`
+                            ? `Alergia a Remédios: ${reenrollment.student_medication_alergy}`
                             : 'Declarado pelo responsável que o aluno não possui alergia a remédios'
                     }`,
                 },
