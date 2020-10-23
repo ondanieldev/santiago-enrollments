@@ -122,6 +122,11 @@ class GenerateReceiptPdfService {
                                     style: 'heading',
                                     width: '*',
                                 },
+                                {
+                                    text: `\nContrato nº ${reenrollment.enrollment_number}`,
+                                    style: 'heading',
+                                    width: '*',
+                                },
                             ],
                         },
                         {
@@ -191,6 +196,11 @@ class GenerateReceiptPdfService {
                             text: [
                                 {
                                     text: `RECIBO`,
+                                    style: 'heading',
+                                    width: '*',
+                                },
+                                {
+                                    text: `\nContrato nº ${reenrollment.enrollment_number}`,
                                     style: 'heading',
                                     width: '*',
                                 },
