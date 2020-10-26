@@ -39,7 +39,7 @@ const EnrolmentsTable: React.FC = () => {
           <thead>
             <tr>
               <td colSpan={1}>Turma</td>
-              <td colSpan={5}>Aluno</td>
+              <td colSpan={7}>Aluno</td>
               <td colSpan={5}>Responsável financeiro</td>
               <td colSpan={5}>Responsável solidário</td>
               <td colSpan={1}>Mãe</td>
@@ -52,14 +52,16 @@ const EnrolmentsTable: React.FC = () => {
               <td>Data da matrícula</td>
               <td>Data de nascimento</td>
               <td>Natrualidade</td>
+              <td>CEP</td>
+              <td>Endereço</td>
               <td>Nome</td>
               <td>Parentesco</td>
-              <td>Celular</td>
+              <td>Telefones</td>
               <td>CPF</td>
               <td>E-mail</td>
               <td>Nome</td>
               <td>Parentesco</td>
-              <td>Celular</td>
+              <td>Telefones</td>
               <td>CPF</td>
               <td>E-mail</td>
               <td>Nome</td>
@@ -81,14 +83,28 @@ const EnrolmentsTable: React.FC = () => {
                   )}
                 </td>
                 <td>{`${reenrollment.student_birth_city} - ${reenrollment.student_birth_state}`}</td>
+                <td>{reenrollment.financial_address_cep}</td>
+                <td>{`${reenrollment.financial_address_street} - ${reenrollment.financial_address_number} ${reenrollment.financial_address_complement} - ${reenrollment.financial_address_neighborhood} - ${reenrollment.financial_address_city}`}</td>
                 <td>{reenrollment.financial_name}</td>
                 <td>{reenrollment.financial_kinship}</td>
-                <td>{reenrollment.financial_personal_phone}</td>
+                <td>
+                  {reenrollment.financial_personal_phone}
+                  <br />
+                  {reenrollment.financial_commercial_phone}
+                  <br />
+                  {reenrollment.financial_residencial_phone}
+                </td>
                 <td>{reenrollment.financial_cpf}</td>
                 <td>{reenrollment.financial_email}</td>
                 <td>{reenrollment.supportive_name}</td>
                 <td>{reenrollment.supportive_kinship}</td>
-                <td>{reenrollment.supportive_personal_phone}</td>
+                <td>
+                  {reenrollment.supportive_personal_phone}
+                  <br />
+                  {reenrollment.supportive_commercial_phone}
+                  <br />
+                  {reenrollment.supportive_residencial_phone}
+                </td>
                 <td>{reenrollment.supportive_cpf}</td>
                 <td>{reenrollment.supportive_email}</td>
                 <td>{reenrollment.student_mother_name}</td>
