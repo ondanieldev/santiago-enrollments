@@ -30,6 +30,7 @@ interface IStudent {
   paid: boolean;
   received_mail_with_documents: boolean;
   enrollment_number: number;
+  paid_materials: boolean;
 }
 
 interface IGrade {
@@ -144,7 +145,14 @@ const Dashboard: React.FC = () => {
 
               <InfoLabelContainer>
                 {student.paid && (
-                  <InfoLabel backgroundColor="#4caf50">pago</InfoLabel>
+                  <InfoLabel backgroundColor="#4caf50">
+                    matrícula paga
+                  </InfoLabel>
+                )}
+                {student.paid_materials && (
+                  <InfoLabel backgroundColor="#4caf50">
+                    materiais pagos
+                  </InfoLabel>
                 )}
                 {student.received_mail_with_documents && (
                   <InfoLabel backgroundColor="#212529">
@@ -166,7 +174,14 @@ const Dashboard: React.FC = () => {
 
               <InfoLabelContainer>
                 {student.paid && (
-                  <InfoLabel backgroundColor="#4caf50">pago</InfoLabel>
+                  <InfoLabel backgroundColor="#4caf50">
+                    matrícula paga
+                  </InfoLabel>
+                )}
+                {student.paid_materials && (
+                  <InfoLabel backgroundColor="#4caf50">
+                    materiais pagos
+                  </InfoLabel>
                 )}
                 {student.received_mail_with_documents && (
                   <InfoLabel backgroundColor="#212529">
