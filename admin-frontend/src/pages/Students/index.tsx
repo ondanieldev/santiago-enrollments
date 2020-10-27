@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { FiDollarSign, FiLoader } from 'react-icons/fi';
+import { FiDollarSign, FiLoader, FiBook } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 
 import {
@@ -30,6 +30,7 @@ interface IStudent {
   paid: boolean;
   received_mail_with_documents: boolean;
   type: 'enrollment' | 'reenrollment';
+  paid_materials: boolean;
 }
 
 const Students: React.FC = () => {
@@ -38,6 +39,7 @@ const Students: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [students, setStudents] = useState([] as IStudent[]);
   const [loadingPayment, setLoadingPayment] = useState(false);
+  const [loadingMaterials, setLoadingMaterials] = useState(false);
 
   useEffect(() => {
     const { grade_name } = params;
@@ -63,13 +65,15 @@ const Students: React.FC = () => {
           status: !student.paid,
         });
 
-        student.paid = !student.paid;
+        const studentsList = students;
 
-        const studentsWithoutUpdated = students.filter(
-          s => s._id !== student._id,
-        );
+        studentsList.forEach(s => {
+          if (s._id === student._id) {
+            s.paid = !student.paid;
+          }
+        });
 
-        setStudents([...studentsWithoutUpdated, student]);
+        setStudents(studentsList);
 
         student.paid
           ? toast.success('Matrícula marcada como concluída!')
@@ -78,6 +82,42 @@ const Students: React.FC = () => {
         toast.error('Erro interno do servidor!');
       } finally {
         setLoadingPayment(false);
+      }
+    },
+    [students],
+  );
+
+  const handleChangeMaterials = useCallback(
+    async (data: IStudent) => {
+      try {
+        setLoadingMaterials(true);
+
+        const student = data;
+
+        await api.patch(
+          `/reenrollments/materials/${student.enrollment_number}`,
+          {
+            status: !student.paid_materials,
+          },
+        );
+
+        const studentsList = students;
+
+        studentsList.forEach(s => {
+          if (s._id === student._id) {
+            s.paid_materials = !student.paid_materials;
+          }
+        });
+
+        setStudents(studentsList);
+
+        student.paid
+          ? toast.success('Matrícula marcada como materiais pagos!')
+          : toast.success('Matrícula marcada como materiais pendentes!');
+      } catch {
+        toast.error('Erro interno do servidor!');
+      } finally {
+        setLoadingMaterials(false);
       }
     },
     [students],
@@ -102,7 +142,14 @@ const Students: React.FC = () => {
                   {student.student_name}
                   <InfoLabelContainer>
                     {student.paid && (
-                      <InfoLabel backgroundColor="#4caf50">pago</InfoLabel>
+                      <InfoLabel backgroundColor="#4caf50">
+                        matrícula paga
+                      </InfoLabel>
+                    )}
+                    {student.paid_materials && (
+                      <InfoLabel backgroundColor="#4caf50">
+                        materiais pagos
+                      </InfoLabel>
                     )}
                     {student.type === 'enrollment' && (
                       <InfoLabel backgroundColor="#013C64">matrícula</InfoLabel>
@@ -142,6 +189,30 @@ const Students: React.FC = () => {
                 >
                   {loadingPayment && <FiLoader size={24} />}
                   {!loadingPayment && <FiDollarSign size={24} />}
+                </Button>
+              )}
+
+              {student.paid_materials && (
+                <Button
+                  type="button"
+                  backgroundColor="#4caf50"
+                  onClick={() => handleChangeMaterials(student)}
+                  disabled={loadingMaterials}
+                >
+                  {loadingMaterials && <FiLoader size={24} />}
+                  {!loadingMaterials && <FiBook size={24} />}
+                </Button>
+              )}
+
+              {!student.paid_materials && (
+                <Button
+                  type="button"
+                  backgroundColor="#f44336"
+                  onClick={() => handleChangeMaterials(student)}
+                  disabled={loadingMaterials}
+                >
+                  {loadingMaterials && <FiLoader size={24} />}
+                  {!loadingMaterials && <FiBook size={24} />}
                 </Button>
               )}
             </Student>
