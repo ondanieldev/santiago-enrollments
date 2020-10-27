@@ -38,7 +38,7 @@ class GenerateReceiptPdfService {
 
         switch (reenrollment.enrollment_payment_format) {
             case 'financing':
-                enrollmentValue = `Matrícula a prazo: R$ ${reenrollment.monthly_value} (${reenrollment.enrollment_payment_times}x)`;
+                enrollmentValue = `Matrícula a prazo: R$ ${reenrollment.monthly_value} sendo este parcelado em (${reenrollment.enrollment_payment_times} vezes)`;
                 break;
             case 'in_cash':
                 enrollmentValue = `Matrícula à vista: R$ ${reenrollment.monthly_value}`;
@@ -55,13 +55,14 @@ class GenerateReceiptPdfService {
 
         switch (reenrollment.materials_payment_format) {
             case 'financing':
-                materialsValue = `Materiais didáticos a prazo: R$ ${reenrollment.materials_payment_value} (${reenrollment.materials_payment_times}x)`;
+                materialsValue = `Materiais didáticos a prazo: R$ ${reenrollment.materials_payment_value} sendo este parcelado em ${reenrollment.materials_payment_times} vezes)`;
                 break;
             case 'in_cash':
                 materialsValue = `Materiais didáticos à vista: R$ ${reenrollment.materials_payment_value}`;
                 break;
             case 'dont_show':
-                materialsValue = '';
+                materialsValue =
+                    'Lembramos que ainda falta o pagamento dos livros didáticos - Sistema de Ensino Anglo';
                 break;
             default:
                 materialsValue = '';
