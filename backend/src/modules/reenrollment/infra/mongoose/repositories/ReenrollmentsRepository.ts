@@ -66,7 +66,7 @@ class ReenrollmentsRepository implements IReenrollmentsRepository {
     ): Promise<IReenrollment[] | []> {
         const reenrollments = await this.Reenrollment.find(
             { grade_name },
-            'enrollment_number student_name paid received_mail_with_documents type',
+            'enrollment_number student_name paid received_mail_with_documents type paid_materials',
         ).exec();
 
         return reenrollments;
@@ -164,7 +164,7 @@ class ReenrollmentsRepository implements IReenrollmentsRepository {
     public async getDashboardData(): Promise<IGetDashboardDataDTO> {
         const students = await this.Reenrollment.find(
             {},
-            'student_name grade_name type paid enrollment_number received_mail_with_documents',
+            'student_name grade_name type paid enrollment_number received_mail_with_documents paid_materials',
         );
 
         const enrollment_students = students.filter(
