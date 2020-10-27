@@ -33,7 +33,7 @@ class ChangeReenrollmentStatusService {
             );
         }
 
-        await this.reenrollmentsRepository.updatePaidStatus(
+        await this.reenrollmentsRepository.updatePaidEnrollmentStatus(
             enrollment_number,
             status,
         );

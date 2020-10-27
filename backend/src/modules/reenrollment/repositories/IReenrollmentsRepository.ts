@@ -16,9 +16,13 @@ interface IUpdatePaymentValues {
 }
 
 export default interface IReenrollmentsRepository {
-    updatePaidStatus(
+    updatePaidEnrollmentStatus(
         enrollment_number: number,
-        paid: boolean,
+        paid_enrollment: boolean,
+    ): Promise<IReenrollment | null>;
+    updatePaidMaterialsStatus(
+        enrollment_number: number,
+        paid_materials: boolean,
     ): Promise<IReenrollment | null>;
     updateChecklist(
         enrollment_number: number,

@@ -202,7 +202,8 @@ interface IReenrollment extends Document {
     materials_payment_times: number;
     materials_payment_value: number;
 
-    paid: boolean;
+    paid_enrollment: boolean;
+    paid_materials: boolean;
     received_mail_with_documents: boolean;
 }
 
