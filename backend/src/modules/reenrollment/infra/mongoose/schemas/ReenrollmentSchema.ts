@@ -88,6 +88,7 @@ const ReenrollmentSchema = new Schema({
     materials_payment_value: Number,
 
     paid: { type: Boolean, default: false },
+    paid_materials: { type: Boolean, default: false },
     received_mail_with_documents: { type: Boolean, default: false },
 });
 
@@ -202,7 +203,7 @@ interface IReenrollment extends Document {
     materials_payment_times: number;
     materials_payment_value: number;
 
-    paid_enrollment: boolean;
+    paid: boolean;
     paid_materials: boolean;
     received_mail_with_documents: boolean;
 }
