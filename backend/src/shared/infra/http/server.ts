@@ -14,7 +14,7 @@ import '@shared/infra/mongoose';
 import '@shared/containers';
 
 const app = express();
-const port = process.env.AP_API_PORT || 3000;
+const port = process.env.APP_API_PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
