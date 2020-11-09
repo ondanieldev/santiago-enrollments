@@ -1,8 +1,14 @@
 import mongoose from 'mongoose';
 
+const user = process.env.MONGO_USER;
+const pass = process.env.MONGO_PASSWORD;
+const host = process.env.MONGO_HOST;
+const port = process.env.MONGO_PORT ? `:${process.env.MONGO_PORT}` : '';
+const dtbs = process.env.MONGO_DATABASE;
+
 mongoose
     .connect(
-        `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@santiago.lorra.mongodb.net/${process.env.MONGO_DATABASE}?retryWrites=true&w=majority`,
+        `mongodb+srv://${user}:${pass}@${host}${port}/${dtbs}?retryWrites=true&w=majority`,
         {
             useNewUrlParser: true,
             useUnifiedTopology: true,
