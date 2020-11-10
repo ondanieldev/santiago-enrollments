@@ -572,7 +572,7 @@ const Reenrollment: React.FC = () => {
             <Document
               key={document.link}
               name={document.name}
-              link={`http://162.241.93.179:3333/public/${document.link}`}
+              link={`${process.env.REACT_APP_API_URL}/public/${document.link}`}
             />
           ))}
         </DocumentGroup>
