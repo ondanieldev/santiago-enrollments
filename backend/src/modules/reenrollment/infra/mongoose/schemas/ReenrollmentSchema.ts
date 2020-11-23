@@ -90,6 +90,10 @@ const ReenrollmentSchema = new Schema({
     paid: { type: Boolean, default: false },
     paid_materials: { type: Boolean, default: false },
     received_mail_with_documents: { type: Boolean, default: false },
+
+    how_meet_school: String,
+    created_At: { type: Date, default: new Date() },
+    student_cpf: String,
 });
 
 interface IReenrollment extends Document {
@@ -206,6 +210,12 @@ interface IReenrollment extends Document {
     paid: boolean;
     paid_materials: boolean;
     received_mail_with_documents: boolean;
+
+    how_meet_school: string;
+
+    created_At?: Date;
+
+    student_cpf?: string;
 }
 
 ReenrollmentSchema.pre('save', function (next) {

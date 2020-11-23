@@ -1,0 +1,12 @@
+version: "2.2"
+services:
+
+    mongo:
+        image: bitnami/mongodb:latest
+        environment:
+            - MONGODB_USERNAME=
+            - MONGODB_PASSWORD=
+            - MONGODB_DATABASE=
+        ports:
+            - 27017:27017
+        restart: unless-stopped

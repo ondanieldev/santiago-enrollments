@@ -88,4 +88,6 @@ export default interface NewReenrollmentDTO {
         | 'seventh_year'
         | 'eighth_year'
         | 'nineth_year';
+
+    how_meet_school?: string;
 }

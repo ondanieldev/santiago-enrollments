@@ -72,6 +72,7 @@ export default interface ISendEnrollmentDTO {
   student_medication_alergy: string;
   student_health_problem: string;
   student_special_necessities: string;
+  student_cpf?: string;
 
   grade_name:
     | 'maternal'
@@ -88,4 +89,5 @@ export default interface ISendEnrollmentDTO {
     | 'nineth_year';
 
   type?: 'enrollment' | 'reenrollment';
+  how_meet_school?: string;
 }

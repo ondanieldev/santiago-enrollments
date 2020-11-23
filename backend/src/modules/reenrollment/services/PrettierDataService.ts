@@ -148,6 +148,10 @@ class PrettierDataService {
             reenrollment.student_special_necessities,
         );
 
+        reenrollment.how_meet_school = this.capitalize(
+            reenrollment.how_meet_school,
+        );
+
         return reenrollment;
     }
 

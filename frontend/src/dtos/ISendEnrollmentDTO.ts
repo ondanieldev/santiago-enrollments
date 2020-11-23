@@ -86,4 +86,8 @@ export default interface ISendEnrollmentDTO {
     | 'nineth_year';
 
   type?: 'enrollment' | 'reenrollment';
+
+  how_meet_school?: string;
+
+  student_cpf?: string;
 }

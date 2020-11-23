@@ -545,6 +545,12 @@ const FormPage: React.FC = () => {
               placeholder="Nacionalidade"
               icon={FiFlag}
             />
+
+            <Input
+              name="student_cpf"
+              placeholder="CPF (Se tiver)"
+              icon={FiClipboard}
+            />
           </InputGroup>
 
           <InputGroup displayColumn={window.innerWidth <= 700}>
@@ -619,6 +625,15 @@ const FormPage: React.FC = () => {
               <option value="eighth_year">8º ano 2021</option>
               <option value="nineth_year">9º ano 2021</option>
             </Select>
+          </InputGroup>
+
+          <InputGroup displayColumn={window.innerWidth <= 700}>
+            <Input
+              type="text"
+              name="how_meet_school"
+              icon={FiUsers}
+              placeholder="Como conheceu a escola"
+            />
           </InputGroup>
 
           <InputGroup displayColumn={window.innerWidth <= 700}>

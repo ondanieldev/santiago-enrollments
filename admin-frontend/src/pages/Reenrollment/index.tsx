@@ -400,6 +400,12 @@ const Reenrollment: React.FC = () => {
                 <td>Nome</td>
                 <td>{reenrollment.student_name}</td>
               </tr>
+              {reenrollment.student_cpf && (
+                <tr>
+                  <td>CPF</td>
+                  <td>{reenrollment.student_cpf}</td>
+                </tr>
+              )}
               <tr>
                 <td>Nome do pai</td>
                 <td>{reenrollment.student_father_name}</td>
@@ -472,6 +478,10 @@ const Reenrollment: React.FC = () => {
                   <td>{reenrollment.student_special_necessities}</td>
                 </tr>
               )}
+              <tr>
+                <td>Como conheceu a escola</td>
+                <td>{reenrollment.how_meet_school}</td>
+              </tr>
             </tbody>
           </Table>
         )}

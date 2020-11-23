@@ -122,6 +122,10 @@ class GenerateReenrollmentFormPdfService {
                     columns: [
                         `Nome: ${reenrollment.student_name}`,
                         {
+                            text: `CPF: ${reenrollment.student_cpf}`,
+                            alignment: 'center',
+                        },
+                        {
                             text: `Turma: ${gradeName}`,
                             alignment: 'right',
                         },
@@ -263,6 +267,9 @@ class GenerateReenrollmentFormPdfService {
                     text: `Escola de Origem: ${
                         reenrollment.student_origin_school || 'Colégio Santiago'
                     }`,
+                },
+                {
+                    text: `Como Conheceu o Colégio: ${reenrollment.how_meet_school}`,
                 },
                 {
                     text: `${

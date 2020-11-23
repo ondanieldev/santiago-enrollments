@@ -5,6 +5,7 @@ import HandlebarsMailTemplateProvider from './MailTemplateProvider/implementatio
 
 import IMailProvider from './MailProvider/models/IMailProvider';
 import NodemailerMailProvider from './MailProvider/implementations/NodemailerMailProvider';
+import AmazonSESMailProvider from './MailProvider/implementations/AmazonSESMailProvider';
 
 import IPDFProvider from './PDFProvider/models/IPDFProvider';
 import PDFMakePDFProvider from './PDFProvider/implementations/PDFMakePDFProvider';
@@ -16,7 +17,9 @@ container.registerSingleton<IMailTemplateProvider>(
 
 container.registerInstance<IMailProvider>(
     'MailProvider',
-    container.resolve(NodemailerMailProvider),
+    process.env.MAIL_PROVIDER === 'ethereal'
+        ? container.resolve(NodemailerMailProvider)
+        : container.resolve(AmazonSESMailProvider),
 );
 
 container.registerSingleton<IPDFProvider>('PDFProvider', PDFMakePDFProvider);

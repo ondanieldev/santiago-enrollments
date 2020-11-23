@@ -10,6 +10,7 @@
     "dev:server:linux": "NODE_ENV=test ts-node-dev -r tsconfig-paths/register --inspect --ignore node_modules src/shared/infra/http/server.ts"
   },
   "dependencies": {
+    "aws-sdk": "^2.792.0",
     "cors": "^2.8.5",
     "date-fns": "^2.16.1",
     "dotenv": "^8.2.0",

@@ -78,6 +78,7 @@ export default interface IReenrollmentDTO {
   student_medication_alergy: string;
   student_health_problem: string;
   student_special_necessities: string;
+  student_cpf?: string;
 
   grade_name:
     | 'maternal'
@@ -94,4 +95,5 @@ export default interface IReenrollmentDTO {
     | 'nineth_year';
 
   formated_grade?: string;
+  how_meet_school?: string;
 }

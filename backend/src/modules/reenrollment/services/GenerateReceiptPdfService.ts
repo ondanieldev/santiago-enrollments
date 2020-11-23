@@ -171,7 +171,7 @@ class GenerateReceiptPdfService {
                     fontSize: 9,
                 },
                 '\nCiente dos registros acima: ________________________________________',
-                '\nSecreatria: ________________________________________',
+                '\nSecretaria: ________________________________________',
                 {
                     text:
                         '\nRua Rio Grande do Sul, nº 863 — Bairro Espírito Santo — Betim — MG. Telefone (31) 3595-2156. Site www.colegiosantiago.com.br\nEste documento não é valido para declaração de I.R.',
@@ -248,7 +248,7 @@ class GenerateReceiptPdfService {
                     fontSize: 9,
                 },
                 '\nCiente dos registros acima: ________________________________________',
-                '\nSecreatria: ________________________________________',
+                '\nSecretaria: ________________________________________',
                 {
                     text:
                         '\nRua Rio Grande do Sul, nº 863 — Bairro Espírito Santo — Betim — MG. Telefone (31) 3595-2156. Site www.colegiosantiago.com.br\nEste documento não é valido para declaração de I.R.',
